@@ -1,0 +1,209 @@
+-- creación de tablash  
+CREATE TABLE region (
+  id_region INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE ciudad (
+  id_ciudad INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(50) NOT NULL,
+  id_region INT,
+  FOREIGN KEY (id_region) REFERENCES region(id_region)
+);
+
+CREATE TABLE proveedor (
+  id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  contacto VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE tienda (
+  id_tienda INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_tienda VARCHAR(100) NOT NULL,
+  ubicacion VARCHAR(100) NOT NULL,
+  horario_apertura DATE,
+  politicas VARCHAR(100)
+);
+
+CREATE TABLE empleado (
+  id_empleado INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  apellido VARCHAR(100) NOT NULL,
+  sueldo INT NOT NULL,
+  id_tienda INT NOT NULL,
+  FOREIGN KEY (id_tienda) REFERENCES tienda(id_tienda)
+);
+
+CREATE TABLE rol (
+  id_rol INT AUTO_INCREMENT PRIMARY KEY,
+  nombre_rol VARCHAR(50) NOT NULL,
+  id_empleado INT NOT NULL,
+  FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado)
+);
+
+CREATE TABLE cliente (
+  id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  apellido VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE tarjeta (
+  id_tarjeta INT AUTO_INCREMENT PRIMARY KEY,
+  tipo CHAR(1) NOT NULL,
+  id_cliente INT NOT NULL,
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+);
+
+CREATE TABLE cupon (
+  id_cupon INT AUTO_INCREMENT PRIMARY KEY,
+  codigo VARCHAR(50) NOT NULL,
+  descuento INT NOT NULL,
+  fecha_expiracion DATE,
+  id_cliente INT NOT NULL,
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+);
+
+CREATE TABLE producto (
+  id_producto INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  precio_venta INT NOT NULL,
+  id_proveedor INT NOT NULL,
+  FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
+);
+
+CREATE TABLE inventario (
+  id_inventario INT AUTO_INCREMENT PRIMARY KEY,
+  cantidad INT NOT NULL,
+  id_producto INT NOT NULL,
+  id_tienda INT NOT NULL,
+  FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
+  FOREIGN KEY (id_tienda) REFERENCES tienda(id_tienda)
+);
+
+CREATE TABLE oferta (
+  id_oferta INT AUTO_INCREMENT PRIMARY KEY,
+  descripcion VARCHAR(100) NOT NULL,
+  descuento INT NOT NULL,
+  id_producto INT NOT NULL,
+  FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+);
+
+CREATE TABLE venta (
+  id_venta INT AUTO_INCREMENT PRIMARY KEY,
+  fecha_venta DATE NOT NULL,
+  id_cliente INT NOT NULL,
+  id_empleado INT NOT NULL,
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+  FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado)
+);
+
+CREATE TABLE detalle_venta (
+  id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+  cantidad INT NOT NULL,
+  precio_unitario_venta INT,
+  id_venta INT NOT NULL,
+  id_producto INT NOT NULL,
+  FOREIGN KEY (id_venta) REFERENCES venta(id_venta),
+  FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+);
+
+CREATE TABLE boleta (
+  id_boleta INT AUTO_INCREMENT PRIMARY KEY,
+  id_cliente INT NOT NULL,
+  id_venta INT NOT NULL,
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+  FOREIGN KEY (id_venta) REFERENCES venta(id_venta)
+);
+
+CREATE TABLE factura (
+  id_factura INT AUTO_INCREMENT PRIMARY KEY,
+  fecha DATE NOT NULL,
+  total INT NOT NULL,
+  id_venta INT NOT NULL,
+  id_cliente INT NOT NULL,
+  FOREIGN KEY (id_venta) REFERENCES venta(id_venta),
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
+);
+
+CREATE TABLE devolucion (
+  id_devolucion INT AUTO_INCREMENT PRIMARY KEY,
+  fecha_devolucion DATE NOT NULL,
+  motivo VARCHAR(200) NOT NULL,
+  monto_reembolso INT NOT NULL,
+  cantidad_devuelta INT NOT NULL,
+  id_empleado INT NOT NULL,
+  id_cliente INT NOT NULL,
+  id_tarjeta INT NOT NULL,
+  id_venta INT NOT NULL,
+  id_producto INT NOT NULL,
+  FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado),
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+  FOREIGN KEY (id_tarjeta) REFERENCES tarjeta(id_tarjeta),
+  FOREIGN KEY (id_venta) REFERENCES venta(id_venta),
+  FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+);
+
+CREATE TABLE envio (
+  id_envio INT AUTO_INCREMENT PRIMARY KEY,
+  fecha_envio DATE NOT NULL,
+  fecha_estimada_entrega DATE NOT NULL,
+  estado VARCHAR(50) NOT NULL,
+  direccion_destino VARCHAR(200) NOT NULL,
+  id_venta INT NOT NULL,
+  id_cliente INT NOT NULL,
+  id_empleado INT NOT NULL,
+  id_ciudad INT NOT NULL,
+  FOREIGN KEY (id_venta) REFERENCES venta(id_venta),
+  FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+  FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado),
+  FOREIGN KEY (id_ciudad) REFERENCES ciudad(id_ciudad)
+);
+
+-- Inserciones u agregar
+INSERT INTO region (nombre) VALUES ('Metropolitana'), ('Valparaíso'), ('Biobío'), ('Araucanía'), ('Maule'), ('O\'Higgins'), ('Los Lagos'), ('Coquimbo'), ('Antofagasta'), ('Atacama'), ('Tarapacá'), ('Arica y Parinacota'), ('Los Ríos'), ('Aysén'), ('Magallanes');
+
+
+INSERT INTO ciudad (nombre, id_region) VALUES ('Santiago', 1), ('Viña del Mar', 2), ('Concepción', 3), ('Temuco', 4), ('Talca', 5), ('Rancagua', 6), ('Puerto Montt', 7), ('La Serena', 8), ('Antofagasta', 9), ('Copiapó', 10), ('Iquique', 11), ('Arica', 12), ('Valdivia', 13), ('Coyhaique', 14), ('Punta Arenas', 15);
+
+
+INSERT INTO proveedor (nombre, contacto) VALUES ('Distribuidora Norte', 'contacto@norte.cl'), ('Proveedor Sur', 'info@sur.cl'), ('Comercial Central', 'ventas@central.cl'), ('Importadora Andina', 'andina@import.cl'), ('Distribuciones Pacífico', 'pacifico@dist.cl'), ('Proveedor Express', 'express@prov.cl'), ('Suministros Globales', 'global@sum.cl'), ('Abastecedora Chile', 'chile@abast.cl'), ('Comercial Austral', 'austral@com.cl'), ('Distribuidora Polar', 'polar@dist.cl'), ('Proveedores Unidos', 'unidos@prov.cl'), ('Importaciones del Sur', 'sur@import.cl'), ('Comercio Andino', 'andino@com.cl'), ('Suministros Rápidos', 'rapidos@sum.cl'), ('Distribuciones Elite', 'elite@dist.cl');
+
+INSERT INTO tienda (nombre_tienda, ubicacion, horario_apertura, politicas) VALUES ('Tienda Santiago Centro', 'Av. Libertador 100', '2020-01-15', 'No devoluciones sin boleta'), ('Tienda Viña del Mar', 'Av. Marina 200', '2019-06-01', 'Cambios en 15 días'), ('Tienda Concepción', 'Calle Barros Arana 300', '2021-03-10', 'Devolución en 30 días'), ('Tienda Temuco', 'Av. Alemania 400', '2018-11-20', 'Solo cambios con etiqueta'), ('Tienda Talca', 'Calle 1 Sur 500', '2022-05-05', 'No devoluciones en ofertas'), ('Tienda Rancagua', 'Av. O\'Higgins 600', '2017-08-15', 'Cambios en 7 días'), ('Tienda Puerto Montt', 'Av. Presidente Ibáñez 700', '2020-09-01', 'Devolución con boleta'), ('Tienda La Serena', 'Av. Francisco de Aguirre 800', '2019-12-10', 'Cambios en 10 días'), ('Tienda Antofagasta', 'Av. Balmaceda 900', '2021-07-20', 'No devoluciones sin empaque'), ('Tienda Iquique', 'Av. Arturo Prat 1000', '2018-04-05', 'Cambios en 20 días'), ('Tienda Arica', 'Av. Comandante San Martín 1100', '2022-02-15', 'Devolución en 15 días'), ('Tienda Valdivia', 'Calle Arauco 1200', '2017-10-01', 'Solo cambios'), ('Tienda Coyhaique', 'Av. Baquedano 1300', '2020-06-20', 'Cambios en 5 días'), ('Tienda Punta Arenas', 'Av. Colón 1400', '2019-03-10', 'Devolución en 7 días'), ('Tienda Copiapó', 'Av. Copayapu 1500', '2021-11-05', 'No devoluciones en liquidación');
+
+INSERT INTO empleado (nombre, apellido, sueldo, id_tienda) VALUES ('Carlos', 'González', 550000, 1), ('María', 'Pérez', 480000, 2), ('Juan', 'Rodríguez', 620000, 3), ('Ana', 'López', 510000, 4), ('Pedro', 'Martínez', 590000, 5), ('Sofía', 'García', 470000, 6), ('Luis', 'Hernández', 630000, 7), ('Valentina', 'Díaz', 500000, 8), ('Diego', 'Sánchez', 560000, 9), ('Camila', 'Torres', 490000, 10), ('Andrés', 'Flores', 610000, 11), ('Javiera', 'Reyes', 520000, 12), ('Matías', 'Morales', 580000, 13), ('Daniela', 'Jiménez', 475000, 14), ('Felipe', 'Rojas', 640000, 15);
+
+
+INSERT INTO rol (nombre_rol, id_empleado) VALUES ('Gerente', 1), ('Cajero', 2), ('Vendedor', 3), ('Bodeguero', 4), ('Supervisor', 5), ('Cajero', 6), ('Gerente', 7), ('Vendedor', 8), ('Bodeguero', 9), ('Cajero', 10), ('Supervisor', 11), ('Vendedor', 12), ('Gerente', 13), ('Cajero', 14), ('Bodeguero', 15);
+
+
+INSERT INTO cliente (nombre, apellido, email) VALUES ('Roberto', 'Alvarez', 'roberto@gmail.com'), ('Carla', 'Muñoz', 'carla@gmail.com'), ('Sebastián', 'Castro', 'sebastian@gmail.com'), ('Fernanda', 'Vargas', 'fernanda@gmail.com'), ('Nicolás', 'Romero', 'nicolas@gmail.com'), ('Paulina', 'Silva', 'paulina@gmail.com'), ('Tomás', 'Contreras', 'tomas@gmail.com'), ('Isabel', 'Medina', 'isabel@gmail.com'), ('Cristóbal', 'Fuentes', 'cristobal@gmail.com'), ('Bárbara', 'Espinoza', 'barbara@gmail.com'), ('Ignacio', 'Vega', 'ignacio@gmail.com'), ('Constanza', 'Ramos', 'constanza@gmail.com'), ('Alejandro', 'Pizarro', 'alejandro@gmail.com'), ('Marcela', 'Navarro', 'marcela@gmail.com'), ('Francisco', 'Ibáñez', 'francisco@gmail.com');
+
+
+INSERT INTO tarjeta (tipo, id_cliente) VALUES ('D', 1), ('C', 2), ('D', 3), ('C', 4), ('D', 5), ('C', 6), ('D', 7), ('C', 8), ('D', 9), ('C', 10), ('D', 11), ('C', 12), ('D', 13), ('C', 14), ('D', 15);
+
+
+INSERT INTO cupon (codigo, descuento, fecha_expiracion, id_cliente) VALUES ('CUP001', 10, '2026-06-01', 1), ('CUP002', 15, '2026-07-01', 2), ('CUP003', 20, '2026-08-01', 3), ('CUP004', 5, '2026-05-15', 4), ('CUP005', 25, '2026-09-01', 5), ('CUP006', 10, '2026-06-15', 6), ('CUP007', 30, '2026-10-01', 7), ('CUP008', 15, '2026-07-15', 8), ('CUP009', 20, '2026-08-15', 9), ('CUP010', 5, '2026-05-30', 10), ('CUP011', 10, '2026-06-30', 11), ('CUP012', 25, '2026-09-15', 12), ('CUP013', 15, '2026-07-30', 13), ('CUP014', 20, '2026-08-30', 14), ('CUP015', 30, '2026-10-15', 15);
+
+
+INSERT INTO producto (nombre, precio_venta, id_proveedor) VALUES ('Bolsa Reutilizable', 3500, 1), ('Jabón Orgánico', 4200, 2), ('Shampoo Natural', 6800, 3), ('Cepillo Bambú', 2900, 4), ('Botella Acero Inox', 12000, 5), ('Crema Hidratante Eco', 8500, 6), ('Tote Bag Algodón', 5500, 7), ('Vela Soja Aromática', 7200, 8), ('Kit Compostaje', 18000, 9), ('Filtro Agua', 25000, 10), ('Aceite Esencial', 9500, 11), ('Semillas Orgánicas', 3200, 12), ('Difusor Aromas', 15000, 13), ('Papel Reciclado', 2800, 14), ('Limpiador Multiuso', 4900, 15);
+
+INSERT INTO inventario (cantidad, id_producto, id_tienda) VALUES (50, 1, 1), (30, 2, 2), (45, 3, 3), (60, 4, 4), (25, 5, 5), (40, 6, 6), (55, 7, 7), (70, 8, 8), (35, 9, 9), (20, 10, 10), (65, 11, 11), (48, 12, 12), (38, 13, 13), (80, 14, 14), (42, 15, 15);
+
+INSERT INTO oferta (descripcion, descuento, id_producto) VALUES ('Oferta de verano', 10, 1), ('Liquidación de invierno', 20, 2), ('Promo fin de semana', 15, 3), ('Descuento especial', 25, 4), ('Oferta relámpago', 30, 5), ('Promo navidad', 20, 6), ('Descuento aniversario', 15, 7), ('Oferta exclusiva web', 10, 8), ('Promo Black Friday', 40, 9), ('Descuento por temporada', 20, 10), ('Oferta nocturna', 15, 11), ('Promo de lanzamiento', 25, 12), ('Descuento por volumen', 10, 13), ('Oferta especial cliente', 20, 14), ('Promo fin de mes', 15, 15);
+
+INSERT INTO venta (fecha_venta, id_cliente, id_empleado) VALUES ('2026-01-05', 1, 1), ('2026-01-10', 2, 2), ('2026-01-15', 3, 3), ('2026-01-20', 4, 4), ('2026-02-01', 5, 5), ('2026-02-10', 6, 6), ('2026-02-15', 7, 7), ('2026-02-20', 8, 8), ('2026-03-01', 9, 9), ('2026-03-10', 10, 10), ('2026-03-15', 11, 11), ('2026-03-20', 12, 12), ('2026-04-01', 13, 13), ('2026-04-10', 14, 14), ('2026-04-15', 15, 15);
+
+
+INSERT INTO detalle_venta (cantidad, precio_unitario_venta, id_venta, id_producto) VALUES (2, 3500, 1, 1), (3, 4200, 2, 2), (1, 6800, 3, 3), (4, 2900, 4, 4), (2, 12000, 5, 5), (1, 8500, 6, 6), (3, 5500, 7, 7), (2, 7200, 8, 8), (1, 18000, 9, 9), (2, 25000, 10, 10), (3, 9500, 11, 11), (5, 3200, 12, 12), (1, 15000, 13, 13), (4, 2800, 14, 14), (2, 4900, 15, 15);
+
+
+INSERT INTO boleta (id_cliente, id_venta) VALUES (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10), (11, 11), (12, 12), (13, 13), (14, 14), (15, 15);
+
+INSERT INTO factura (fecha, total, id_venta, id_cliente) VALUES ('2026-01-05', 7000, 1, 1), ('2026-01-10', 12600, 2, 2), ('2026-01-15', 6800, 3, 3), ('2026-01-20', 11600, 4, 4), ('2026-02-01', 24000, 5, 5), ('2026-02-10', 8500, 6, 6), ('2026-02-15', 16500, 7, 7), ('2026-02-20', 14400, 8, 8), ('2026-03-01', 18000, 9, 9), ('2026-03-10', 50000, 10, 10), ('2026-03-15', 28500, 11, 11), ('2026-03-20', 16000, 12, 12), ('2026-04-01', 15000, 13, 13), ('2026-04-10', 11200, 14, 14), ('2026-04-15', 9800, 15, 15);
+
+
+INSERT INTO devolucion (fecha_devolucion, motivo, monto_reembolso, cantidad_devuelta, id_empleado, id_cliente, id_tarjeta, id_venta, id_producto) VALUES ('2026-01-10', 'Producto defectuoso', 3500, 1, 1, 1, 1, 1, 1), ('2026-01-15', 'No era lo esperado', 4200, 1, 2, 2, 2, 2, 2), ('2026-01-20', 'Producto dañado', 6800, 1, 3, 3, 3, 3, 3), ('2026-01-25', 'Alergia al producto', 2900, 2, 4, 4, 4, 4, 4), ('2026-02-05', 'Falla en material', 12000, 1, 5, 5, 5, 5, 5), ('2026-02-12', 'Color incorrecto', 8500, 1, 6, 6, 6, 6, 6), ('2026-02-18', 'Producto incompleto', 5500, 1, 7, 7, 7, 7, 7), ('2026-02-22', 'No funciona', 7200, 1, 8, 8, 8, 8, 8), ('2026-03-05', 'Defecto de fábrica', 18000, 1, 9, 9, 9, 9, 9), ('2026-03-12', 'Producto equivocado', 25000, 1, 10, 10, 10, 10, 10), ('2026-03-18', 'No compatible', 9500, 1, 11, 11, 11, 11, 11), ('2026-03-22', 'Envase roto', 3200, 2, 12, 12, 12, 12, 12), ('2026-04-03', 'Mal estado', 15000, 1, 13, 13, 13, 13, 13), ('2026-04-12', 'No era lo pedido', 2800, 2, 14, 14, 14, 14, 14), ('2026-04-18', 'Producto vencido', 4900, 1, 15, 15, 15, 15, 15);
+
+
+INSERT INTO envio (fecha_envio, fecha_estimada_entrega, estado, direccion_destino, id_venta, id_cliente, id_empleado, id_ciudad) VALUES ('2026-01-05', '2026-01-08', 'Entregado', 'Av. Libertador 101, Santiago', 1, 1, 1, 1), ('2026-01-10', '2026-01-13', 'Entregado', 'Av. Marina 201, Viña del Mar', 2, 2, 2, 2), ('2026-01-15', '2026-01-18', 'Entregado', 'Calle Barros Arana 301, Concepción', 3, 3, 3, 3), ('2026-01-20', '2026-01-23', 'Entregado', 'Av. Alemania 401, Temuco', 4, 4, 4, 4), ('2026-02-01', '2026-02-04', 'Entregado', 'Calle 1 Sur 501, Talca', 5, 5, 5, 5), ('2026-02-10', '2026-02-13', 'Entregado', 'Av. O\'Higgins 601, Rancagua', 6, 6, 6, 6), ('2026-02-15', '2026-02-18', 'En tránsito', 'Av. Ibáñez 701, Puerto Montt', 7, 7, 7, 7), ('2026-02-20', '2026-02-23', 'En tránsito', 'Av. Aguirre 801, La Serena', 8, 8, 8, 8), ('2026-03-01', '2026-03-04', 'En tránsito', 'Av. Balmaceda 901, Antofagasta', 9, 9, 9, 9), ('2026-03-10', '2026-03-13', 'Procesando', 'Av. Arturo Prat 1001, Iquique', 10, 10, 10, 11), ('2026-03-15', '2026-03-18', 'Procesando', 'Av. San Martín 1101, Arica', 11, 11, 11, 12), ('2026-03-20', '2026-03-23', 'Procesando', 'Calle Arauco 1201, Valdivia', 12, 12, 12, 13), ('2026-04-01', '2026-04-04', 'Pendiente', 'Av. Baquedano 1301, Coyhaique', 13, 13, 13, 14), ('2026-04-10', '2026-04-13', 'Pendiente', 'Av. Colón 1401, Punta Arenas', 14, 14, 14, 15), ('2026-04-15', '2026-04-18', 'Pendiente', 'Av. Copayapu 1501, Copiapó', 15, 15, 15, 10);
