@@ -15,24 +15,26 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface EmpleadoRepository  extends JpaRepository<Empleado, Integer >{
-    @Query ("SELECT o FROM Oferta o")
-    List <Oferta> findAll(); /*Listar todos los empleados */
+    @Query ("SELECT en FROM Envio en")
+    List <Empleado> findAll(); /*Listar todos los empleados */
 
-    @Query ("SELECT o FROM Oferta o WHERE o.id_oferta =:id")
-    List<Oferta> buscarPorId(Integer id);/* Listar por id de empleado*/
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Oferta o WHERE o.id_oferta =:id")
-    void deleteOfertaById( @Param("id")Integer id);/* Eliminar por el id*/
-
+    @Query ("SELECT en FROM Envio e WHERE en.id_envio =:id")
+    List<Envio> buscarPorId(Integer id);/* Listar por id de empleado*/
 
     @Modifying
     @Transactional
-    @Query ("UPDATE Oferta o SET o.descripcion =:descripcion , o.descuento =: descuento WHERE o.id_oferta =:id  ")
+    @Query("DELETE FROM Envio en WHERE en.id_envio =:id")
+    void deleteEnvioById( @Param("id")Integer id);/* Eliminar por el id*/
+
+
+    @Modifying
+    @Transactional
+    @Query ("UPDATE Envio en SET en.estado =:estado, en.cantidad =: cantidad, en.direccion_destino =: direccion_destino WHERE e.id_empleado =:id  ")
              int updateEmpleado(@Param("id")Integer id,
-                                @Param ("descripcion")String nombre,
-                                @Param("descuento") int descuento,
+                                @Param ("estado")String estado,
+                                @Param("cantidad") int cantidad,
+                                @Param ("direccion_destino") String direccion_destino
+
                                                          ); /* hacerlo con todos los datps que se quieran modificar, siguiendo la misma estructura:)*/
                     
 
