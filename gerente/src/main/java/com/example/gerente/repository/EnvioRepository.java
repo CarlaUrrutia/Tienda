@@ -14,9 +14,9 @@ import com.example.gerente.model.Empleado;
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface EmpleadoRepository  extends JpaRepository<Empleado, Integer >{
+public interface EnvioRepository  extends JpaRepository<Envio, Integer >{
     @Query ("SELECT en FROM Envio en")
-    List <Empleado> findAll(); /*Listar todos los empleados */
+    List <Envio> findAll(); /*Listar todos los empleados */
 
     @Query ("SELECT en FROM Envio e WHERE en.id_envio =:id")
     List<Envio> buscarPorId(Integer id);/* Listar por id de empleado*/
