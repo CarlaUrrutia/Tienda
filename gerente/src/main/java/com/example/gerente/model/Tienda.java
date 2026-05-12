@@ -41,13 +41,14 @@ public class Tienda {
     @NotNull
     @Size(min = 2, max = 100, message = "Error ubicacion no valida")
     private String ubicacion;
+    /* debarible, es una fecha o es una hora */
     private Date horario_aprertura;
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 100, message = "Error politicas no validas")
     private String politicas;
     /*clave foranea aqui o eso creo */
-    @OneToMany
-    @Column(name = "id_ciudad",nullable = false)
-    private Ciudad ciudad;
+    @OneToMany(mappedBy = "id_tienda")           // Relación inversa
+    @Column(name = "id_empleado", nullable = false)
+    private Empleado id_empleado;
 }

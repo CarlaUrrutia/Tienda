@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -14,10 +15,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @AllArgsConstructor
 @NoArgsConstructor
+@Valid
 @Data
 @Entity
 @Table(name = "region")
@@ -33,6 +33,4 @@ public class Region {
     @NotNull
     @Size(min = 2, max = 50, message = "Error nombre no valido")
     private String nombre;
-    
-
 }

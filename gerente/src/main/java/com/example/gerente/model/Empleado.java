@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,11 +16,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Valid
 @Data
-@Table(name = "empleado")
 @Entity
+@Table(name = "empleado")
+// clase para identificar el Administrador, Empleado, Gerente por rol 
 public class Empleado {
     @NotNull(message = "El id no debe ser nulo")
     @NotEmpty(message = "el id no debe ser nulo")
@@ -42,8 +45,15 @@ public class Empleado {
     @NotEmpty(message = "el sueldo no  debe ser nulo")
     @Min(value = 0)
     private int sueldo;
+
+    @ManyToOne
+    @Column(name = "rol",nullable = false)
+    @NotEmpty
+    @NotNull
+    @Size(min = 2, max = 100, message = "Error rol no valido")
+    private Rol id_rol;
+
     @ManyToOne
     @Column(name = "id_tienda", nullable = false)
     private Tienda id_tienda;
-    
 }
