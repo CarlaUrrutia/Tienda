@@ -29,7 +29,7 @@ public class EmpleadoDTO {
         
         @NotBlank(message = "El sueldo del empleado es obligatorio")
         @Min(value = 0)
-        private int  sueldo;
+        private float  sueldo;
 
     }
 
