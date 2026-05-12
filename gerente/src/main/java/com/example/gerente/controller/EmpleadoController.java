@@ -1,67 +1,47 @@
-package com.example.gerente.controller;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.gerente.model.Empleado;
-import com.example.gerente.service.EmpleadoService;
 
 @RestController
-@RequestMapping("/api/empleados")
-
+@RequestMapping("/api/empleado")
 public class EmpleadoController {
+    
     @Autowired
-    private EmpleadoService empleadoService;
+    private EmpleadoService  empleadoServi;
 
     @GetMapping
-    public List<Empleado> listar(){
-        return empleadoService.getAllEmpleados();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity <Empleado> obtenerPorId(@PathVariable Integer id){
-        Empleado empleado = empleadoService.getEmpleadoById(id);
-        if(empleado!= null){
-            return ResponseEntity.ok(empleado);
+    public ResponseEntity<List<Empleado>> listar(){
+        List<Empleado> emp = empleadoServi.getAllEmpleado();
+        if (emp.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
-        return  ResponseEntity.notFound().build();
+        return ResponseEntity.ok(emp);
     }
 
-    @PostMapping  
-    public ResponseEntity<Empleado> save(@RequestBody Empleado empl){
-        Empleado nuevo = empleadoService.save(empl);
-        if(nuevo!=null){
-            return ResponseEntity.ok(nuevo);
+    @PostMapping
+    public ResponseEntity<Empleado> guardar(@RequestBody Empleado emple){
+        Empleado em = empleadoServi.createDetalle(emple);
+        return ResponseEntity.status(HttpStatus.CREATED).body(em);
+    }
+
+    @DeleteMapping("/{id_empleado}")
+    public ResponseEntity<Void> eliminar(@PathVariable int id_empleado){
+        try{
+            empleadoServi.deleteEmpleado(id_empleado);
+            return ResponseEntity.noContent().build();
+        }catch(Exception ex){
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.badRequest().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Empleado> modificar(@PathVariable Integer id, @RequestBody Empleado e) {
-        Empleado actua = empleadoService.updateEmpleado(id, e);
+    @GetMapping("/{id_empleado}")
+    public ResponseEntity<Empleado> buscarByid_empleado(@PathVariable
+        int id_empleado){
+            Empleado emple = empleadoServi.getPersoByid_empleado(id_empleado);
+            if (emple==null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(emple);
+        }
+    
         
-        if (actua != null) {
-            return ResponseEntity.ok(actua); 
-        }
-        return ResponseEntity.notFound().build(); 
-
-    }
-
-    @DeleteMapping ("/{id}")
-    public ResponseEntity<Void> delete (@PathVariable Integer id){
-        empleadoService.delete(id);
-        return ResponseEntity.ok().build();
-    }
-
 
 }
