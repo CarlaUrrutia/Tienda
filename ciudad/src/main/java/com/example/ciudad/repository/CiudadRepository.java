@@ -1,6 +1,6 @@
 package com.example.ciudad.repository;
 
-import com.ejemplo.ms_persona.entity.Persona;
+//import com.ejemplo.ms_persona.entity.Persona;
 import com.example.ciudad.model.Ciudad;
 
 import org.springframework.data.jpa.repository.JpaRepository;

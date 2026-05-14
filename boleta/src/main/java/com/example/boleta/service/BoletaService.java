@@ -1,4 +1,4 @@
-package com.example.gerente.Service;
+package com.example.boleta.service;
 
 import java.util.List;
 
@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.gerente.Repository.BoletaRepository;
 import com.example.gerente.model.Boleta;
+
+//import com.example.Repository.BoletaRepository;
+//import com.example.model.Boleta;
 
 import jakarta.transaction.Transactional;
 
@@ -29,27 +32,30 @@ public class BoletaService {
         return null;
     }
 
-    public List<Boleta> getPersoRepo(String name){
-        return boletaRepo.findByNombre(name);
+    /*
+    public List<Boleta> getBoletaRepo(int id_boleta){
+        return boletaRepo.findByNombre(id_boleta);
+    }
+    */
+
+    public Boleta createBoleta(Boleta bol){
+        return boletaRepo.save(bol);
     }
 
-    public Boleta createPerso(Boleta perso){
-        return boletaRepo.save(perso);
-    }
-
-    public void deletePerso(String rut){
-        boletaRepo.deleteById(rut);
+    public void deleteBoleta(int id_boleta){
+        boletaRepo.deleteById(id_boleta);
     }
     
-    public Boleta updatePerso(String rut, Boleta perso){
-        Boleta per= getPersoByRut(rut);
+    //No se puede modificar la boleta
+    /*public Boleta updatePerso(String rut, int id_boleta){
+        Boleta bol= getPersoByRut(rut);
         if (per!=null) {
-            per.setNombre(perso.getNombre());
-            per.setEdad(perso.getEdad());
-            per.setGenero(perso.getGenero());
-            return persoRepo.save(per);   
+            bol.setNombre(perso.getNombre());
+            bol.setEdad(perso.getEdad());
+            bol.setGenero(perso.getGenero());
+            return boletaRepo.save(per);   
         }
         return null;
     }
-
+    */
 }

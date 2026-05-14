@@ -1,6 +1,6 @@
 package com.example.cupon.repository;
 
-import com.ejemplo.ms_persona.entity.Persona;
+//import com.ejemplo.ms_persona.entity.Persona;
 import com.example.cupon.model.Cliente;
 
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-
+package com.example.cupon.controller;
 
 @RestController
 @RequestMapping("/api/cupon")

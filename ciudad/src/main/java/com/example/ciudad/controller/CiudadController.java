@@ -1,4 +1,4 @@
-
+package com.example.ciudad.controller;
 
 @RestController
 @RequestMapping("/api/ciudad")
