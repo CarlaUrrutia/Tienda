@@ -51,9 +51,9 @@ public class Empleado {
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 100, message = "Error rol no valido")
-    private Rol id_rol;
+    private int id_rol;
 
     
     @Column(name = "id_tienda", nullable = false)
-    private Tienda id_tienda;
+    private int id_tienda;
 }
