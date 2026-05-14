@@ -35,11 +35,11 @@ public class Inventario {
     @Column(name = "cantidad",nullable = false)
     private int cantidad;
     /*claves foranias */
-    @ManyToOne
+
     @Column(name = "id_producto", nullable = false)
-    private Producto id_producto;
+    private int id_producto;
     /*clavesh */
-    @ManyToOne
+
     @Column(name = "id_tienda",nullable = false)
-    private Tienda id_tienda;
+    private int id_tienda;
 }

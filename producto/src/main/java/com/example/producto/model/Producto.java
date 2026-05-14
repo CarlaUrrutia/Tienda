@@ -40,9 +40,9 @@ public class Producto {
     @Min(value = 0)
     private int precio_venta;
     
-    @ManyToOne
+    
     @Column(name = "id_proveedor", nullable = false)
-    private Proveedor id_proveedor;
+    private int id_proveedor;
 
     /*
     debatiblñe si se agrega o no 

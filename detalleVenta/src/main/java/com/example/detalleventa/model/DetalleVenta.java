@@ -41,12 +41,13 @@ public class DetalleVenta {
     @Min(value = 0)
     private int precio_unitario_venta; //` int(11) DEFAULT NULL
     /*Confirmar luego la clave foranea  */
-    @OneToMany
+
+
     @Column(name = "id_venta",nullable = false)
-    private Venta id_venta;
+    private int id_venta;
     /*Confirmar luego la clave foranea */
-    @ManyToOne
+
     @Column(name = "id_producto",nullable = false)
-    private Producto id_producto;
+    private int id_producto;
     
 }

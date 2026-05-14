@@ -28,7 +28,6 @@ public class Boleta {
     private int id_boleta;
     
     /*que coincidan las claves foraneas */
-    @ManyToOne
     @Column(name = "id_venta",nullable = false)
-    private Venta id_venta;
+    private int id_venta;
 }

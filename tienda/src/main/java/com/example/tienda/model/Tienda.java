@@ -48,7 +48,8 @@ public class Tienda {
     @Size(min = 2, max = 100, message = "Error politicas no validas")
     private String politicas;
     /*clave foranea aqui o eso creo */
-    @OneToMany(mappedBy = "id_tienda")           // Relación inversa
+     
+     
     @Column(name = "id_empleado", nullable = false)
-    private Empleado id_empleado;
+    private int id_empleado;
 }

@@ -35,6 +35,7 @@ public class Ciudad {
     @Size(min = 2, max = 50, message = "Error nombre no valido")
     private String nombre;
     /*que coincidan las claves foraneas  ejemplo una a una o una a muchas o muchas a muchas*/
-    @ManyToOne 
+     
+    @Column(name = "id_region",nullable = false)
     private int id_region;
 }

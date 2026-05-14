@@ -50,12 +50,12 @@ public class Devolucion {
     @Min(value = 0)
     private int cantidad_devuelta;
 
-    @ManyToOne
+
     @Column(name = "id_empleado", nullable = false)
-    private Empleado id_empleado;
-    @OneToOne
+    private int id_empleado;
+
     @Column(name = "id_detalle_venta", nullable = false)
-    private DetalleVenta id_detalle_venta;
+    private int id_detalle_venta;
 
     /*
     private Cliente id_cliente;

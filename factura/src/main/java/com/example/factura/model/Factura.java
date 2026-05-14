@@ -38,7 +38,7 @@ public class Factura {
     @NotEmpty(message = "el total no debe ser nulo")
     @Min(value = 0)
     private int total;
-    @OneToOne
+
     @Column(name = "venta",nullable = false)
     private Venta venta;
    

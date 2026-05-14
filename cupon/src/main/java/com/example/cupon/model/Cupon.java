@@ -45,7 +45,8 @@ public class Cupon {
     /*Se debe validar el date? */
     private Date fecha_expiracion;
     /*Deben coincidir */
-    @ManyToOne
+
+
     @Column(name = "id_cliente",nullable = false)
-    private Cliente id_cliente;
+    private int id_cliente;
 }

@@ -51,16 +51,16 @@ public class Envio {
     @NotEmpty(message = "La direccion de destino no debe ser nulo")
     private String direccion_destino;
 
-    @ManyToOne
+
     @Column(name = "id_venta",nullable = false)
-    private Venta id_venta;
-    @ManyToOne
+    private int id_venta;
+
     @Column(name = "id_cliente",nullable = false)
-    private Cliente id_cliente;
-    @ManyToOne
+    private int id_cliente;
+
     @Column(name = "id_empleado",nullable = false)  
-    private Empleado id_empleado;
-    @ManyToOne
+    private int id_empleado;
+
     @Column(name = "id_ciudad",nullable = false)
-    private Ciudad id_ciudad;
+    private int id_ciudad;
 }

@@ -32,7 +32,7 @@ public class Tarjeta {
     @Column(name = "tipo",nullable = false)
     private char tipo;
 
-    @ManyToOne
+    
     @Column(name = "id_cliente",nullable = false)
-    private Cliente id_cliente;
+    private int id_cliente;
 }

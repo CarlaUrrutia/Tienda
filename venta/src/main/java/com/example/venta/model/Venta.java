@@ -30,14 +30,16 @@ public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_venta;
+    
     @Column(name = "fecha_venta", nullable = false)
     private Date fecha_venta;
-    @ManyToOne
+
+
     @Column(name = "id_cliente",nullable = false)
-    private Cliente id_cliente;
-    @ManyToOne
+    private int id_cliente;
+
     @Column(name = "id_empleado",nullable = false)
-    private Empleado id_empleado;
+    private int id_empleado;
 
     /*
     debatible si falta o no

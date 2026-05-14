@@ -40,7 +40,7 @@ public class Oferta {
     @Min(value = 0)
     private int descuento; // 0.1 = 10%
     /*clavesita */
-    @ManyToOne
+    
     @Column(name = "id_producto",nullable = false)
-    private Producto id_producto;
+    private int id_producto;
 }
