@@ -1,4 +1,4 @@
-package com.example.gerente;
+package com.example.oferta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

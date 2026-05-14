@@ -1,4 +1,4 @@
-package com.example.envio.dto;
+package com.example.empleado.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -7,30 +7,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class EmpleadoDTO {
-    @Data
+public class TiendaDTO {
+     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
 
-        @NotBlank(message = "El id del empleado es obligatorio")
-        @Min(value = 0)
-        private int  id_empleado;
+        @Min(value = 0, message = "El id de la tienda no puede ser negativo")
+        private int id_tienda;
 
-        @NotBlank(message = "El nombre  es obligatorio")
+        @NotBlank(message = "La politicas de la tienda es obligatorio")
         @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
                  message = "El nombre debe contener al menos 2 palabras")
-        private String nombre;
+        private String politicas;
 
-        @NotBlank(message = "El apellido es obligatorio")
+        @NotBlank(message = "La ubicacion  de la tienda es obligatoria")
         @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El apellido debe contener al menos 2 palabras")
-        private String apellido;
-        
-        @NotBlank(message = "El sueldo del empleado es obligatorio")
-        @Min(value = 0)
-        private int  sueldo;
+                 message = "El nombre debe contener al menos 2 palabras")
+        private String ubicacion;
 
+        
     }
 
     /**
@@ -40,10 +36,9 @@ public class EmpleadoDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private int id_empleado;
-        private String nombre;
-        private String apellido;
-        private int sueldo;
-        private TiendaDTO tienda; 
+        private int id_tienda;
+        private String politicas;
+        private String ubicacion;
+        private CiudadDTO ciudad; //clave foranea
     }
 }

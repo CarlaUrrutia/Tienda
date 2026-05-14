@@ -1,22 +1,23 @@
-package com.example.envio.dto;
+package com.example.devolucion.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public class ClienteDTO {
-
+public class EmpleadoDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
 
-        @NotBlank(message = "El id del cliente es obligatorio")
+        @NotBlank(message = "El id del empleado es obligatorio")
         @Min(value = 0)
-        private int  id_cliente;
+        private int  id_empleado;
 
-        @NotBlank(message = "El nombre es obligatorio")
+        @NotBlank(message = "El nombre  es obligatorio")
         @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
                  message = "El nombre debe contener al menos 2 palabras")
         private String nombre;
@@ -26,11 +27,9 @@ public class ClienteDTO {
                  message = "El apellido debe contener al menos 2 palabras")
         private String apellido;
         
-        @NotBlank(message = "El email es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El email debe contener al menos 2 palabras")
-        private String email;
-
+        @NotBlank(message = "El sueldo del empleado es obligatorio")
+        @Min(value = 0)
+        private int  sueldo;
 
     }
 
@@ -41,10 +40,10 @@ public class ClienteDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private int id_cliente;
+        private int id_empleado;
         private String nombre;
         private String apellido;
-        private String email;
-        // private ClienteDTO genero; // CLAVEEEE FORANEAAA, 
+        private int sueldo;
+        private TiendaDTO tienda; 
     }
 }

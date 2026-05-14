@@ -1,4 +1,4 @@
-package com.example.envio.dto;
+package com.example.boleta.dto;
 
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;

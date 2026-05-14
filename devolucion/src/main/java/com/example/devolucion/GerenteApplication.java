@@ -1,4 +1,4 @@
-package com.example.producto;
+package com.example.devolucion;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

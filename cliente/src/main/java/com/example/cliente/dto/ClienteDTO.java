@@ -1,4 +1,4 @@
-package com.example.envio.dto;
+package com.example.cupon.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
