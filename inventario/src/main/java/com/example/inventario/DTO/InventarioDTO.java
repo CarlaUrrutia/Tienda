@@ -11,22 +11,24 @@ public class InventarioDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        @Min(value = 0, message = "El id del inventario  no puede ser negativo")
-        private int id_inventario;
 
-        @Min(value = 0, message = "El total del inventario no puede ser negativo")
+        @Min(value = 0, message = "La cantidad no puede ser negativa")
         private int cantidad;
 
-        
+        @Min(value = 1, message = "El id_producto es obligatorio")
+        private int id_producto;
+
+        @Min(value = 1, message = "El id_tienda es obligatorio")
+        private int id_tienda;
     }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private int id_empleado;
-        private int edad;
-        private TiendaDTO tienda; // clave foranea
-        private ProductoDTO producto; //clave foranea
+        private int id_inventario;
+        private int cantidad;
+        private int id_producto;
+        private int id_tienda;
     }
 }
