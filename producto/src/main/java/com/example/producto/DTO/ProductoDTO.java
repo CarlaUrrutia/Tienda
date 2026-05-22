@@ -1,6 +1,5 @@
 package com.example.producto.DTO;
 
-import com.example.producto.dto.ProveedorResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

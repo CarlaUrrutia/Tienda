@@ -1,6 +1,6 @@
 package com.example.tarjeta.DTO;
 
-import com.example.tarjeta.dto.ClienteResponse;
+import com.example.tarjeta.DTO.ClienteResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

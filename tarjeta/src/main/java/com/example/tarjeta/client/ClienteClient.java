@@ -1,6 +1,6 @@
 package com.example.tarjeta.client;
 
-import com.example.tarjeta.dto.ClienteResponse;
+import com.example.tarjeta.DTO.ClienteResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

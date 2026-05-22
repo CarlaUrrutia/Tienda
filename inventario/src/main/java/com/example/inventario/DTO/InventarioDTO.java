@@ -1,7 +1,5 @@
 package com.example.inventario.DTO;
 
-import com.example.inventario.dto.ProductoResponse;
-import com.example.inventario.dto.TiendaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

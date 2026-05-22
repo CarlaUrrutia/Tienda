@@ -1,4 +1,4 @@
-package com.example.tarjeta.dto;
+package com.example.tarjeta.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

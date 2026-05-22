@@ -1,8 +1,8 @@
 package com.example.envio.DTO;
 
-import com.example.envio.dto.ClienteResponse;
-import com.example.envio.dto.EmpleadoResponse;
-import com.example.envio.dto.VentaResponse;
+import com.example.envio.DTO.ClienteResponse;
+import com.example.envio.DTO.EmpleadoResponse;
+import com.example.envio.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
