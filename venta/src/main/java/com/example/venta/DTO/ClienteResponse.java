@@ -1,4 +1,4 @@
-package com.example.venta.dto;
+package com.example.venta.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,5 +12,5 @@ public class ClienteResponse {
     private int id_cliente;
     private String nombre;
     private String apellido;
-    private String email;
+    private String email; 
 }
