@@ -1,7 +1,8 @@
 package com.example.envio.controller;
 
-import com.example.envio.model.Envio;
+import com.example.envio.DTO.EnvioDTO;
 import com.example.envio.service.EnvioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,26 +16,26 @@ public class EnvioController {
     private EnvioService envioService;
 
     @GetMapping
-    public List<Envio> listar() {
+    public List<EnvioDTO.Response> listar() {
         return envioService.getAllEnvios();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Envio> obtenerPorId(@PathVariable Integer id) {
-        Envio envio = envioService.getEnvioById(id);
-        return envio != null ? ResponseEntity.ok(envio) : ResponseEntity.notFound().build();
+    public ResponseEntity<EnvioDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        EnvioDTO.Response r = envioService.getEnvioById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Envio> crear(@RequestBody Envio envio) {
-        Envio nuevo = envioService.save(envio);
-        return nuevo != null ? ResponseEntity.ok(nuevo) : ResponseEntity.badRequest().build();
+    public ResponseEntity<EnvioDTO.Response> crear(@Valid @RequestBody EnvioDTO.Request request) {
+        EnvioDTO.Response r = envioService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<Envio> actualizarEstado(@PathVariable Integer id, @RequestParam String estado) {
-        Envio actualizado = envioService.updateEstado(id, estado);
-        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
+    @PutMapping("/{id}")
+    public ResponseEntity<EnvioDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody EnvioDTO.Request request) {
+        EnvioDTO.Response r = envioService.updateEnvio(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

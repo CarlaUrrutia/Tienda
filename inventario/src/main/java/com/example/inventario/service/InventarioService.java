@@ -1,12 +1,12 @@
 package com.example.inventario.service;
 
-import com.example.inventario.model.Inventario;
+import com.example.inventario.DTO.InventarioDTO;
 import java.util.List;
 
 public interface InventarioService {
-    List<Inventario> getAllInventarios();
-    Inventario getInventarioById(Integer id);
-    Inventario save(Inventario inventario);
-    Inventario updateInventario(Integer id, Inventario inventario);
+    List<InventarioDTO.Response> getAllInventarios();
+    InventarioDTO.Response getInventarioById(Integer id);
+    InventarioDTO.Response save(InventarioDTO.Request request);
+    InventarioDTO.Response updateInventario(Integer id, InventarioDTO.Request request);
     void delete(Integer id);
 }

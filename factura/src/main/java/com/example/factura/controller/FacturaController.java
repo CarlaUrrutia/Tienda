@@ -1,7 +1,8 @@
 package com.example.factura.controller;
 
-import com.example.factura.model.Factura;
+import com.example.factura.DTO.FacturaDTO;
 import com.example.factura.service.FacturaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,26 +16,26 @@ public class FacturaController {
     private FacturaService facturaService;
 
     @GetMapping
-    public List<Factura> listar() {
+    public List<FacturaDTO.Response> listar() {
         return facturaService.getAllFacturas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Factura> obtenerPorId(@PathVariable Integer id) {
-        Factura factura = facturaService.getFacturaById(id);
-        return factura != null ? ResponseEntity.ok(factura) : ResponseEntity.notFound().build();
+    public ResponseEntity<FacturaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        FacturaDTO.Response r = facturaService.getFacturaById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Factura> crear(@RequestBody Factura factura) {
-        Factura nueva = facturaService.save(factura);
-        return nueva != null ? ResponseEntity.ok(nueva) : ResponseEntity.badRequest().build();
+    public ResponseEntity<FacturaDTO.Response> crear(@Valid @RequestBody FacturaDTO.Request request) {
+        FacturaDTO.Response r = facturaService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Factura> actualizar(@PathVariable Integer id, @RequestBody Factura factura) {
-        Factura actualizada = facturaService.updateFactura(id, factura);
-        return actualizada != null ? ResponseEntity.ok(actualizada) : ResponseEntity.notFound().build();
+    public ResponseEntity<FacturaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody FacturaDTO.Request request) {
+        FacturaDTO.Response r = facturaService.updateFactura(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

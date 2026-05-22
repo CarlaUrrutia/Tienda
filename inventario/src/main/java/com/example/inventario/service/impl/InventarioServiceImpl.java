@@ -1,48 +1,62 @@
 package com.example.inventario.service.impl;
 
+import com.example.inventario.DTO.InventarioDTO;
+import com.example.inventario.client.ProductoClient;
+import com.example.inventario.client.TiendaClient;
 import com.example.inventario.model.Inventario;
 import com.example.inventario.repository.InventarioRepository;
 import com.example.inventario.service.InventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InventarioServiceImpl implements InventarioService {
 
-    @Autowired
-    private InventarioRepository inventarioRepository;
+    @Autowired private InventarioRepository inventarioRepository;
+    @Autowired private ProductoClient productoClient;
+    @Autowired private TiendaClient tiendaClient;
 
-    @Override
-    public List<Inventario> getAllInventarios() {
-        return inventarioRepository.findAll();
+    private InventarioDTO.Response toResponse(Inventario i) {
+        return new InventarioDTO.Response(
+            i.getId_inventario(), i.getCantidad(),
+            productoClient.getProductoById(i.getId_producto()),
+            tiendaClient.getTiendaById(i.getId_tienda())
+        );
     }
 
     @Override
-    public Inventario getInventarioById(Integer id) {
+    public List<InventarioDTO.Response> getAllInventarios() {
+        return inventarioRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public InventarioDTO.Response getInventarioById(Integer id) {
         List<Inventario> lista = inventarioRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : lista.get(0);
+        return lista.isEmpty() ? null : toResponse(lista.get(0));
     }
 
     @Override
-    public Inventario save(Inventario inventario) {
-        return inventarioRepository.save(inventario);
+    public InventarioDTO.Response save(InventarioDTO.Request request) {
+        Inventario i = new Inventario();
+        i.setCantidad(request.getCantidad());
+        i.setId_producto(request.getId_producto());
+        i.setId_tienda(request.getId_tienda());
+        return toResponse(inventarioRepository.save(i));
     }
 
     @Override
-    public Inventario updateInventario(Integer id, Inventario inventario) {
-        Inventario existente = getInventarioById(id);
-        if (existente != null) {
-            existente.setCantidad(inventario.getCantidad());
-            existente.setId_producto(inventario.getId_producto());
-            existente.setId_tienda(inventario.getId_tienda());
-            return inventarioRepository.save(existente);
-        }
-        return null;
+    public InventarioDTO.Response updateInventario(Integer id, InventarioDTO.Request request) {
+        List<Inventario> lista = inventarioRepository.buscarPorId(id);
+        if (lista.isEmpty()) return null;
+        Inventario i = lista.get(0);
+        i.setCantidad(request.getCantidad());
+        i.setId_producto(request.getId_producto());
+        i.setId_tienda(request.getId_tienda());
+        return toResponse(inventarioRepository.save(i));
     }
 
     @Override
-    public void delete(Integer id) {
-        inventarioRepository.deleteInventarioById(id);
-    }
+    public void delete(Integer id) { inventarioRepository.deleteInventarioById(id); }
 }

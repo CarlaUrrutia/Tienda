@@ -1,7 +1,8 @@
 package com.example.boleta.controller;
 
-import com.example.boleta.model.Boleta;
+import com.example.boleta.DTO.BoletaDTO;
 import com.example.boleta.service.BoletaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,19 +16,19 @@ public class BoletaController {
     private BoletaService boletaService;
 
     @GetMapping
-    public List<Boleta> listar() {
+    public List<BoletaDTO.Response> listar() {
         return boletaService.getAllBoletas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Boleta> obtenerPorId(@PathVariable Integer id) {
-        Boleta boleta = boletaService.getBoletaById(id);
+    public ResponseEntity<BoletaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        BoletaDTO.Response boleta = boletaService.getBoletaById(id);
         return boleta != null ? ResponseEntity.ok(boleta) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Boleta> crear(@RequestBody Boleta boleta) {
-        Boleta nueva = boletaService.save(boleta);
+    public ResponseEntity<BoletaDTO.Response> crear(@Valid @RequestBody BoletaDTO.Request request) {
+        BoletaDTO.Response nueva = boletaService.save(request);
         return nueva != null ? ResponseEntity.ok(nueva) : ResponseEntity.badRequest().build();
     }
 

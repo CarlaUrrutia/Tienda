@@ -1,48 +1,59 @@
 package com.example.oferta.service.impl;
 
+import com.example.oferta.DTO.OfertaDTO;
+import com.example.oferta.client.ProductoClient;
 import com.example.oferta.model.Oferta;
 import com.example.oferta.repository.OfertaRepository;
 import com.example.oferta.service.OfertaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OfertaServiceImpl implements OfertaService {
 
-    @Autowired
-    private OfertaRepository ofertaRepository;
+    @Autowired private OfertaRepository ofertaRepository;
+    @Autowired private ProductoClient productoClient;
 
-    @Override
-    public List<Oferta> getAllOfertas() {
-        return ofertaRepository.findAll();
+    private OfertaDTO.Response toResponse(Oferta o) {
+        return new OfertaDTO.Response(
+            o.getId_oferta(), o.getDescripcion(), o.getDescuento(),
+            productoClient.getProductoById(o.getId_producto())
+        );
     }
 
     @Override
-    public Oferta getOfertaById(Integer id) {
+    public List<OfertaDTO.Response> getAllOfertas() {
+        return ofertaRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public OfertaDTO.Response getOfertaById(Integer id) {
         List<Oferta> lista = ofertaRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : lista.get(0);
+        return lista.isEmpty() ? null : toResponse(lista.get(0));
     }
 
     @Override
-    public Oferta save(Oferta oferta) {
-        return ofertaRepository.save(oferta);
+    public OfertaDTO.Response save(OfertaDTO.Request request) {
+        Oferta o = new Oferta();
+        o.setDescripcion(request.getDescripcion());
+        o.setDescuento(request.getDescuento());
+        o.setId_producto(request.getId_producto());
+        return toResponse(ofertaRepository.save(o));
     }
 
     @Override
-    public Oferta updateOferta(Integer id, Oferta oferta) {
-        Oferta existente = getOfertaById(id);
-        if (existente != null) {
-            existente.setDescripcion(oferta.getDescripcion());
-            existente.setDescuento(oferta.getDescuento());
-            existente.setId_producto(oferta.getId_producto());
-            return ofertaRepository.save(existente);
-        }
-        return null;
+    public OfertaDTO.Response updateOferta(Integer id, OfertaDTO.Request request) {
+        List<Oferta> lista = ofertaRepository.buscarPorId(id);
+        if (lista.isEmpty()) return null;
+        Oferta o = lista.get(0);
+        o.setDescripcion(request.getDescripcion());
+        o.setDescuento(request.getDescuento());
+        o.setId_producto(request.getId_producto());
+        return toResponse(ofertaRepository.save(o));
     }
 
     @Override
-    public void delete(Integer id) {
-        ofertaRepository.deleteOfertaById(id);
-    }
+    public void delete(Integer id) { ofertaRepository.deleteOfertaById(id); }
 }

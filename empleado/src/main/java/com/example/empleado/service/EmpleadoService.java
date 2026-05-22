@@ -1,12 +1,12 @@
 package com.example.empleado.service;
 
-import com.example.empleado.model.Empleado;
+import com.example.empleado.DTO.EmpleadoDTO;
 import java.util.List;
 
 public interface EmpleadoService {
-    List<Empleado> getAllEmpleados();
-    Empleado getEmpleadoById(Integer id);
-    Empleado save(Empleado empleado);
-    Empleado updateEmpleado(Integer id, Empleado empleado);
+    List<EmpleadoDTO.Response> getAllEmpleados();
+    EmpleadoDTO.Response getEmpleadoById(Integer id);
+    EmpleadoDTO.Response save(EmpleadoDTO.Request request);
+    EmpleadoDTO.Response updateEmpleado(Integer id, EmpleadoDTO.Request request);
     void delete(Integer id);
 }

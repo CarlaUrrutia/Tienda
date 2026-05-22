@@ -1,11 +1,11 @@
 package com.example.boleta.service;
 
-import com.example.boleta.model.Boleta;
+import com.example.boleta.DTO.BoletaDTO;
 import java.util.List;
 
 public interface BoletaService {
-    List<Boleta> getAllBoletas();
-    Boleta getBoletaById(Integer id);
-    Boleta save(Boleta boleta);
+    List<BoletaDTO.Response> getAllBoletas();
+    BoletaDTO.Response getBoletaById(Integer id);
+    BoletaDTO.Response save(BoletaDTO.Request request);
     void delete(Integer id);
 }

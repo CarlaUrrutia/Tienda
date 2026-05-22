@@ -1,7 +1,8 @@
 package com.example.detalleVenta.controller;
 
-import com.example.detalleVenta.model.DetalleVenta;
+import com.example.detalleVenta.DTO.DetalleVentaDTO;
 import com.example.detalleVenta.service.DetalleVentaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,31 +16,31 @@ public class DetalleVentaController {
     private DetalleVentaService detalleVentaService;
 
     @GetMapping
-    public List<DetalleVenta> listar() {
+    public List<DetalleVentaDTO.Response> listar() {
         return detalleVentaService.getAllDetalles();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DetalleVenta> obtenerPorId(@PathVariable Integer id) {
-        DetalleVenta detalle = detalleVentaService.getDetalleById(id);
-        return detalle != null ? ResponseEntity.ok(detalle) : ResponseEntity.notFound().build();
+    public ResponseEntity<DetalleVentaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        DetalleVentaDTO.Response r = detalleVentaService.getDetalleById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/venta/{idVenta}")
-    public List<DetalleVenta> obtenerPorVenta(@PathVariable Integer idVenta) {
+    public List<DetalleVentaDTO.Response> obtenerPorVenta(@PathVariable Integer idVenta) {
         return detalleVentaService.getDetallesByVenta(idVenta);
     }
 
     @PostMapping
-    public ResponseEntity<DetalleVenta> crear(@RequestBody DetalleVenta detalle) {
-        DetalleVenta nuevo = detalleVentaService.save(detalle);
-        return nuevo != null ? ResponseEntity.ok(nuevo) : ResponseEntity.badRequest().build();
+    public ResponseEntity<DetalleVentaDTO.Response> crear(@Valid @RequestBody DetalleVentaDTO.Request request) {
+        DetalleVentaDTO.Response r = detalleVentaService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DetalleVenta> actualizar(@PathVariable Integer id, @RequestBody DetalleVenta detalle) {
-        DetalleVenta actualizado = detalleVentaService.updateDetalle(id, detalle);
-        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
+    public ResponseEntity<DetalleVentaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody DetalleVentaDTO.Request request) {
+        DetalleVentaDTO.Response r = detalleVentaService.updateDetalle(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

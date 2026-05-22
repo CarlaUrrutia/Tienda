@@ -1,7 +1,8 @@
 package com.example.oferta.controller;
 
-import com.example.oferta.model.Oferta;
+import com.example.oferta.DTO.OfertaDTO;
 import com.example.oferta.service.OfertaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,26 +16,26 @@ public class OfertaController {
     private OfertaService ofertaService;
 
     @GetMapping
-    public List<Oferta> listar() {
+    public List<OfertaDTO.Response> listar() {
         return ofertaService.getAllOfertas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Oferta> obtenerPorId(@PathVariable Integer id) {
-        Oferta oferta = ofertaService.getOfertaById(id);
-        return oferta != null ? ResponseEntity.ok(oferta) : ResponseEntity.notFound().build();
+    public ResponseEntity<OfertaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        OfertaDTO.Response r = ofertaService.getOfertaById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Oferta> crear(@RequestBody Oferta oferta) {
-        Oferta nueva = ofertaService.save(oferta);
-        return nueva != null ? ResponseEntity.ok(nueva) : ResponseEntity.badRequest().build();
+    public ResponseEntity<OfertaDTO.Response> crear(@Valid @RequestBody OfertaDTO.Request request) {
+        OfertaDTO.Response r = ofertaService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Oferta> actualizar(@PathVariable Integer id, @RequestBody Oferta oferta) {
-        Oferta actualizada = ofertaService.updateOferta(id, oferta);
-        return actualizada != null ? ResponseEntity.ok(actualizada) : ResponseEntity.notFound().build();
+    public ResponseEntity<OfertaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody OfertaDTO.Request request) {
+        OfertaDTO.Response r = ofertaService.updateOferta(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

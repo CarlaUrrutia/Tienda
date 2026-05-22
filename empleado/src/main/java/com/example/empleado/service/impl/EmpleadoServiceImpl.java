@@ -1,49 +1,61 @@
 package com.example.empleado.service.impl;
 
+import com.example.empleado.DTO.EmpleadoDTO;
+import com.example.empleado.client.TiendaClient;
 import com.example.empleado.model.Empleado;
 import com.example.empleado.repository.EmpleadoRepository;
 import com.example.empleado.service.EmpleadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
 
-    @Autowired
-    private EmpleadoRepository empleadoRepository;
+    @Autowired private EmpleadoRepository empleadoRepository;
+    @Autowired private TiendaClient tiendaClient;
 
-    @Override
-    public List<Empleado> getAllEmpleados() {
-        return empleadoRepository.findAll();
+    private EmpleadoDTO.Response toResponse(Empleado e) {
+        return new EmpleadoDTO.Response(
+            e.getId_empleado(), e.getNombre(), e.getApellido(), e.getSueldo(),
+            tiendaClient.getTiendaById(e.getId_tienda())
+        );
     }
 
     @Override
-    public Empleado getEmpleadoById(Integer id) {
+    public List<EmpleadoDTO.Response> getAllEmpleados() {
+        return empleadoRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public EmpleadoDTO.Response getEmpleadoById(Integer id) {
         List<Empleado> lista = empleadoRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : lista.get(0);
+        return lista.isEmpty() ? null : toResponse(lista.get(0));
     }
 
     @Override
-    public Empleado save(Empleado empleado) {
-        return empleadoRepository.save(empleado);
+    public EmpleadoDTO.Response save(EmpleadoDTO.Request request) {
+        Empleado e = new Empleado();
+        e.setNombre(request.getNombre());
+        e.setApellido(request.getApellido());
+        e.setSueldo(request.getSueldo());
+        e.setId_tienda(request.getId_tienda());
+        return toResponse(empleadoRepository.save(e));
     }
 
     @Override
-    public Empleado updateEmpleado(Integer id, Empleado empleado) {
-        Empleado existente = getEmpleadoById(id);
-        if (existente != null) {
-            existente.setNombre(empleado.getNombre());
-            existente.setApellido(empleado.getApellido());
-            existente.setSueldo(empleado.getSueldo());
-            existente.setId_tienda(empleado.getId_tienda());
-            return empleadoRepository.save(existente);
-        }
-        return null;
+    public EmpleadoDTO.Response updateEmpleado(Integer id, EmpleadoDTO.Request request) {
+        List<Empleado> lista = empleadoRepository.buscarPorId(id);
+        if (lista.isEmpty()) return null;
+        Empleado e = lista.get(0);
+        e.setNombre(request.getNombre());
+        e.setApellido(request.getApellido());
+        e.setSueldo(request.getSueldo());
+        e.setId_tienda(request.getId_tienda());
+        return toResponse(empleadoRepository.save(e));
     }
 
     @Override
-    public void delete(Integer id) {
-        empleadoRepository.deleteEmpleadoById(id);
-    }
+    public void delete(Integer id) { empleadoRepository.deleteEmpleadoById(id); }
 }

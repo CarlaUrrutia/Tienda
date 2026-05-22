@@ -1,7 +1,8 @@
 package com.example.inventario.controller;
 
-import com.example.inventario.model.Inventario;
+import com.example.inventario.DTO.InventarioDTO;
 import com.example.inventario.service.InventarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,26 +16,26 @@ public class InventarioController {
     private InventarioService inventarioService;
 
     @GetMapping
-    public List<Inventario> listar() {
+    public List<InventarioDTO.Response> listar() {
         return inventarioService.getAllInventarios();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Inventario> obtenerPorId(@PathVariable Integer id) {
-        Inventario inventario = inventarioService.getInventarioById(id);
-        return inventario != null ? ResponseEntity.ok(inventario) : ResponseEntity.notFound().build();
+    public ResponseEntity<InventarioDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        InventarioDTO.Response r = inventarioService.getInventarioById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Inventario> crear(@RequestBody Inventario inventario) {
-        Inventario nuevo = inventarioService.save(inventario);
-        return nuevo != null ? ResponseEntity.ok(nuevo) : ResponseEntity.badRequest().build();
+    public ResponseEntity<InventarioDTO.Response> crear(@Valid @RequestBody InventarioDTO.Request request) {
+        InventarioDTO.Response r = inventarioService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Inventario> actualizar(@PathVariable Integer id, @RequestBody Inventario inventario) {
-        Inventario actualizado = inventarioService.updateInventario(id, inventario);
-        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
+    public ResponseEntity<InventarioDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody InventarioDTO.Request request) {
+        InventarioDTO.Response r = inventarioService.updateInventario(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

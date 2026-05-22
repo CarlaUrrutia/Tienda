@@ -1,12 +1,12 @@
 package com.example.cupon.service;
 
-import com.example.cupon.model.Cupon;
+import com.example.cupon.DTO.CuponDTO;
 import java.util.List;
 
 public interface CuponService {
-    List<Cupon> getAllCupones();
-    Cupon getCuponById(Integer id);
-    Cupon save(Cupon cupon);
-    Cupon updateCupon(Integer id, Cupon cupon);
+    List<CuponDTO.Response> getAllCupones();
+    CuponDTO.Response getCuponById(Integer id);
+    CuponDTO.Response save(CuponDTO.Request request);
+    CuponDTO.Response updateCupon(Integer id, CuponDTO.Request request);
     void delete(Integer id);
 }
