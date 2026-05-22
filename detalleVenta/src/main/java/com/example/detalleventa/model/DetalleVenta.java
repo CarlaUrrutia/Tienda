@@ -1,4 +1,4 @@
-package com.example.detalleVenta.model;
+package com.example.detalleventa.model;
 
 import jakarta.persistence.*;
 import lombok.*;

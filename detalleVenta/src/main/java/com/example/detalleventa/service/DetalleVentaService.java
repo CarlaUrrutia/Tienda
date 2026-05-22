@@ -1,6 +1,6 @@
-package com.example.detalleVenta.service;
+package com.example.detalleventa.service;
 
-import com.example.detalleVenta.DTO.DetalleVentaDTO;
+import com.example.detalleventa.DTO.DetalleVentaDTO;
 import java.util.List;
 
 public interface DetalleVentaService {

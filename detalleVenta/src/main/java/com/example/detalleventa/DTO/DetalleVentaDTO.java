@@ -1,7 +1,7 @@
-package com.example.detalleVenta.DTO;
+package com.example.detalleventa.DTO;
 
-import com.example.detalleVenta.dto.ProductoResponse;
-import com.example.detalleVenta.dto.VentaResponse;
+import com.example.detalleventa.dto.ProductoResponse;
+import com.example.detalleventa.dto.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

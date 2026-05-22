@@ -1,11 +1,11 @@
-package com.example.detalleVenta.service.impl;
+package com.example.detalleventa.service.impl;
 
-import com.example.detalleVenta.DTO.DetalleVentaDTO;
-import com.example.detalleVenta.client.ProductoClient;
-import com.example.detalleVenta.client.VentaClient;
-import com.example.detalleVenta.model.DetalleVenta;
-import com.example.detalleVenta.repository.DetalleVentaRepository;
-import com.example.detalleVenta.service.DetalleVentaService;
+import com.example.detalleventa.DTO.DetalleVentaDTO;
+import com.example.detalleventa.client.ProductoClient;
+import com.example.detalleventa.client.VentaClient;
+import com.example.detalleventa.model.DetalleVenta;
+import com.example.detalleventa.repository.DetalleVentaRepository;
+import com.example.detalleventa.service.DetalleVentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

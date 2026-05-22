@@ -1,6 +1,6 @@
-package com.example.detalleVenta.repository;
+package com.example.detalleventa.repository;
 
-import com.example.detalleVenta.model.DetalleVenta;
+import com.example.detalleventa.model.DetalleVenta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
