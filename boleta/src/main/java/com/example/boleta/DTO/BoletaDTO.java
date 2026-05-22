@@ -12,19 +12,19 @@ public class BoletaDTO {
     @AllArgsConstructor
     public static class Request {
 
-        @NotBlank(message = "El id de la boleta es obligatorio")
-        @Min(value = 0)
-        private int id_boleta;
+        @Min(value = 1, message = "El id_cliente es obligatorio")
+        private int id_cliente;
 
+        @Min(value = 1, message = "El id_venta es obligatorio")
+        private int id_venta;
     }
 
-    /**
-     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign. queeeeeeeee
-     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
         private int id_boleta;
+        private int id_cliente;
+        private int id_venta;
     }
 }

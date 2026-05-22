@@ -1,28 +1,26 @@
 package com.example.oferta.DTO;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class OfertaDTO {
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
 
-        @Min(value = 0, message = "El id de la oferta no puede ser negativo")
-        private int id_oferta;
-
         @NotBlank(message = "La descripcion es obligatoria")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "La descripcion debe contener al menos 2 palabras")
+        @Size(min = 2, message = "La descripcion debe tener al menos 2 caracteres")
         private String descripcion;
 
-        @Min(value = 0, message = "El descuento de la oferta no puede ser negativo")
-        private int descuento;  
+        @Min(value = 0, message = "El descuento no puede ser negativo")
+        private int descuento;
+
+        @Min(value = 1, message = "El id_producto es obligatorio")
+        private int id_producto;
     }
 
     @Data
@@ -32,6 +30,6 @@ public class OfertaDTO {
         private int id_oferta;
         private String descripcion;
         private int descuento;
-        private ProductoDTO producto; // clave foranea
+        private int id_producto;
     }
 }

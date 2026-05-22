@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.sql.Date;
 
 public class CuponDTO {
 
@@ -12,16 +13,16 @@ public class CuponDTO {
     @AllArgsConstructor
     public static class Request {
 
-
-        @Min(value = 0, message = "El id del cupon no puede ser negativa")
-        private int id_cupon;
-
-        @NotNull(message = "El codigo del género es obligatorio")
+        @NotBlank(message = "El codigo del cupón es obligatorio")
         private String codigo;
-        @Min(value = 0, message = "El descuento del cupon no puede ser negativo")
+
+        @Min(value = 0, message = "El descuento no puede ser negativo")
         private int descuento;
 
-        
+        private Date fecha_expiracion;
+
+        @Min(value = 1, message = "El id_cliente es obligatorio")
+        private int id_cliente;
     }
 
     @Data
@@ -31,6 +32,7 @@ public class CuponDTO {
         private int id_cupon;
         private String codigo;
         private int descuento;
-        private ClienteDTO cliente; // Clave foranea
+        private Date fecha_expiracion;
+        private int id_cliente;
     }
 }

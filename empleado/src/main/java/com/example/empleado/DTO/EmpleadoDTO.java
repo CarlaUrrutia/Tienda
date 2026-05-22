@@ -1,41 +1,32 @@
 package com.example.empleado.DTO;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class EmpleadoDTO {
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
 
-        @NotBlank(message = "El id del empleado es obligatorio")
-        @Min(value = 0)
-        private int  id_empleado;
-
-        @NotBlank(message = "El nombre  es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El nombre debe contener al menos 2 palabras")
+        @NotBlank(message = "El nombre es obligatorio")
+        @Size(min = 2, message = "El nombre debe tener al menos 2 caracteres")
         private String nombre;
 
         @NotBlank(message = "El apellido es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El apellido debe contener al menos 2 palabras")
+        @Size(min = 2, message = "El apellido debe tener al menos 2 caracteres")
         private String apellido;
-        
-        @NotBlank(message = "El sueldo del empleado es obligatorio")
-        @Min(value = 0)
-        private float  sueldo;
 
+        @Min(value = 0, message = "El sueldo no puede ser negativo")
+        private float sueldo;
+
+        @Min(value = 1, message = "El id_tienda es obligatorio")
+        private int id_tienda;
     }
 
-    /**
-     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
-     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -43,7 +34,7 @@ public class EmpleadoDTO {
         private int id_empleado;
         private String nombre;
         private String apellido;
-        private int sueldo;
-        private TiendaDTO tienda; 
+        private float sueldo;
+        private int id_tienda;
     }
 }
