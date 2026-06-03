@@ -12,42 +12,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.example.gerente.model.Inventario;
 import com.example.gerente.model.Oferta;
 
+@RestController
+@RequestMapping("/api/ofertas")
 public class OfertaController {
+
     @Autowired
-    private OfertaService  ofertaServi;
+    private OfertaService ofertaService;
 
     @GetMapping
-    public ResponseEntity<List<Oferta>> listar(){
-        List<Oferta> ofe = inventarioServi.getAllOferta();
-        if (ofe.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(ofe);
+    public List<OfertaDTO.Response> listar() {
+        return ofertaService.getAllOfertas();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OfertaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        OfertaDTO.Response r = ofertaService.getOfertaById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Oferta> guardar(@RequestBody Oferta ofe){
-        Oferta of = ofertaServi.createOferta(ofe);
-        return ResponseEntity.status(HttpStatus.CREATED).body(of);
+    public ResponseEntity<OfertaDTO.Response> crear(@Valid @RequestBody OfertaDTO.Request request) {
+        OfertaDTO.Response r = ofertaService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_oferta}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_oferta){
-        try{
-            ofertaServi.deleteOferta(id_oferta);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<OfertaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody OfertaDTO.Request request) {
+        OfertaDTO.Response r = ofertaService.updateOferta(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_oferta}")
-    public ResponseEntity<Inventario> buscarByid_oferta(@PathVariable
-        int id_oferta){
-            Oferta ofert = ofertaServi.getPersoByid_oferta(id_oferta);
-            if (ofert==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(ofert);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        ofertaService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

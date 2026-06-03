@@ -10,11 +10,16 @@ import org.springframework.stereotype.Repository;
 import com.example.gerente.model.Tarjeta;
 
 @Repository
-public interface TarjetaRepository extends JpaRepository<Tarjeta, Long> {
+public interface TarjetaRepository extends JpaRepository<Tarjeta, Integer> {
 
-    Optional<Tarjeta> findByid_region(int id_region);
+    @Query("SELECT t FROM Tarjeta t")
+    List<Tarjeta> findAll();
 
+    @Query("SELECT t FROM Tarjeta t WHERE t.id_tarjeta = :id")
+    List<Tarjeta> buscarPorId(@Param("id") Integer id);
 
-    List<Tarjeta> findBytipo(Long tipo); 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Tarjeta t WHERE t.id_tarjeta = :id")
+    void deleteTarjetaById(@Param("id") Integer id);
 }
-

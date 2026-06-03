@@ -13,42 +13,39 @@ import com.example.gerente.model.Oferta;
 import com.example.gerente.model.Producto;
 import com.example.gerente.model.Proveedor;
 
+@RestController
+@RequestMapping("/api/proveedores")
 public class ProveedorController {
+
     @Autowired
-    private ProveedorService  proveedorServi;
+    private ProveedorService proveedorService;
 
     @GetMapping
-    public ResponseEntity<List<Proveedor>> listar(){
-        List<Proveedor> prov = proveedorServi.getAllProveedor();
-        if (prov.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(prov);
+    public List<Proveedor> listar() {
+        return proveedorService.getAllProveedores();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Proveedor> obtenerPorId(@PathVariable Integer id) {
+        Proveedor proveedor = proveedorService.getProveedorById(id);
+        return proveedor != null ? ResponseEntity.ok(proveedor) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Proveedor> guardar(@RequestBody Proveedor pro){
-        Proveedor pr = proveedorServi.createProveedor(pro);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pr);
+    public ResponseEntity<Proveedor> crear(@RequestBody Proveedor proveedor) {
+        Proveedor nuevo = proveedorService.save(proveedor);
+        return nuevo != null ? ResponseEntity.ok(nuevo) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_proveedor}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_proveedor){
-        try{
-            proveedorServi.deleteProveedor(id_proveedor);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<Proveedor> actualizar(@PathVariable Integer id, @RequestBody Proveedor proveedor) {
+        Proveedor actualizado = proveedorService.updateProveedor(id, proveedor);
+        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_proveedor}")
-    public ResponseEntity<Producto> buscarByid_proveedor(@PathVariable
-        int id_proveedor){
-            Proveedor prove = proveedorServi.getPersoByid_proveedor(id_proveedor);
-            if (prove==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(prove);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        proveedorService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

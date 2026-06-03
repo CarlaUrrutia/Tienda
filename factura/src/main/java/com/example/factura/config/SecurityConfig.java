@@ -1,4 +1,4 @@
-package com.ejemplo.ms_persona.config;
+package com.example.factura.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

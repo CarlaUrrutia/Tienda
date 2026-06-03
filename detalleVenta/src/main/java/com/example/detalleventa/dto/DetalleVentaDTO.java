@@ -1,5 +1,7 @@
 package com.example.detalleventa.dto;
 
+import com.example.detalleventa.dto.ProductoResponse;
+import com.example.detalleventa.dto.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,33 +9,24 @@ import lombok.NoArgsConstructor;
 
 public class DetalleVentaDTO {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Data @NoArgsConstructor @AllArgsConstructor
     public static class Request {
-
-        @Min(value = 0, message = "El detalle de venta no puede ser negativo")
-        private int id_detalle;
-
-        @Min(value = 0, message = "La cantidad no puede ser negativa")
+        @Min(value = 1, message = "La cantidad debe ser al menos 1")
         private int cantidad;
-
-        @Min(value = 0, message = "El precio unitario no puede ser negativo")
+        @Min(value = 0, message = "El precio no puede ser negativo")
         private int precio_unitario_venta;
-        
+        @Min(value = 1, message = "El id_venta es obligatorio")
+        private int id_venta;
+        @Min(value = 1, message = "El id_producto es obligatorio")
+        private int id_producto;
     }
 
-    /**
-     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Data @NoArgsConstructor @AllArgsConstructor
     public static class Response {
         private int id_detalle;
         private int cantidad;
         private int precio_unitario_venta;
-        private VentaDTO venta; //clave foranea
-        private ProductoDTO producto; //clave foranea
+        private VentaResponse venta;
+        private ProductoResponse producto;
     }
 }

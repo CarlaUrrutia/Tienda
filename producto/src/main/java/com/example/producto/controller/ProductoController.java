@@ -13,42 +13,35 @@ import com.example.gerente.model.Inventario;
 import com.example.gerente.model.Oferta;
 import com.example.gerente.model.Producto;
 
+@RestController
+@RequestMapping("/api/productos")
 public class ProductoController {
-    @Autowired
-    private ProductoService  productoServi;
+    @Autowired private ProductoService productoService;
 
     @GetMapping
-    public ResponseEntity<List<Producto>> listar(){
-        List<Producto> prod = productoServi.getAllProducto();
-        if (prod.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(prod);
+    public List<ProductoDTO.Response> listar() { return productoService.getAllProductos(); }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductoDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        ProductoDTO.Response r = productoService.getProductoById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Producto> guardar(@RequestBody Producto pro){
-        Producto p = productoServi.createProducto(pro);
-        return ResponseEntity.status(HttpStatus.CREATED).body(p);
+    public ResponseEntity<ProductoDTO.Response> crear(@Valid @RequestBody ProductoDTO.Request request) {
+        ProductoDTO.Response r = productoService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_producto}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_producto){
-        try{
-            productoServi.deleteOferta(id_producto);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody ProductoDTO.Request request) {
+        ProductoDTO.Response r = productoService.updateProducto(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_producto}")
-    public ResponseEntity<Producto> buscarByid_producto(@PathVariable
-        int id_producto){
-            Producto prodc = productoServi.getPersoByid_producto(id_producto);
-            if (prodc==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(prodc);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        productoService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

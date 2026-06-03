@@ -1,16 +1,26 @@
 package com.example.boleta.repository;
 
-import com.ejemplo.ms_persona.entity.Persona;
+
 import com.example.boleta.model.Boleta;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface BoletaRepository extends JpaRepository<Boleta, long> {
+public interface BoletaRepository extends JpaRepository<Boleta, Integer> {
 
-    Optional<Boleta> findByid_boleta(int id_boleta);
+    @Query("SELECT b FROM Boleta b")
+    List<Boleta> findAll();
+
+    @Query("SELECT b FROM Boleta b WHERE b.id_boleta = :id")
+    List<Boleta> buscarPorId(@Param("id") Integer id);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Boleta b WHERE b.id_boleta = :id")
+    void deleteBoletaById(@Param("id") Integer id);
 }

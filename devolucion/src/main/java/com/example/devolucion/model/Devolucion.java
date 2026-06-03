@@ -54,15 +54,17 @@ public class Devolucion {
     @Column(name = "id_empleado", nullable = false)
     private int id_empleado;
 
-    @Column(name = "id_detalle_venta", nullable = false)
-    private int id_detalle_venta;
+    @Column(name = "id_cliente", nullable = false)
+    private int id_cliente;
 
-    /*
-    private Cliente id_cliente;
-    private Tarjeta id_tarjeta;
-    private Venta id_venta;
-    private Producto id_producto;
-    */
+    @Column(name = "id_tarjeta", nullable = false)
+    private int id_tarjeta;
+
+    @Column(name = "id_venta", nullable = false)
+    private int id_venta;
+
+    @Column(name = "id_producto", nullable = false)
+    private int id_producto;
 
     
 }

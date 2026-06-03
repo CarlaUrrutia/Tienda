@@ -1,4 +1,4 @@
-package com.ejemplo.ms_persona.config;
+package com.example.factura.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -13,42 +13,35 @@ import com.example.gerente.Service.RegionService;
 import com.example.gerente.Service.TarjetaService;
 import com.example.gerente.model.Tarjeta;
 
+@RestController
+@RequestMapping("/api/tarjetas")
 public class TarjetaController {
-    @Autowired
-    private TarjetaService  tarjetaServi;
+    @Autowired private TarjetaService tarjetaService;
 
     @GetMapping
-    public ResponseEntity<List<Tarjeta>> listar(){
-        List<Tarjeta> tarjet = tarjetaServi.getAllTarjeta();
-        if (tarjet.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(tarjet);
+    public List<TarjetaDTO.Response> listar() { return tarjetaService.getAllTarjetas(); }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TarjetaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        TarjetaDTO.Response r = tarjetaService.getTarjetaById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Tarjeta> guardar(@RequestBody Tarjeta tar){
-        Tarjeta tarj = tarjetaServi.createTarjeta(tar);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tarj);
+    public ResponseEntity<TarjetaDTO.Response> crear(@Valid @RequestBody TarjetaDTO.Request request) {
+        TarjetaDTO.Response r = tarjetaService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_tarjeta}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_tarjeta){
-        try{
-            tarjetaServi.deleteTarjeta(id_tarjeta);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<TarjetaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody TarjetaDTO.Request request) {
+        TarjetaDTO.Response r = tarjetaService.updateTarjeta(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_tarjeta}")
-    public ResponseEntity<Tarjeta> buscarByid_tarjeta(@PathVariable
-        int id_tarjeta){
-            Tarjeta ta = tarjetaServi.getPersoByid_tarjeta(id_tarjeta);
-            if (ta==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(ta);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        tarjetaService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

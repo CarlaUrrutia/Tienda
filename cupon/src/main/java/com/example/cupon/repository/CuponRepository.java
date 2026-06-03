@@ -1,18 +1,25 @@
 package com.example.cupon.repository;
 
-import com.ejemplo.ms_persona.entity.Persona;
 import com.example.cupon.model.Cupon;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface CuponRepository extends JpaRepository<Cupon, Long> {
+public interface CuponRepository extends JpaRepository<Cupon, Integer> {
 
-    Optional<Cupon> findByid_cupon(int id_cupon);
+    @Query("SELECT c FROM Cupon c")
+    List<Cupon> findAll();
 
-    boolean existsBycodigo(int codigo);
+    @Query("SELECT c FROM Cupon c WHERE c.id_cupon = :id")
+    List<Cupon> buscarPorId(@Param("id") Integer id);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Cupon c WHERE c.id_cupon = :id")
+    void deleteCuponById(@Param("id") Integer id);
 }

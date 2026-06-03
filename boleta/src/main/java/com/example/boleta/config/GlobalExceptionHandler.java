@@ -1,4 +1,4 @@
-package com.ejemplo.ms_persona.config;
+package com.example.boleta.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         respuesta.put("timestamp", LocalDateTime.now().toString());
         respuesta.put("status", 404);
         respuesta.put("error", ex.getMessage());
-        log.error("[ms-persona] Error: {}", ex.getMessage());
+        log.error("[ms-boleta] Error: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
     }
 }

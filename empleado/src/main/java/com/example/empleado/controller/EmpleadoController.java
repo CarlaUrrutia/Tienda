@@ -1,47 +1,43 @@
 import com.example.empleado.model.Empleado;
 
+import com.example.empleado.DTO.EmpleadoDTO;
+import com.example.empleado.service.EmpleadoService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/empleado")
+@RequestMapping("/api/empleados")
 public class EmpleadoController {
-    
-    @Autowired
-    private EmpleadoService  empleadoServi;
+    @Autowired private EmpleadoService empleadoService;
 
     @GetMapping
-    public ResponseEntity<List<Empleado>> listar(){
-        List<Empleado> emp = empleadoServi.getAllEmpleado();
-        if (emp.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(emp);
+    public List<EmpleadoDTO.Response> listar() { return empleadoService.getAllEmpleados(); }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmpleadoDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        EmpleadoDTO.Response r = empleadoService.getEmpleadoById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Empleado> guardar(@RequestBody Empleado emple){
-        Empleado em = empleadoServi.createDetalle(emple);
-        return ResponseEntity.status(HttpStatus.CREATED).body(em);
+    public ResponseEntity<EmpleadoDTO.Response> crear(@Valid @RequestBody EmpleadoDTO.Request request) {
+        EmpleadoDTO.Response r = empleadoService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_empleado}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_empleado){
-        try{
-            empleadoServi.deleteEmpleado(id_empleado);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<EmpleadoDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody EmpleadoDTO.Request request) {
+        EmpleadoDTO.Response r = empleadoService.updateEmpleado(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_empleado}")
-    public ResponseEntity<Empleado> buscarByid_empleado(@PathVariable
-        int id_empleado){
-            Empleado emple = empleadoServi.getPersoByid_empleado(id_empleado);
-            if (emple==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(emple);
-        }
-    
-        
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        empleadoService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
+

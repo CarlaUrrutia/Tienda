@@ -44,6 +44,7 @@ public class EmpleadoDTO {
         private String nombre;
         private String apellido;
         private int sueldo;
-        private TiendaDTO tienda; 
+        private TiendarResponse tienda; 
+        private RolResponse rol;
     }
 }

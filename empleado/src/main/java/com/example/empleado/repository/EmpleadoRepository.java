@@ -14,25 +14,24 @@ import com.example.gerente.model.Empleado;
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface EmpleadoRepository  extends JpaRepository<Empleado, Integer >{
-    @Query ("SELECT e FROM Empleado e")
-    List <Empleado> findAll();
+public interface EmpleadoRepository extends JpaRepository<Empleado, Integer> {
 
-    @Query ("SELECT e FROM Empleado e WHERE e.id_empleado =:id")
-    List<Empleado> findByRut(Integer id);
+    @Query("SELECT e FROM Empleado e")
+    List<Empleado> findAll();
+
+    @Query("SELECT e FROM Empleado e WHERE e.id_empleado = :id")
+    List<Empleado> buscarPorId(@Param("id") Integer id);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Empleado e WHERE e.id_empleado =: id")
-    void deleteEmpleadoById( @Param("id")Integer id);
+    @Query("DELETE FROM Empleado e WHERE e.id_empleado = :id")
+    void deleteEmpleadoById(@Param("id") Integer id);
 
-
-  
-
-
-
-
-
-
-
+    @Modifying
+    @Transactional
+    @Query("UPDATE Empleado e SET e.nombre = :nombre, e.apellido = :apellido, e.sueldo = :sueldo WHERE e.id_empleado = :id")
+    int updateEmpleado(@Param("id") Integer id,
+                       @Param("nombre") String nombre,
+                       @Param("apellido") String apellido,
+                       @Param("sueldo") float sueldo);
 }

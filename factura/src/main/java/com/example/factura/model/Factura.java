@@ -39,7 +39,10 @@ public class Factura {
     @Min(value = 0)
     private int total;
 
-    @Column(name = "venta",nullable = false)
-    private Venta venta;
+    @Column(name = "id_venta", nullable = false)
+    private int id_venta;
+
+    @Column(name = "id_cliente", nullable = false)
+    private int id_cliente;
    
 }

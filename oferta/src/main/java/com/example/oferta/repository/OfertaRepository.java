@@ -7,10 +7,18 @@ import org.springframework.stereotype.Repository;
 
 import com.example.gerente.model.Oferta;
 
-    @Repository
-public interface OfertaRepository extends JpaRepository<Oferta, Long> {
 
-    Optional<Oferta> findByid_oferta(int id_oferta);
+@Repository
+public interface OfertaRepository extends JpaRepository<Oferta, Integer> {
 
-    boolean existsBydescripcion(String descripcion);
+    @Query("SELECT o FROM Oferta o")
+    List<Oferta> findAll();
+
+    @Query("SELECT o FROM Oferta o WHERE o.id_oferta = :id")
+    List<Oferta> buscarPorId(@Param("id") Integer id);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Oferta o WHERE o.id_oferta = :id")
+    void deleteOfertaById(@Param("id") Integer id);
 }

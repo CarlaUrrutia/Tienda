@@ -11,10 +11,16 @@ import org.springframework.stereotype.Repository;
 import com.example.gerente.model.Tienda;
 
 @Repository
-public interface TiendaRepository extends JpaRepository<Tienda, Long> {
+public interface TiendaRepository extends JpaRepository<Tienda, Integer> {
 
-    Optional<Tienda> findByid_tienda(int id_tienda);
+    @Query("SELECT t FROM Tienda t")
+    List<Tienda> findAll();
 
+    @Query("SELECT t FROM Tienda t WHERE t.id_tienda = :id")
+    List<Tienda> buscarPorId(@Param("id") Integer id);
 
-    List<Tienda> findByubicacion(Long ubicacion); 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Tienda t WHERE t.id_tienda = :id")
+    void deleteTiendaById(@Param("id") Integer id);
 }

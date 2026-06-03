@@ -1,4 +1,4 @@
-package com.ejemplo.ms_persona.client;
+package com.example.venta.client;
 
 import feign.auth.BasicAuthRequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,14 +17,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FeignClientConfig {
 
-    @Value("${ms.genero.user}")
-    private String generoUser;
+    @Value("${ms.venta.user}")
+    private String ventaUser;
 
-    @Value("${ms.genero.password}")
-    private String generoPassword;
+    @Value("${ms.venta.password}")
+    private String ventaPassword;
 
     @Bean
     public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
-        return new BasicAuthRequestInterceptor(generoUser, generoPassword);
+        return new BasicAuthRequestInterceptor(ventaUser, ventaPassword);
     }
 }

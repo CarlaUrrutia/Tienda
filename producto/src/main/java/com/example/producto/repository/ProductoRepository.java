@@ -9,10 +9,23 @@ import org.springframework.stereotype.Repository;
 import com.example.gerente.model.Producto;
 
 @Repository
-public interface ProductoRepository extends JpaRepository<Producto, Long> {
+public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
-    Optional<Producto> findByid_producto(int id_producto);
+    @Query("SELECT p FROM Producto p")
+    List<Producto> findAll();
 
+    @Query("SELECT p FROM Producto p WHERE p.id_producto = :id")
+    List<Producto> buscarPorId(@Param("id") Integer id);
 
-    List<Producto> findBynombre(Long nombre); 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Producto p WHERE p.id_producto = :id")
+    void deleteProductoById(@Param("id") Integer id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Producto p SET p.nombre = :nombre, p.precio_venta = :precio WHERE p.id_producto = :id")
+    int updateProducto(@Param("id") Integer id,
+                       @Param("nombre") String nombre,
+                       @Param("precio") int precio_venta);
 }

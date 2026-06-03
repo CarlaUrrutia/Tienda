@@ -1,48 +1,38 @@
-
+import com.example.boleta.DTO.BoletaDTO;
+import com.example.boleta.service.BoletaService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/boletas")
 public class BoletaController {
-    
+
     @Autowired
-    private BoletaService boletaServi;
+    private BoletaService boletaService;
 
     @GetMapping
-    public ResponseEntity<List<Boleta>> listar(){
-        List<Boleta> bolet = boletaServi.getAllBoleta();
-        if (bolet.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(bolet);
+    public List<BoletaDTO.Response> listar() {
+        return boletaService.getAllBoletas();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BoletaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        BoletaDTO.Response boleta = boletaService.getBoletaById(id);
+        return boleta != null ? ResponseEntity.ok(boleta) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Boleta> guardar(@RequestBody Boleta bole){
-        Boleta npe = boletaServi.createBoleta(bole);
-        return ResponseEntity.status(HttpStatus.CREATED).body(npe);
+    public ResponseEntity<BoletaDTO.Response> crear(@Valid @RequestBody BoletaDTO.Request request) {
+        BoletaDTO.Response nueva = boletaService.save(request);
+        return nueva != null ? ResponseEntity.ok(nueva) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_boleta}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_boleta){
-        try{
-            persoServi.deleteBoleta(id_boleta);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        boletaService.delete(id);
+        return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/{id_boleta}")
-    public ResponseEntity<Boleta> buscarByid_boleta(@PathVariable
-        int id_boleta){
-            Boleta bo = boletaServi.getPersoByid_boleta(id_boleta);
-            if (bo==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(bo);
-        }
-    
-        
-
 }
-*/
