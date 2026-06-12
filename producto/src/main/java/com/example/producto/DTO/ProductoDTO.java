@@ -3,7 +3,10 @@ package com.example.producto.DTO;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class ProductoDTO {
 
@@ -17,11 +20,11 @@ public class ProductoDTO {
         private int id_proveedor;
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
-        private int id_producto;
-        private String nombre;
-        private int precio_venta;
-        private ProveedorResponse proveedor;
-    }
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+        public static class Response extends RepresentationModel<Response> {
+             private int id_producto;
+                private String nombre;
+                private int precio_venta;
+                private ProveedorResponse proveedor;
+}
 }
