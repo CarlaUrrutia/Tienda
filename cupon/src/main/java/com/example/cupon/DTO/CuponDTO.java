@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Date;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class CuponDTO {
 
@@ -20,8 +22,8 @@ public class CuponDTO {
         private int id_cliente;
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_cupon;
         private String codigo;
         private int descuento;

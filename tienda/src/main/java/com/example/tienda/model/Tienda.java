@@ -3,13 +3,17 @@ package com.example.tienda.model;
 import java.sql.Date;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "tienda")
-public class Tienda {
+public class Tienda extends RepresentationModel<Tienda> {
+    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +30,6 @@ public class Tienda {
 
     @Column(name = "politicas")
     private String politicas;
+
+    //Tienda tambien es un caso especial ya que
 }

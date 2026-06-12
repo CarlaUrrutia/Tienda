@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Date;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class VentaDTO {
 
@@ -29,10 +31,8 @@ public class VentaDTO {
      * Response enriquecido: incluye los datos completos de cliente y empleado
      * obtenidos via Feign desde sus respectivos microservicios.
      */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_venta;
         private Date fecha_venta;
         private ClienteResponse cliente;
