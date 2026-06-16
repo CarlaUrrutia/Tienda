@@ -1,6 +1,6 @@
+package com.example.devolucion.controller;
 
-
-import com.example.devolucion.DTO.DevolucionDTO;
+import com.example.devolucion.dto.DevolucionDTO;
 import com.example.devolucion.service.DevolucionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
