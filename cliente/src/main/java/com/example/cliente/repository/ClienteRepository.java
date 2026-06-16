@@ -1,4 +1,4 @@
-package com.example.cupon.repository;
+package com.example.cliente.repository;
 
 
 import com.example.cliente.model.Cliente;

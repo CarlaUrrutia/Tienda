@@ -1,3 +1,4 @@
+package com.example.cliente.controller;
 
 import com.example.cliente.model.Cliente;
 import com.example.cliente.service.ClienteService;

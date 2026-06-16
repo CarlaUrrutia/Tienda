@@ -1,4 +1,4 @@
-package com.example.cupon.model;
+package com.example.cliente.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

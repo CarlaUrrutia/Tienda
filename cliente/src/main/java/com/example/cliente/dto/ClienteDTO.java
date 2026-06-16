@@ -1,4 +1,4 @@
-package com.example.cupon.dto;
+package com.example.cliente.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
