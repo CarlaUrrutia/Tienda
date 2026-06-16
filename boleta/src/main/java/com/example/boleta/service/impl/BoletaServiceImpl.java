@@ -1,6 +1,6 @@
 package com.example.boleta.service.impl;
 
-import com.example.boleta.DTO.BoletaDTO;
+import com.example.boleta.dto.BoletaDTO;
 import com.example.boleta.client.ClienteClient;
 import com.example.boleta.client.VentaClient;
 import com.example.boleta.model.Boleta;

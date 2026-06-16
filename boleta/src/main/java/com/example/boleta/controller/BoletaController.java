@@ -1,4 +1,6 @@
-import com.example.boleta.DTO.BoletaDTO;
+package com.example.boleta.controller;
+
+import com.example.boleta.dto.BoletaDTO;
 import com.example.boleta.service.BoletaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
