@@ -1,4 +1,4 @@
-package com.example.cliente.config;
+package com.example.boleta.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
