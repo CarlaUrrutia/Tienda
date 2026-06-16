@@ -1,4 +1,6 @@
-import com.example.detalleventa.DTO.DetalleVentaDTO;
+package com.example.detalleventa.controller;
+
+import com.example.detalleventa.dto.DetalleVentaDTO;
 import com.example.detalleventa.service.DetalleVentaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

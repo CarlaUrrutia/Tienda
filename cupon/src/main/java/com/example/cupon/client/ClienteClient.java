@@ -1,6 +1,6 @@
 package com.example.cupon.client;
 
-import com.example.cupon.DTO.ClienteResponse;
+import com.example.cupon.dto.ClienteResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,6 +1,6 @@
 package com.example.cupon.service.impl;
 
-import com.example.cupon.DTO.CuponDTO;
+import com.example.cupon.dto.CuponDTO;
 import com.example.cupon.client.ClienteClient;
 import com.example.cupon.model.Cupon;
 import com.example.cupon.repository.CuponRepository;

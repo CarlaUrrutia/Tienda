@@ -1,10 +1,11 @@
-package com.example.cupon.DTO;
+package com.example.cupon.dto;
 
-import com.example.cupon.DTO.ClienteResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 import java.sql.Date;
 
 public class CuponDTO {
@@ -21,7 +22,8 @@ public class CuponDTO {
     }
 
     @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
+    @EqualsAndHashCode(callSuper = true)
+    public static class Response extends RepresentationModel<Response> {
         private int id_cupon;
         private String codigo;
         private int descuento;
