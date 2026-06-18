@@ -19,12 +19,12 @@ public class InventarioServiceImpl implements InventarioService {
     @Autowired private TiendaClient tiendaClient;
 
     private InventarioDTO.Response toResponse(Inventario i) {
-        return new InventarioDTO.Response(
-            i.getId_inventario(), i.getCantidad(),
-            productoClient.getProductoById(i.getId_producto()),
-            tiendaClient.getTiendaById(i.getId_tienda())
-        );
-    }
+    return new InventarioDTO.Response(
+        i.getId(), i.getCantidad(),
+        tiendaClient.getTiendaById(i.getId_tienda()),
+        productoClient.getProductoById(i.getId_producto())
+    );
+}
 
     @Override
     public List<InventarioDTO.Response> getAllInventarios() {
