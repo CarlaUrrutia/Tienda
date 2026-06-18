@@ -1,8 +1,14 @@
-//Me da error aqui pero en el compu del duoc no, entonces no se si tocarlo
-import com.ejemplo.ms_persona.entity.Persona;
+package com.example.factura.repository;
+
+
 import com.example.factura.model.Factura;
 
+import feign.Param;
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;

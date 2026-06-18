@@ -1,6 +1,6 @@
 package com.example.factura.service.impl;
 
-import com.example.factura.DTO.FacturaDTO;
+import com.example.factura.dto.FacturaDTO;
 import com.example.factura.client.ClienteClient;
 import com.example.factura.client.VentaClient;
 import com.example.factura.model.Factura;
@@ -20,7 +20,7 @@ public class FacturaServiceImpl implements FacturaService {
 
     private FacturaDTO.Response toResponse(Factura f) {
         return new FacturaDTO.Response(
-            f.getId_factura(), f.getFecha(), f.getTotal(),
+            f.getId().intValue(), f.getFecha(), f.getTotal(),
             clienteClient.getClienteById(f.getId_cliente()),
             ventaClient.getVentaById(f.getId_venta())
         );
