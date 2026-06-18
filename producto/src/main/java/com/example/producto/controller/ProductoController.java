@@ -1,21 +1,17 @@
 package com.example.producto.controller;
 
+import com.example.producto.dto.ProductoDTO;
+import com.example.producto.service.ProductoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.example.gerente.model.Inventario;
-import com.example.gerente.model.Oferta;
-import com.example.gerente.model.Producto;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
+
     @Autowired private ProductoService productoService;
 
     @GetMapping
