@@ -1,6 +1,8 @@
+package com.example.empleado.controller;
+
 import com.example.empleado.model.Empleado;
 
-import com.example.empleado.DTO.EmpleadoDTO;
+import com.example.empleado.dto.EmpleadoDTO;
 import com.example.empleado.service.EmpleadoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

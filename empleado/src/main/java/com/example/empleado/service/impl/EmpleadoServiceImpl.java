@@ -1,7 +1,8 @@
 package com.example.empleado.service.impl;
 
-import com.example.empleado.DTO.EmpleadoDTO;
+import com.example.empleado.dto.EmpleadoDTO;
 import com.example.empleado.client.TiendaClient;
+import com.example.empleado.client.RolClient;
 import com.example.empleado.model.Empleado;
 import com.example.empleado.repository.EmpleadoRepository;
 import com.example.empleado.service.EmpleadoService;
@@ -15,11 +16,13 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Autowired private EmpleadoRepository empleadoRepository;
     @Autowired private TiendaClient tiendaClient;
+    @Autowired private RolClient rolClient;
 
     private EmpleadoDTO.Response toResponse(Empleado e) {
         return new EmpleadoDTO.Response(
             e.getId_empleado(), e.getNombre(), e.getApellido(), e.getSueldo(),
-            tiendaClient.getTiendaById(e.getId_tienda())
+            tiendaClient.getTiendaById(e.getId_tienda()),
+            rolClient.getRolById(e.getId_rol())
         );
     }
 
@@ -41,6 +44,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         e.setApellido(request.getApellido());
         e.setSueldo(request.getSueldo());
         e.setId_tienda(request.getId_tienda());
+        e.setId_rol(request.getId_rol());
         return toResponse(empleadoRepository.save(e));
     }
 
@@ -53,6 +57,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         e.setApellido(request.getApellido());
         e.setSueldo(request.getSueldo());
         e.setId_tienda(request.getId_tienda());
+        e.setId_rol(request.getId_rol());
         return toResponse(empleadoRepository.save(e));
     }
 

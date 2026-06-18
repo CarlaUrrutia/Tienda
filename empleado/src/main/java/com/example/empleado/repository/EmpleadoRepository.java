@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.gerente.model.Empleado;
+import com.example.empleado.model.Empleado;
 
 import jakarta.transaction.Transactional;
 
