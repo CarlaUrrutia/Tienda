@@ -1,4 +1,4 @@
-package com.ejemplo.ms_persona.config;
+package com.example.envio.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,17 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/v3/api-docs",
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/doc/swagger-ui.html",
+                    "/error"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

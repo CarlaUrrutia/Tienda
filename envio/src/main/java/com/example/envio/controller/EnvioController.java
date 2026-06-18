@@ -1,6 +1,6 @@
 package com.example.envio.controller;
 
-import com.example.envio.DTO.EnvioDTO;
+import com.example.envio.dto.EnvioDTO;
 import com.example.envio.service.EnvioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
