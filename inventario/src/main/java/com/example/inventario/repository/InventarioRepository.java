@@ -1,7 +1,14 @@
 package com.example.inventario.repository;
 
-import com.ejemplo.ms_persona.entity.Persona;
+
+import com.example.inventario.model.Inventario;
+
+import feign.Param;
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
