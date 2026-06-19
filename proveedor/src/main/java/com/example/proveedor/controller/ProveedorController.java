@@ -1,17 +1,12 @@
-package com.example.proveedor.Controller;
+package com.example.proveedor.controller;
 
+import com.example.proveedor.model.Proveedor;
+import com.example.proveedor.service.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.gerente.model.Oferta;
-import com.example.gerente.model.Producto;
-import com.example.gerente.model.Proveedor;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/proveedores")

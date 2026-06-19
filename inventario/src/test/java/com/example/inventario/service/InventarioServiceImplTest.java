@@ -37,7 +37,7 @@ class InventarioServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        inventario = new Inventario(1, 100, 7, 3);
+        inventario = new Inventario(1, 100, 7, 3); // id, cantidad, id_producto, id_tienda
         productoResponse = new ProductoResponse(7, "Producto A", 1000, null);
         tiendaResponse = new TiendaResponse(3, "Tienda Central", "Av. Principal", null, "Política general");
     }

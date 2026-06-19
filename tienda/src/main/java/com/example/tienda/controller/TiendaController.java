@@ -1,18 +1,12 @@
-package com.example.gerente.Controller;
+package com.example.tienda.controller;
 
+import com.example.tienda.model.Tienda;
+import com.example.tienda.service.TiendaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.gerente.Service.TarjetaService;
-import com.example.gerente.Service.TiendaService;
-import com.example.gerente.model.Tarjeta;
-import com.example.gerente.model.Tienda;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tiendas")

@@ -1,13 +1,14 @@
-//Me da error aqui pero en el compu del duoc no, entonces no se si tocarlo
-import com.ejemplo.ms_persona.entity.Persona;
+package com.example.factura.repository;
+
 import com.example.factura.model.Factura;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import jakarta.transaction.Transactional;
 
-import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface FacturaRepository extends JpaRepository<Factura, Integer> {

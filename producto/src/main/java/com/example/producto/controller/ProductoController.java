@@ -1,25 +1,25 @@
 package com.example.producto.controller;
 
+import com.example.producto.DTO.ProductoDTO;
+import com.example.producto.service.ProductoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.gerente.model.Inventario;
-import com.example.gerente.model.Oferta;
-import com.example.gerente.model.Producto;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
-    @Autowired private ProductoService productoService;
+
+    @Autowired
+    private ProductoService productoService;
 
     @GetMapping
-    public List<ProductoDTO.Response> listar() { return productoService.getAllProductos(); }
+    public List<ProductoDTO.Response> listar() {
+        return productoService.getAllProductos();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDTO.Response> obtenerPorId(@PathVariable Integer id) {
