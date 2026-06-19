@@ -1,10 +1,10 @@
 package com.example.venta.service.impl;
 
-import com.example.venta.DTO.VentaDTO;
+import com.example.venta.dto.VentaDTO;
 import com.example.venta.client.ClienteClient;
 import com.example.venta.client.EmpleadoClient;
-import com.example.venta.DTO.ClienteResponse;
-import com.example.venta.DTO.EmpleadoResponse;
+import com.example.venta.dto.ClienteResponse;
+import com.example.venta.dto.EmpleadoResponse;
 import com.example.venta.model.Venta;
 import com.example.venta.repository.VentaRepository;
 import com.example.venta.service.VentaService;
@@ -26,7 +26,6 @@ public class VentaServiceImpl implements VentaService {
     @Autowired
     private EmpleadoClient empleadoClient;
 
-    // Convierte una entidad Venta en un Response enriquecido con datos de cliente y empleado
     private VentaDTO.Response toResponse(Venta venta) {
         ClienteResponse cliente = clienteClient.getClienteById(venta.getId_cliente());
         EmpleadoResponse empleado = empleadoClient.getEmpleadoById(venta.getId_empleado());

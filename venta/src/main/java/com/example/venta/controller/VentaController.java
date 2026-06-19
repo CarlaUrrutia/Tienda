@@ -1,19 +1,12 @@
-package com.example.venta.Controller;
+package com.example.venta.controller;
 
+import com.example.venta.dto.VentaDTO;
+import com.example.venta.service.VentaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.example.gerente.Service.TiendaService;
-import com.example.gerente.Service.VentaService;
-import com.example.gerente.model.Tarjeta;
-import com.example.gerente.model.Tienda;
-import com.example.gerente.model.Venta;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/ventas")
