@@ -1,12 +1,12 @@
 package com.example.proveedor.service;
 
-import com.example.proveedor.model.Proveedor;
+import com.example.proveedor.dto.ProveedorDTO;
 import java.util.List;
 
 public interface ProveedorService {
-    List<Proveedor> getAllProveedores();
-    Proveedor getProveedorById(Integer id);
-    Proveedor save(Proveedor proveedor);
-    Proveedor updateProveedor(Integer id, Proveedor proveedor);
+    List<ProveedorDTO.Response> getAllProveedores();
+    ProveedorDTO.Response getProveedorById(Integer id);
+    ProveedorDTO.Response save(ProveedorDTO.Request request);
+    ProveedorDTO.Response updateProveedor(Integer id, ProveedorDTO.Request request);
     void delete(Integer id);
 }

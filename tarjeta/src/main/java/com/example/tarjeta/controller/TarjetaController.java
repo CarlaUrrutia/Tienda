@@ -1,21 +1,17 @@
-package com.example.tarjeta.Controller;
+package com.example.tarjeta.controller;
 
+import com.example.tarjeta.dto.TarjetaDTO;
+import com.example.tarjeta.service.TarjetaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.example.gerente.Service.RegionService;
-import com.example.gerente.Service.TarjetaService;
-import com.example.gerente.model.Tarjeta;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tarjetas")
 public class TarjetaController {
+
     @Autowired private TarjetaService tarjetaService;
 
     @GetMapping

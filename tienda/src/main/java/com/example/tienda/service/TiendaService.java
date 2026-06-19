@@ -1,12 +1,12 @@
 package com.example.tienda.service;
 
-import com.example.tienda.model.Tienda;
+import com.example.tienda.dto.TiendaDTO;
 import java.util.List;
 
 public interface TiendaService {
-    List<Tienda> getAllTiendas();
-    Tienda getTiendaById(Integer id);
-    Tienda save(Tienda tienda);
-    Tienda updateTienda(Integer id, Tienda tienda);
+    List<TiendaDTO.Response> getAllTiendas();
+    TiendaDTO.Response getTiendaById(Integer id);
+    TiendaDTO.Response save(TiendaDTO.Request request);
+    TiendaDTO.Response updateTienda(Integer id, TiendaDTO.Request request);
     void delete(Integer id);
 }

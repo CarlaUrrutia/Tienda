@@ -1,18 +1,12 @@
-package com.example.gerente.Controller;
+package com.example.tienda.controller;
 
+import com.example.tienda.dto.TiendaDTO;
+import com.example.tienda.service.TiendaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import com.example.gerente.Service.TarjetaService;
-import com.example.gerente.Service.TiendaService;
-import com.example.gerente.model.Tarjeta;
-import com.example.gerente.model.Tienda;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tiendas")
@@ -22,26 +16,26 @@ public class TiendaController {
     private TiendaService tiendaService;
 
     @GetMapping
-    public List<Tienda> listar() {
+    public List<TiendaDTO.Response> listar() {
         return tiendaService.getAllTiendas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tienda> obtenerPorId(@PathVariable Integer id) {
-        Tienda tienda = tiendaService.getTiendaById(id);
-        return tienda != null ? ResponseEntity.ok(tienda) : ResponseEntity.notFound().build();
+    public ResponseEntity<TiendaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        TiendaDTO.Response r = tiendaService.getTiendaById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Tienda> crear(@RequestBody Tienda tienda) {
-        Tienda nueva = tiendaService.save(tienda);
-        return nueva != null ? ResponseEntity.ok(nueva) : ResponseEntity.badRequest().build();
+    public ResponseEntity<TiendaDTO.Response> crear(@Valid @RequestBody TiendaDTO.Request request) {
+        TiendaDTO.Response r = tiendaService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tienda> actualizar(@PathVariable Integer id, @RequestBody Tienda tienda) {
-        Tienda actualizada = tiendaService.updateTienda(id, tienda);
-        return actualizada != null ? ResponseEntity.ok(actualizada) : ResponseEntity.notFound().build();
+    public ResponseEntity<TiendaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody TiendaDTO.Request request) {
+        TiendaDTO.Response r = tiendaService.updateTienda(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

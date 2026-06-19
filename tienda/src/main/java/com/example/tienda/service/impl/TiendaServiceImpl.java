@@ -1,11 +1,13 @@
 package com.example.tienda.service.impl;
 
+import com.example.tienda.dto.TiendaDTO;
 import com.example.tienda.model.Tienda;
 import com.example.tienda.repository.TiendaRepository;
 import com.example.tienda.service.TiendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TiendaServiceImpl implements TiendaService {
@@ -13,33 +15,44 @@ public class TiendaServiceImpl implements TiendaService {
     @Autowired
     private TiendaRepository tiendaRepository;
 
-    @Override
-    public List<Tienda> getAllTiendas() {
-        return tiendaRepository.findAll();
+    private TiendaDTO.Response toResponse(Tienda t) {
+        return new TiendaDTO.Response(
+            t.getId_tienda(), t.getNombre_tienda(), t.getUbicacion(),
+            t.getHorario_apertura(), t.getPoliticas()
+        );
     }
 
     @Override
-    public Tienda getTiendaById(Integer id) {
+    public List<TiendaDTO.Response> getAllTiendas() {
+        return tiendaRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public TiendaDTO.Response getTiendaById(Integer id) {
         List<Tienda> lista = tiendaRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : lista.get(0);
+        return lista.isEmpty() ? null : toResponse(lista.get(0));
     }
 
     @Override
-    public Tienda save(Tienda tienda) {
-        return tiendaRepository.save(tienda);
+    public TiendaDTO.Response save(TiendaDTO.Request request) {
+        Tienda t = new Tienda();
+        t.setNombre_tienda(request.getNombre_tienda());
+        t.setUbicacion(request.getUbicacion());
+        t.setHorario_apertura(request.getHorario_apertura());
+        t.setPoliticas(request.getPoliticas());
+        return toResponse(tiendaRepository.save(t));
     }
 
     @Override
-    public Tienda updateTienda(Integer id, Tienda tienda) {
-        Tienda existente = getTiendaById(id);
-        if (existente != null) {
-            existente.setNombre_tienda(tienda.getNombre_tienda());
-            existente.setUbicacion(tienda.getUbicacion());
-            existente.setHorario_apertura(tienda.getHorario_apertura());
-            existente.setPoliticas(tienda.getPoliticas());
-            return tiendaRepository.save(existente);
-        }
-        return null;
+    public TiendaDTO.Response updateTienda(Integer id, TiendaDTO.Request request) {
+        List<Tienda> lista = tiendaRepository.buscarPorId(id);
+        if (lista.isEmpty()) return null;
+        Tienda t = lista.get(0);
+        t.setNombre_tienda(request.getNombre_tienda());
+        t.setUbicacion(request.getUbicacion());
+        t.setHorario_apertura(request.getHorario_apertura());
+        t.setPoliticas(request.getPoliticas());
+        return toResponse(tiendaRepository.save(t));
     }
 
     @Override
