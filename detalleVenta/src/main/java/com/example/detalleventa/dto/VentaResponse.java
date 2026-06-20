@@ -1,4 +1,4 @@
-package com.example.detalleventa.dto;
+package com.example.detalleventa.dto;  // o com.example.envio.dto según corresponda
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

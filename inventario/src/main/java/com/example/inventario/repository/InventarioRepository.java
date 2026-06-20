@@ -1,9 +1,8 @@
 package com.example.inventario.repository;
 
-
 import com.example.inventario.model.Inventario;
 
-import feign.Param;
+import org.springframework.data.repository.query.Param;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface InventarioRepository extends JpaRepository<Inventario, Integer> {
@@ -20,16 +18,16 @@ public interface InventarioRepository extends JpaRepository<Inventario, Integer>
     @Query("SELECT i FROM Inventario i")
     List<Inventario> findAll();
 
-    @Query("SELECT i FROM Inventario i WHERE i.id_inventario = :id")
+    @Query("SELECT i FROM Inventario i WHERE i.id = :id")
     List<Inventario> buscarPorId(@Param("id") Integer id);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM Inventario i WHERE i.id_inventario = :id")
+    @Query("DELETE FROM Inventario i WHERE i.id = :id")
     void deleteInventarioById(@Param("id") Integer id);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Inventario i SET i.cantidad = :cantidad WHERE i.id_inventario = :id")
+    @Query("UPDATE Inventario i SET i.cantidad = :cantidad WHERE i.id = :id")
     int updateCantidad(@Param("id") Integer id, @Param("cantidad") int cantidad);
 }
