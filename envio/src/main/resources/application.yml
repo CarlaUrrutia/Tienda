@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: envio
+  profiles:
+    active: dev
+
+server:
+  port: 8094
+
+ms:
+  venta:
+    url: http://localhost:8086
+  cliente:
+    url: http://localhost:8082
+  empleado:
+    url: http://localhost:8081
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html

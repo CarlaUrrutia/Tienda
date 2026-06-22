@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: cliente
+  profiles:
+    active: dev
+
+server:
+  port: 8082
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html

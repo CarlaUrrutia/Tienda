@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: factura
+  profiles:
+    active: dev
+
+server:
+  port: 8089
+
+ms:
+  cliente:
+    url: http://localhost:8082
+  venta:
+    url: http://localhost:8086
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html
