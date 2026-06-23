@@ -2,7 +2,7 @@
 -- Estructura de tabla para la tabla `cliente`
 
 CREATE TABLE IF NOT EXISTS cliente (
-    id_cliente int(11) NOT NULL,
+    id_cliente int(11) NOT NULL AUTO_INCREMENT,
     nombre varchar(100) NOT NULL,
     apellido varchar(100) NOT NULL,
     email varchar(100) NOT NULL
