@@ -37,7 +37,6 @@ public class ClienteDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
     public static class Response extends RepresentationModel<Response> {
         private int id_cliente;
         private String nombre;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class BoletaControllerV2 {
     private final BoletaService boletaService;
     private final BoletaModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<BoletaDTO.Response>> listarTodos() {
         List<EntityModel<BoletaDTO.Response>> boletas = boletaService.getAllBoletas().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class BoletaControllerV2 {
                 linkTo(methodOn(BoletaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<BoletaDTO.Response> buscarPorId(@PathVariable Integer id) {
         BoletaDTO.Response boleta = boletaService.getBoletaById(id);
         return assembler.toModel(boleta);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<BoletaDTO.Response>> crear(@Valid @RequestBody BoletaDTO.Request request) {
         BoletaDTO.Response nueva = boletaService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class BoletaControllerV2 {
                 .body(assembler.toModel(nueva));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         boletaService.delete(id);
         return ResponseEntity.noContent().build();

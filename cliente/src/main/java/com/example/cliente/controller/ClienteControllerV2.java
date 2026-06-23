@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class ClienteControllerV2 {
     private final ClienteService clienteService;
     private final ClienteModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<ClienteDTO.Response>> listarTodos() {
         List<EntityModel<ClienteDTO.Response>> clientes = clienteService.getAllClientes().stream()
                 .map(this::toResponse)
@@ -35,13 +36,13 @@ public class ClienteControllerV2 {
                 linkTo(methodOn(ClienteControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<ClienteDTO.Response> buscarPorId(@PathVariable Integer id) {
         Cliente cliente = clienteService.getClienteById(id);
         return assembler.toModel(toResponse(cliente));
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<ClienteDTO.Response>> crear(@RequestBody Cliente cliente) {
         Cliente nuevo = clienteService.save(cliente);
         return ResponseEntity
@@ -49,7 +50,7 @@ public class ClienteControllerV2 {
                 .body(assembler.toModel(toResponse(nuevo)));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<ClienteDTO.Response>> actualizar(
             @PathVariable Integer id,
             @RequestBody Cliente cliente) {
@@ -57,7 +58,7 @@ public class ClienteControllerV2 {
         return ResponseEntity.ok(assembler.toModel(toResponse(actualizado)));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         clienteService.delete(id);
         return ResponseEntity.noContent().build();
