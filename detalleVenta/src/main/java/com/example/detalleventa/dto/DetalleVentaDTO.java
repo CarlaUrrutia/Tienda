@@ -3,9 +3,7 @@ package com.example.detalleventa.dto;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.RepresentationModel;
 
 public class DetalleVentaDTO {
 
@@ -22,8 +20,7 @@ public class DetalleVentaDTO {
     }
 
     @Data @NoArgsConstructor @AllArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
-    public static class Response extends RepresentationModel<Response> {
+    public static class Response {
         private int id_detalle;
         private int cantidad;
         private int precio_unitario_venta;

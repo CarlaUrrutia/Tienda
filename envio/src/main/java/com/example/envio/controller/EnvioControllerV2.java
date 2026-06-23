@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class EnvioControllerV2 {
     private final EnvioService envioService;
     private final EnvioModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<EnvioDTO.Response>> listarTodos() {
         List<EntityModel<EnvioDTO.Response>> envios = envioService.getAllEnvios().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class EnvioControllerV2 {
                 linkTo(methodOn(EnvioControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<EnvioDTO.Response> buscarPorId(@PathVariable Integer id) {
         EnvioDTO.Response envio = envioService.getEnvioById(id);
         return assembler.toModel(envio);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<EnvioDTO.Response>> crear(@Valid @RequestBody EnvioDTO.Request request) {
         EnvioDTO.Response nuevo = envioService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class EnvioControllerV2 {
                 .body(assembler.toModel(nuevo));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<EnvioDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody EnvioDTO.Request request) {
@@ -56,7 +57,7 @@ public class EnvioControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         envioService.delete(id);
         return ResponseEntity.noContent().build();

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class InventarioControllerV2 {
     private final InventarioService inventarioService;
     private final InventarioModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<InventarioDTO.Response>> listarTodos() {
         List<EntityModel<InventarioDTO.Response>> inventarios = inventarioService.getAllInventarios().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class InventarioControllerV2 {
                 linkTo(methodOn(InventarioControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<InventarioDTO.Response> buscarPorId(@PathVariable Integer id) {
         InventarioDTO.Response inventario = inventarioService.getInventarioById(id);
         return assembler.toModel(inventario);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<InventarioDTO.Response>> crear(@Valid @RequestBody InventarioDTO.Request request) {
         InventarioDTO.Response nuevo = inventarioService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class InventarioControllerV2 {
                 .body(assembler.toModel(nuevo));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<InventarioDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody InventarioDTO.Request request) {
@@ -56,7 +57,7 @@ public class InventarioControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         inventarioService.delete(id);
         return ResponseEntity.noContent().build();

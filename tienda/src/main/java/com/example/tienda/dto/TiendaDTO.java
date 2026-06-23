@@ -3,9 +3,7 @@ package com.example.tienda.dto;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.RepresentationModel;
 import java.sql.Date;
 
 public class TiendaDTO {
@@ -34,8 +32,7 @@ public class TiendaDTO {
     }
 
     @Data @NoArgsConstructor @AllArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
-    public static class Response extends RepresentationModel<Response> {
+    public static class Response {
         private int id_tienda;
         private String nombre_tienda;
         private String ubicacion;

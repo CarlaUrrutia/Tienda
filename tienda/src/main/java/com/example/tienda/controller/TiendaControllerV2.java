@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class TiendaControllerV2 {
     private final TiendaService tiendaService;
     private final TiendaModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<TiendaDTO.Response>> listarTodos() {
         List<EntityModel<TiendaDTO.Response>> tiendas = tiendaService.getAllTiendas().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class TiendaControllerV2 {
                 linkTo(methodOn(TiendaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<TiendaDTO.Response> buscarPorId(@PathVariable Integer id) {
         TiendaDTO.Response tienda = tiendaService.getTiendaById(id);
         return assembler.toModel(tienda);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<TiendaDTO.Response>> crear(@Valid @RequestBody TiendaDTO.Request request) {
         TiendaDTO.Response nueva = tiendaService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class TiendaControllerV2 {
                 .body(assembler.toModel(nueva));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<TiendaDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody TiendaDTO.Request request) {
@@ -56,7 +57,7 @@ public class TiendaControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         tiendaService.delete(id);
         return ResponseEntity.noContent().build();

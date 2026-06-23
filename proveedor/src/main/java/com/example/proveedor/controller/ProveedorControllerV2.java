@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class ProveedorControllerV2 {
     private final ProveedorService proveedorService;
     private final ProveedorModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<ProveedorDTO.Response>> listarTodos() {
         List<EntityModel<ProveedorDTO.Response>> proveedores = proveedorService.getAllProveedores().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class ProveedorControllerV2 {
                 linkTo(methodOn(ProveedorControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<ProveedorDTO.Response> buscarPorId(@PathVariable Integer id) {
         ProveedorDTO.Response proveedor = proveedorService.getProveedorById(id);
         return assembler.toModel(proveedor);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<ProveedorDTO.Response>> crear(@Valid @RequestBody ProveedorDTO.Request request) {
         ProveedorDTO.Response nuevo = proveedorService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class ProveedorControllerV2 {
                 .body(assembler.toModel(nuevo));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<ProveedorDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody ProveedorDTO.Request request) {
@@ -56,7 +57,7 @@ public class ProveedorControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         proveedorService.delete(id);
         return ResponseEntity.noContent().build();

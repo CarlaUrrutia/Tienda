@@ -3,9 +3,7 @@ package com.example.envio.dto;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.RepresentationModel;
 import java.sql.Date;
 
 public class EnvioDTO {
@@ -31,8 +29,7 @@ public class EnvioDTO {
     }
 
     @Data @NoArgsConstructor @AllArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
-    public static class Response extends RepresentationModel<Response> {
+    public static class Response {
         private int id_envio;
         private Date fecha_envio;
         private Date fecha_estimada_entrega;

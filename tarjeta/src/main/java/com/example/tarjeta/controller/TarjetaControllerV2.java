@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class TarjetaControllerV2 {
     private final TarjetaService tarjetaService;
     private final TarjetaModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<TarjetaDTO.Response>> listarTodos() {
         List<EntityModel<TarjetaDTO.Response>> tarjetas = tarjetaService.getAllTarjetas().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class TarjetaControllerV2 {
                 linkTo(methodOn(TarjetaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<TarjetaDTO.Response> buscarPorId(@PathVariable Integer id) {
         TarjetaDTO.Response tarjeta = tarjetaService.getTarjetaById(id);
         return assembler.toModel(tarjeta);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<TarjetaDTO.Response>> crear(@Valid @RequestBody TarjetaDTO.Request request) {
         TarjetaDTO.Response nueva = tarjetaService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class TarjetaControllerV2 {
                 .body(assembler.toModel(nueva));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<TarjetaDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody TarjetaDTO.Request request) {
@@ -56,7 +57,7 @@ public class TarjetaControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         tarjetaService.delete(id);
         return ResponseEntity.noContent().build();

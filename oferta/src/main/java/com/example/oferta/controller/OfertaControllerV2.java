@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class OfertaControllerV2 {
     private final OfertaService ofertaService;
     private final OfertaModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<OfertaDTO.Response>> listarTodos() {
         List<EntityModel<OfertaDTO.Response>> ofertas = ofertaService.getAllOfertas().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class OfertaControllerV2 {
                 linkTo(methodOn(OfertaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<OfertaDTO.Response> buscarPorId(@PathVariable Integer id) {
         OfertaDTO.Response oferta = ofertaService.getOfertaById(id);
         return assembler.toModel(oferta);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<OfertaDTO.Response>> crear(@Valid @RequestBody OfertaDTO.Request request) {
         OfertaDTO.Response nueva = ofertaService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class OfertaControllerV2 {
                 .body(assembler.toModel(nueva));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<OfertaDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody OfertaDTO.Request request) {
@@ -56,7 +57,7 @@ public class OfertaControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         ofertaService.delete(id);
         return ResponseEntity.noContent().build();

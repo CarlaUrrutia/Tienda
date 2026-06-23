@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class VentaControllerV2 {
     private final VentaService ventaService;
     private final VentaModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<VentaDTO.Response>> listarTodos() {
         List<EntityModel<VentaDTO.Response>> ventas = ventaService.getAllVentas().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class VentaControllerV2 {
                 linkTo(methodOn(VentaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<VentaDTO.Response> buscarPorId(@PathVariable Integer id) {
         VentaDTO.Response venta = ventaService.getVentaById(id);
         return assembler.toModel(venta);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<VentaDTO.Response>> crear(@Valid @RequestBody VentaDTO.Request request) {
         VentaDTO.Response nueva = ventaService.save(request);
         return ResponseEntity
@@ -48,7 +49,7 @@ public class VentaControllerV2 {
                 .body(assembler.toModel(nueva));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<VentaDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody VentaDTO.Request request) {
@@ -56,7 +57,7 @@ public class VentaControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         ventaService.delete(id);
         return ResponseEntity.noContent().build();

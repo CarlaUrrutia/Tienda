@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class DetalleVentaControllerV2 {
     private final DetalleVentaService detalleVentaService;
     private final DetalleVentaModelAssembler assembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<DetalleVentaDTO.Response>> listarTodos() {
         List<EntityModel<DetalleVentaDTO.Response>> detalles = detalleVentaService.getAllDetalles().stream()
                 .map(assembler::toModel)
@@ -34,13 +35,13 @@ public class DetalleVentaControllerV2 {
                 linkTo(methodOn(DetalleVentaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public EntityModel<DetalleVentaDTO.Response> buscarPorId(@PathVariable Integer id) {
         DetalleVentaDTO.Response detalle = detalleVentaService.getDetalleById(id);
         return assembler.toModel(detalle);
     }
 
-    @GetMapping(value = "/venta/{idVenta}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(value = "/venta/{idVenta}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public CollectionModel<EntityModel<DetalleVentaDTO.Response>> buscarPorVenta(@PathVariable Integer idVenta) {
         List<EntityModel<DetalleVentaDTO.Response>> detalles = detalleVentaService.getDetallesByVenta(idVenta).stream()
                 .map(assembler::toModel)
@@ -50,7 +51,7 @@ public class DetalleVentaControllerV2 {
                 linkTo(methodOn(DetalleVentaControllerV2.class).buscarPorVenta(idVenta)).withSelfRel());
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<DetalleVentaDTO.Response>> crear(@Valid @RequestBody DetalleVentaDTO.Request request) {
         DetalleVentaDTO.Response nuevo = detalleVentaService.save(request);
         return ResponseEntity
@@ -58,7 +59,7 @@ public class DetalleVentaControllerV2 {
                 .body(assembler.toModel(nuevo));
     }
 
-    @PutMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<EntityModel<DetalleVentaDTO.Response>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody DetalleVentaDTO.Request request) {
@@ -66,7 +67,7 @@ public class DetalleVentaControllerV2 {
         return ResponseEntity.ok(assembler.toModel(actualizado));
     }
 
-    @DeleteMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         detalleVentaService.delete(id);
         return ResponseEntity.noContent().build();
