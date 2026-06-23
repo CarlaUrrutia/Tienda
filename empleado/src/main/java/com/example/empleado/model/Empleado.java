@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -22,38 +21,32 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "empleado")
-// clase para identificar el Administrador, Empleado, Gerente por rol 
 public class Empleado {
-    @NotNull(message = "El id no debe ser nulo")
-    @NotEmpty(message = "el id no debe ser nulo")
-    @Min(value = 0)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_empleado;
-    @Column(name = "nombre",nullable = false)
+    private Integer id_empleado;
+
+    @Column(name = "nombre", nullable = false)
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 100, message = "Error nombre no valido")
     private String nombre;
-    @Column(name = "apellido",nullable = false)
+
+    @Column(name = "apellido", nullable = false)
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 100, message = "Error apellido no valido")
     private String apellido;
-    @Column(name = "sueldo",nullable = false)
+
+    @Column(name = "sueldo", nullable = false)
     @NotNull(message = "El sueldo no debe ser nulo")
-    @NotEmpty(message = "el sueldo no  debe ser nulo")
     @Min(value = 0)
-    private int sueldo;
+    private Integer sueldo;
 
+    @Column(name = "id_rol", nullable = false)
+    private Integer id_rol;
 
-    @Column(name = "rol",nullable = false)
-    @NotEmpty
-    @NotNull
-    @Size(min = 2, max = 100, message = "Error rol no valido")
-    private int id_rol;
-
-    
     @Column(name = "id_tienda", nullable = false)
-    private int id_tienda;
+    private Integer id_tienda;
 }

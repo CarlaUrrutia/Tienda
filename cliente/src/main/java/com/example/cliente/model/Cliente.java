@@ -24,19 +24,25 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_cliente;
-    @Column(name = "nombre",nullable = false)
+
+    @Column(name = "nombre", nullable = false)
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 100, message = "Error nombre no valido")
     private String nombre;
-    @Column(name = "apellido",nullable = false)
+
+    @Column(name = "apellido", nullable = false)
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 100, message = "Error apellido no valido")
     private String apellido;
-    @Column(name = "email",nullable = false)
+
+    @Column(name = "email", nullable = false)
     @NotEmpty
     @NotNull
-    @Size(min = 2, max = 100, message = "Error, email  no valido")
+    @Size(min = 2, max = 100, message = "Error, email no valido")
     private String email;
+
+    @Column(name = "genero", length = 50)
+    private String genero;
 }

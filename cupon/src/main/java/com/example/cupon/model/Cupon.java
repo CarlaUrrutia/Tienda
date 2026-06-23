@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -25,28 +24,25 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "cupon")
 public class Cupon {
-    @NotNull(message = "El id no debe ser nulo")
-    @NotEmpty(message = "el id no debe ser nulo")
-    @Min(value = 0)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_cupon;
-    @Column(name = "codigo",nullable = false)
+    private Integer id_cupon;
+
+    @Column(name = "codigo", nullable = false)
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 50, message = "Error codigo no valido")
     private String codigo;
-    @Column(name = "descuento",nullable = false)
+
+    @Column(name = "descuento", nullable = false)
     @NotNull(message = "El descuento no debe ser nulo")
-    @NotEmpty(message = "el descuento no debe ser nulo")
     @Min(value = 0)
-    private int descuento;
+    private Integer descuento;
+
     @Column(name = "fecha_expiracion")
-    /*Se debe validar el date? */
     private Date fecha_expiracion;
-    /*Deben coincidir */
 
-
-    @Column(name = "id_cliente",nullable = false)
-    private int id_cliente;
+    @Column(name = "id_cliente", nullable = false)
+    private Integer id_cliente;
 }
