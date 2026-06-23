@@ -1,6 +1,6 @@
 package com.example.venta.client;
 
-import com.example.venta.DTO.EmpleadoResponse;
+import com.example.venta.dto.EmpleadoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

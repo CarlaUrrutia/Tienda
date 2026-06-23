@@ -1,6 +1,6 @@
 package com.example.venta.controller;
 
-import com.example.venta.DTO.VentaDTO;
+import com.example.venta.dto.VentaDTO;
 import com.example.venta.service.VentaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

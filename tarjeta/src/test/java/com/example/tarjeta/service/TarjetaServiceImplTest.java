@@ -1,7 +1,7 @@
 package com.example.tarjeta.service;
 
-import com.example.tarjeta.DTO.ClienteResponse;
-import com.example.tarjeta.DTO.TarjetaDTO;
+import com.example.tarjeta.dto.ClienteResponse;
+import com.example.tarjeta.dto.TarjetaDTO;
 import com.example.tarjeta.client.ClienteClient;
 import com.example.tarjeta.model.Tarjeta;
 import com.example.tarjeta.repository.TarjetaRepository;

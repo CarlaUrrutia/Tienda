@@ -1,6 +1,6 @@
 package com.example.envio.controller;
 
-import com.example.envio.DTO.EnvioDTO;
+import com.example.envio.dto.EnvioDTO;
 import com.example.envio.service.EnvioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

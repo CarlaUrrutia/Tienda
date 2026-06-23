@@ -1,6 +1,6 @@
 package com.example.devolucion.service;
 
-import com.example.devolucion.DTO.DevolucionDTO;
+import com.example.devolucion.dto.DevolucionDTO;
 import com.example.devolucion.client.*;
 import com.example.devolucion.dto.*;
 import com.example.devolucion.model.Devolucion;

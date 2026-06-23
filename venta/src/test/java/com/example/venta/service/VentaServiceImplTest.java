@@ -1,8 +1,8 @@
 package com.example.venta.service;
 
-import com.example.venta.DTO.ClienteResponse;
-import com.example.venta.DTO.EmpleadoResponse;
-import com.example.venta.DTO.VentaDTO;
+import com.example.venta.dto.ClienteResponse;
+import com.example.venta.dto.EmpleadoResponse;
+import com.example.venta.dto.VentaDTO;
 import com.example.venta.client.ClienteClient;
 import com.example.venta.client.EmpleadoClient;
 import com.example.venta.model.Venta;

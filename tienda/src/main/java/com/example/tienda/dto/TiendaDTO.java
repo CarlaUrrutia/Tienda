@@ -1,4 +1,4 @@
-package com.example.gerente.dto;
+package com.example.tienda.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,7 @@
 package com.example.empleado.service;
 
-import com.example.empleado.DTO.EmpleadoDTO;
-import com.example.empleado.DTO.TiendaResponse;
+import com.example.empleado.dto.EmpleadoDTO;
+import com.example.empleado.dto.TiendaResponse;
 import com.example.empleado.client.TiendaClient;
 import com.example.empleado.model.Empleado;
 import com.example.empleado.repository.EmpleadoRepository;

@@ -1,6 +1,6 @@
 package com.example.tarjeta.service;
 
-import com.example.tarjeta.DTO.TarjetaDTO;
+import com.example.tarjeta.dto.TarjetaDTO;
 import java.util.List;
 
 public interface TarjetaService {

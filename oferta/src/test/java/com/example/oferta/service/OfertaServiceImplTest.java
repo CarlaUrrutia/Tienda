@@ -1,7 +1,7 @@
 package com.example.oferta.service;
 
-import com.example.oferta.DTO.OfertaDTO;
-import com.example.oferta.DTO.ProductoResponse;
+import com.example.oferta.dto.OfertaDTO;
+import com.example.oferta.dto.ProductoResponse;
 import com.example.oferta.client.ProductoClient;
 import com.example.oferta.model.Oferta;
 import com.example.oferta.repository.OfertaRepository;

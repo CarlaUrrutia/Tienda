@@ -1,11 +1,11 @@
 package com.example.cupon.service;
 
-import com.example.cupon.DTO.ClienteResponse;
-import com.example.cupon.DTO.CuponDTO;
+import com.example.cupon.dto.ClienteResponse;
+import com.example.cupon.dto.CuponDTO;
 import com.example.cupon.client.ClienteClient;
 import com.example.cupon.model.Cupon;
 import com.example.cupon.repository.CuponRepository;
-import com.example.cupon.service.impl.CuponServiceImpl;
+import com.example.cupon.service.Impl.CuponServiceimpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

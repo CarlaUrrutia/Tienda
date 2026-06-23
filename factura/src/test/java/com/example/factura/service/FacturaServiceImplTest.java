@@ -1,8 +1,8 @@
 package com.example.factura.service;
 
-import com.example.factura.DTO.ClienteResponse;
-import com.example.factura.DTO.FacturaDTO;
-import com.example.factura.DTO.VentaResponse;
+import com.example.factura.dto.ClienteResponse;
+import com.example.factura.dto.FacturaDTO;
+import com.example.factura.dto.VentaResponse;
 import com.example.factura.client.ClienteClient;
 import com.example.factura.client.VentaClient;
 import com.example.factura.model.Factura;

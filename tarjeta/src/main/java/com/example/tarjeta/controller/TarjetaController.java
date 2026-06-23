@@ -1,6 +1,6 @@
 package com.example.tarjeta.controller;
 
-import com.example.tarjeta.DTO.TarjetaDTO;
+import com.example.tarjeta.dto.TarjetaDTO;
 import com.example.tarjeta.service.TarjetaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
