@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,12 +21,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "cliente")
 public class Cliente {
-    @NotNull(message = "El id no debe ser nulo")
-    @NotEmpty(message = "el id no debe ser nulo")
-    @Min(value = 0)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_cliente;
+    private Integer id_cliente;
     @Column(name = "nombre",nullable = false)
     @NotEmpty
     @NotNull
