@@ -6,6 +6,7 @@ import com.example.detalleventa.client.VentaClient;
 import com.example.detalleventa.model.DetalleVenta;
 import com.example.detalleventa.repository.DetalleVentaRepository;
 import com.example.detalleventa.service.DetalleVentaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -34,7 +35,10 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
     @Override
     public DetalleVentaDTO.Response getDetalleById(Integer id) {
         List<DetalleVenta> lista = detalleVentaRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Detalle de venta con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -55,7 +59,9 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
     @Override
     public DetalleVentaDTO.Response updateDetalle(Integer id, DetalleVentaDTO.Request request) {
         List<DetalleVenta> lista = detalleVentaRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Detalle de venta con id " + id + " no encontrado para actualizar");
+        }
         DetalleVenta d = lista.get(0);
         d.setCantidad(request.getCantidad());
         d.setPrecio_unitario_venta(request.getPrecio_unitario_venta());
@@ -65,5 +71,8 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
     }
 
     @Override
-    public void delete(Integer id) { detalleVentaRepository.deleteDetalleById(id); }
+    public void delete(Integer id) {
+        getDetalleById(id); // valida existencia antes de borrar
+        detalleVentaRepository.deleteDetalleById(id);
+    }
 }

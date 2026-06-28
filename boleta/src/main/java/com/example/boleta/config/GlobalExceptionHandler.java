@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
         });
         log.warn("[ms-boleta] Validación: {}", errores);
         return ResponseEntity.badRequest().body(
-            ApiResponse.badRequest("Error de validación en los datos enviados", errores)
+            ApiResponse.badRequest("Error de validación de los datos enviados", errores)
         );
     }
 

@@ -128,10 +128,10 @@ public class BoletaControllerV2 {
         )
     })
     @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public EntityModel<BoletaDTO.Response> buscarPorId(@PathVariable Integer id) {
+        public ResponseEntity<EntityModel<BoletaDTO.Response>> buscarPorId(@PathVariable Integer id) {
         BoletaDTO.Response boleta = boletaService.getBoletaById(id);
-        return assembler.toModel(boleta);
-    }
+        return ResponseEntity.ok(assembler.toModel(boleta));
+}
 
     // POST /api/v2/boletas
     @Operation(summary = "Crear una nueva boleta", description = "Registra una boleta y retorna su ubicación en el header Location.")

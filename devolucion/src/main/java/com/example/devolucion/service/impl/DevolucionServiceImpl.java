@@ -5,6 +5,7 @@ import com.example.devolucion.client.*;
 import com.example.devolucion.model.Devolucion;
 import com.example.devolucion.repository.DevolucionRepository;
 import com.example.devolucion.service.DevolucionService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -40,7 +41,10 @@ public class DevolucionServiceImpl implements DevolucionService {
     @Override
     public DevolucionDTO.Response getDevolucionById(Integer id) {
         List<Devolucion> lista = devolucionRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Devolución con id " + id + " no encontrada");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -60,7 +64,9 @@ public class DevolucionServiceImpl implements DevolucionService {
     @Override
     public DevolucionDTO.Response updateDevolucion(Integer id, DevolucionDTO.Request request) {
         List<Devolucion> lista = devolucionRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Devolución con id " + id + " no encontrada para actualizar");
+        }
         Devolucion d = lista.get(0);
         d.setMotivo(request.getMotivo());
         d.setMonto_reembolso(request.getMonto_reembolso());
@@ -69,5 +75,8 @@ public class DevolucionServiceImpl implements DevolucionService {
     }
 
     @Override
-    public void delete(Integer id) { devolucionRepository.deleteDevolucionById(id); }
+    public void delete(Integer id) {
+        getDevolucionById(id); // valida existencia antes de borrar
+        devolucionRepository.deleteDevolucionById(id);
+    }
 }

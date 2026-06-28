@@ -5,6 +5,7 @@ import com.example.cupon.client.ClienteClient;
 import com.example.cupon.model.Cupon;
 import com.example.cupon.repository.CuponRepository;
 import com.example.cupon.service.CuponService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -31,7 +32,10 @@ public class CuponServiceImpl implements CuponService {
     @Override
     public CuponDTO.Response getCuponById(Integer id) {
         List<Cupon> lista = cuponRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Cupón con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -47,7 +51,9 @@ public class CuponServiceImpl implements CuponService {
     @Override
     public CuponDTO.Response updateCupon(Integer id, CuponDTO.Request request) {
         List<Cupon> lista = cuponRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Cupón con id " + id + " no encontrado para actualizar");
+        }
         Cupon c = lista.get(0);
         c.setCodigo(request.getCodigo());
         c.setDescuento(request.getDescuento());
@@ -57,5 +63,8 @@ public class CuponServiceImpl implements CuponService {
     }
 
     @Override
-    public void delete(Integer id) { cuponRepository.deleteCuponById(id); }
+    public void delete(Integer id) {
+        getCuponById(id); // valida existencia antes de borrar
+        cuponRepository.deleteCuponById(id);
+    }
 }
