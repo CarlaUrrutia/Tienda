@@ -6,6 +6,7 @@ import com.example.factura.client.VentaClient;
 import com.example.factura.model.Factura;
 import com.example.factura.repository.FacturaRepository;
 import com.example.factura.service.FacturaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -34,7 +35,10 @@ public class FacturaServiceImpl implements FacturaService {
     @Override
     public FacturaDTO.Response getFacturaById(Integer id) {
         List<Factura> lista = facturaRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Factura con id " + id + " no encontrada");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -50,7 +54,9 @@ public class FacturaServiceImpl implements FacturaService {
     @Override
     public FacturaDTO.Response updateFactura(Integer id, FacturaDTO.Request request) {
         List<Factura> lista = facturaRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Factura con id " + id + " no encontrada para actualizar");
+        }
         Factura f = lista.get(0);
         f.setFecha(request.getFecha());
         f.setTotal(request.getTotal());
@@ -60,5 +66,8 @@ public class FacturaServiceImpl implements FacturaService {
     }
 
     @Override
-    public void delete(Integer id) { facturaRepository.deleteFacturaById(id); }
+    public void delete(Integer id) {
+        getFacturaById(id); // valida existencia antes de borrar
+        facturaRepository.deleteFacturaById(id);
+    }
 }

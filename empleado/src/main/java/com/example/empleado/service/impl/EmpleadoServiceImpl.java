@@ -6,6 +6,7 @@ import com.example.empleado.client.RolClient;
 import com.example.empleado.model.Empleado;
 import com.example.empleado.repository.EmpleadoRepository;
 import com.example.empleado.service.EmpleadoService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -34,7 +35,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Override
     public EmpleadoDTO.Response getEmpleadoById(Integer id) {
         List<Empleado> lista = empleadoRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Empleado con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -51,7 +55,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Override
     public EmpleadoDTO.Response updateEmpleado(Integer id, EmpleadoDTO.Request request) {
         List<Empleado> lista = empleadoRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Empleado con id " + id + " no encontrado para actualizar");
+        }
         Empleado e = lista.get(0);
         e.setNombre(request.getNombre());
         e.setApellido(request.getApellido());
@@ -62,5 +68,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     }
 
     @Override
-    public void delete(Integer id) { empleadoRepository.deleteEmpleadoById(id); }
+    public void delete(Integer id) {
+        getEmpleadoById(id); // valida existencia antes de borrar
+        empleadoRepository.deleteEmpleadoById(id);
+    }
 }

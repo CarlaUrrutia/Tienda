@@ -1,5 +1,7 @@
 package com.example.empleado.config;
 
+import com.example.empleado.dto.ApiResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,27 +18,34 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiResponse<Void>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errores = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String campo = ((FieldError) error).getField();
             errores.put(campo, error.getDefaultMessage());
         });
-        Map<String, Object> respuesta = new HashMap<>();
-        respuesta.put("timestamp", LocalDateTime.now().toString());
-        respuesta.put("status", 400);
-        respuesta.put("error", "Errores de validación");
-        respuesta.put("campos", errores);
-        return ResponseEntity.badRequest().body(respuesta);
+        log.warn("[ms-empleado] Validación: {}", errores);
+        return ResponseEntity.badRequest().body(
+            ApiResponse.badRequest("Error de validación en los datos enviados", errores)
+        );
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
-        Map<String, Object> respuesta = new HashMap<>();
-        respuesta.put("timestamp", LocalDateTime.now().toString());
-        respuesta.put("status", 404);
-        respuesta.put("error", ex.getMessage());
-        log.error("[ms-persona] Error: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleEntityNotFound(EntityNotFoundException ex) {
+        log.warn("[ms-empleado] No encontrado: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            ApiResponse.notFound(ex.getMessage())
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception ex) {
+        log.error("[ms-empleado] Error inesperado: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+            ApiResponse.<Void>builder()
+                .status(500).success(false)
+                .message("Error interno del servidor: " + ex.getMessage())
+                .build()
+        );
     }
 }

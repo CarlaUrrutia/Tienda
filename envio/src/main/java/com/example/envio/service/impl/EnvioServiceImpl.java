@@ -7,6 +7,7 @@ import com.example.envio.client.VentaClient;
 import com.example.envio.model.Envio;
 import com.example.envio.repository.EnvioRepository;
 import com.example.envio.service.EnvioService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -39,7 +40,10 @@ public class EnvioServiceImpl implements EnvioService {
     @Override
     public EnvioDTO.Response getEnvioById(Integer id) {
         List<Envio> lista = envioRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Envío con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -59,7 +63,9 @@ public class EnvioServiceImpl implements EnvioService {
     @Override
     public EnvioDTO.Response updateEnvio(Integer id, EnvioDTO.Request request) {
         List<Envio> lista = envioRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Envío con id " + id + " no encontrado para actualizar");
+        }
         Envio e = lista.get(0);
         e.setEstado(request.getEstado());
         e.setDireccion_destino(request.getDireccion_destino());
@@ -67,5 +73,8 @@ public class EnvioServiceImpl implements EnvioService {
     }
 
     @Override
-    public void delete(Integer id) { envioRepository.deleteEnvioById(id); }
+    public void delete(Integer id) {
+        getEnvioById(id); // valida existencia antes de borrar
+        envioRepository.deleteEnvioById(id);
+    }
 }

@@ -6,6 +6,7 @@ import com.example.inventario.client.TiendaClient;
 import com.example.inventario.model.Inventario;
 import com.example.inventario.repository.InventarioRepository;
 import com.example.inventario.service.InventarioService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -19,12 +20,12 @@ public class InventarioServiceImpl implements InventarioService {
     @Autowired private TiendaClient tiendaClient;
 
     private InventarioDTO.Response toResponse(Inventario i) {
-    return new InventarioDTO.Response(
-        i.getId(), i.getCantidad(),
-        tiendaClient.getTiendaById(i.getId_tienda()),
-        productoClient.getProductoById(i.getId_producto())
-    );
-}
+        return new InventarioDTO.Response(
+            i.getId(), i.getCantidad(),
+            tiendaClient.getTiendaById(i.getId_tienda()),
+            productoClient.getProductoById(i.getId_producto())
+        );
+    }
 
     @Override
     public List<InventarioDTO.Response> getAllInventarios() {
@@ -34,7 +35,10 @@ public class InventarioServiceImpl implements InventarioService {
     @Override
     public InventarioDTO.Response getInventarioById(Integer id) {
         List<Inventario> lista = inventarioRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Inventario con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -49,7 +53,9 @@ public class InventarioServiceImpl implements InventarioService {
     @Override
     public InventarioDTO.Response updateInventario(Integer id, InventarioDTO.Request request) {
         List<Inventario> lista = inventarioRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Inventario con id " + id + " no encontrado para actualizar");
+        }
         Inventario i = lista.get(0);
         i.setCantidad(request.getCantidad());
         i.setId_producto(request.getId_producto());
@@ -58,5 +64,8 @@ public class InventarioServiceImpl implements InventarioService {
     }
 
     @Override
-    public void delete(Integer id) { inventarioRepository.deleteInventarioById(id); }
+    public void delete(Integer id) {
+        getInventarioById(id); // valida existencia antes de borrar
+        inventarioRepository.deleteInventarioById(id);
+    }
 }
