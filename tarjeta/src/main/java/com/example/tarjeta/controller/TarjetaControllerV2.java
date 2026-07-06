@@ -1,8 +1,8 @@
-package com.example.tienda.controller;
+package com.example.tarjeta.controller;
 
-import com.example.tienda.assembler.TiendaModelAssembler;
-import com.example.tienda.dto.TiendaDTO;
-import com.example.tienda.service.TiendaService;
+import com.example.tarjeta.assembler.TarjetaModelAssembler;
+import com.example.tarjeta.dto.TarjetaDTO;
+import com.example.tarjeta.service.TarjetaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -23,17 +23,17 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-@Tag(name = "Tiendas V2", description = "Gestión de tiendas con HATEOAS")
+@Tag(name = "Tarjetas V2", description = "Gestión de tarjetas con HATEOAS")
 @RestController
-@RequestMapping("/api/v2/tiendas")
+@RequestMapping("/api/v2/tarjetas")
 @RequiredArgsConstructor
-public class TiendaControllerV2 {
+public class TarjetaControllerV2 {
 
-    private final TiendaService tiendaService;
-    private final TiendaModelAssembler assembler;
+    private final TarjetaService tarjetaService;
+    private final TarjetaModelAssembler assembler;
 
-    // GET /api/v2/tiendas
-    @Operation(summary = "Listar todas las tiendas", description = "Retorna todas las tiendas con links HATEOAS.")
+    // GET /api/v2/tarjetas
+    @Operation(summary = "Listar todas las tarjetas", description = "Retorna todas las tarjetas con links HATEOAS.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
@@ -43,26 +43,24 @@ public class TiendaControllerV2 {
                 schema = @Schema(implementation = CollectionModel.class),
                 examples = @ExampleObject(
                     name = "Éxito",
-                    summary = "Tiendas obtenidas exitosamente",
+                    summary = "Tarjetas obtenidas exitosamente",
                     value = """
                     {
                       "_embedded": {
                         "responseList": [
                           {
-                            "id_tienda": 1,
-                            "nombre_tienda": "Tienda Central Santiago",
-                            "ubicacion": "Av. Providencia 1234 Santiago",
-                            "horario_apertura": "2025-01-01",
-                            "politicas": "No se aceptan devoluciones sin boleta",
+                            "id_tarjeta": 1,
+                            "tipo": "D",
+                            "cliente": { "id_cliente": 1, "nombre": "Juan", "apellido": "Pérez", "email": "juan@mail.com" },
                             "_links": {
-                              "self":    { "href": "/api/v2/tiendas/1" },
-                              "tiendas": { "href": "/api/v2/tiendas" }
+                              "self":     { "href": "/api/v2/tarjetas/1" },
+                              "tarjetas": { "href": "/api/v2/tarjetas" }
                             }
                           }
                         ]
                       },
                       "_links": {
-                        "self": { "href": "/api/v2/tiendas" }
+                        "self": { "href": "/api/v2/tarjetas" }
                       }
                     }
                     """
@@ -71,37 +69,35 @@ public class TiendaControllerV2 {
         )
     })
     @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public CollectionModel<EntityModel<TiendaDTO.Response>> listarTodos() {
-        List<EntityModel<TiendaDTO.Response>> tiendas = tiendaService.getAllTiendas().stream()
+    public CollectionModel<EntityModel<TarjetaDTO.Response>> listarTodos() {
+        List<EntityModel<TarjetaDTO.Response>> tarjetas = tarjetaService.getAllTarjetas().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(tiendas,
-                linkTo(methodOn(TiendaControllerV2.class).listarTodos()).withSelfRel());
+        return CollectionModel.of(tarjetas,
+                linkTo(methodOn(TarjetaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    // GET /api/v2/tiendas/{id}
-    @Operation(summary = "Obtener tienda por ID", description = "Retorna una tienda específica con sus links HATEOAS.")
+    // GET /api/v2/tarjetas/{id}
+    @Operation(summary = "Obtener tarjeta por ID", description = "Retorna una tarjeta específica con sus links HATEOAS.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Tienda encontrada exitosamente",
+            description = "Tarjeta encontrada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
                 schema = @Schema(implementation = EntityModel.class),
                 examples = @ExampleObject(
                     name = "Éxito",
-                    summary = "Tienda encontrada",
+                    summary = "Tarjeta encontrada",
                     value = """
                     {
-                      "id_tienda": 1,
-                      "nombre_tienda": "Tienda Central Santiago",
-                      "ubicacion": "Av. Providencia 1234 Santiago",
-                      "horario_apertura": "2025-01-01",
-                      "politicas": "No se aceptan devoluciones sin boleta",
+                      "id_tarjeta": 1,
+                      "tipo": "D",
+                      "cliente": { "id_cliente": 1, "nombre": "Juan", "apellido": "Pérez", "email": "juan@mail.com" },
                       "_links": {
-                        "self":    { "href": "/api/v2/tiendas/1" },
-                        "tiendas": { "href": "/api/v2/tiendas" }
+                        "self":     { "href": "/api/v2/tarjetas/1" },
+                        "tarjetas": { "href": "/api/v2/tarjetas" }
                       }
                     }
                     """
@@ -110,7 +106,7 @@ public class TiendaControllerV2 {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Tienda no encontrada",
+            description = "Tarjeta no encontrada",
             content = @Content(
                 mediaType = "application/json",
                 examples = @ExampleObject(
@@ -120,7 +116,7 @@ public class TiendaControllerV2 {
                     {
                       "status": 404,
                       "success": false,
-                      "message": "Tienda con id 99 no encontrada",
+                      "message": "Tarjeta con id 99 no encontrada",
                       "timestamp": "2025-06-22T10:00:00"
                     }
                     """
@@ -129,32 +125,30 @@ public class TiendaControllerV2 {
         )
     })
     @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<TiendaDTO.Response>> buscarPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(assembler.toModel(tiendaService.getTiendaById(id)));
+    public ResponseEntity<EntityModel<TarjetaDTO.Response>> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(assembler.toModel(tarjetaService.getTarjetaById(id)));
     }
 
-    // POST /api/v2/tiendas
-    @Operation(summary = "Crear una nueva tienda", description = "Registra una tienda y retorna su ubicación en el header Location.")
+    // POST /api/v2/tarjetas
+    @Operation(summary = "Crear una nueva tarjeta", description = "Registra una tarjeta y retorna su ubicación en el header Location.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "201",
-            description = "Tienda creada exitosamente",
+            description = "Tarjeta creada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
                 schema = @Schema(implementation = EntityModel.class),
                 examples = @ExampleObject(
                     name = "Creada",
-                    summary = "Tienda registrada correctamente",
+                    summary = "Tarjeta registrada correctamente",
                     value = """
                     {
-                      "id_tienda": 5,
-                      "nombre_tienda": "Tienda Norte Concepcion",
-                      "ubicacion": "Av. O'Higgins 567 Concepcion",
-                      "horario_apertura": "2025-03-01",
-                      "politicas": "Cambios dentro de 30 dias con boleta",
+                      "id_tarjeta": 5,
+                      "tipo": "C",
+                      "cliente": { "id_cliente": 2, "nombre": "María", "apellido": "González", "email": "maria@mail.com" },
                       "_links": {
-                        "self":    { "href": "/api/v2/tiendas/5" },
-                        "tiendas": { "href": "/api/v2/tiendas" }
+                        "self":     { "href": "/api/v2/tarjetas/5" },
+                        "tarjetas": { "href": "/api/v2/tarjetas" }
                       }
                     }
                     """
@@ -175,9 +169,8 @@ public class TiendaControllerV2 {
                       "success": false,
                       "message": "Error de validación en los datos enviados",
                       "errors": {
-                        "nombre_tienda": "El nombre de la tienda es obligatorio",
-                        "ubicacion":     "La ubicacion de la tienda es obligatoria",
-                        "politicas":     "Las politicas de la tienda son obligatorias"
+                        "tipo":       "El tipo de tarjeta es obligatorio",
+                        "id_cliente": "El id_cliente es obligatorio"
                       },
                       "timestamp": "2025-06-22T10:00:00"
                     }
@@ -187,35 +180,33 @@ public class TiendaControllerV2 {
         )
     })
     @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<TiendaDTO.Response>> crear(@Valid @RequestBody TiendaDTO.Request request) {
-        TiendaDTO.Response nueva = tiendaService.save(request);
+    public ResponseEntity<EntityModel<TarjetaDTO.Response>> crear(@Valid @RequestBody TarjetaDTO.Request request) {
+        TarjetaDTO.Response nueva = tarjetaService.save(request);
         return ResponseEntity
-                .created(linkTo(methodOn(TiendaControllerV2.class).buscarPorId(nueva.getId_tienda())).toUri())
+                .created(linkTo(methodOn(TarjetaControllerV2.class).buscarPorId(nueva.getId_tarjeta())).toUri())
                 .body(assembler.toModel(nueva));
     }
 
-    // PUT /api/v2/tiendas/{id}
-    @Operation(summary = "Actualizar una tienda existente", description = "Modifica los datos de una tienda por su ID.")
+    // PUT /api/v2/tarjetas/{id}
+    @Operation(summary = "Actualizar una tarjeta existente", description = "Modifica el tipo y cliente de una tarjeta por su ID.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Tienda actualizada exitosamente",
+            description = "Tarjeta actualizada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
                 schema = @Schema(implementation = EntityModel.class),
                 examples = @ExampleObject(
                     name = "Actualizada",
-                    summary = "Tienda modificada correctamente",
+                    summary = "Tarjeta modificada correctamente",
                     value = """
                     {
-                      "id_tienda": 1,
-                      "nombre_tienda": "Tienda Central Santiago Premium",
-                      "ubicacion": "Av. Providencia 1234 Santiago",
-                      "horario_apertura": "2025-01-01",
-                      "politicas": "Devoluciones hasta 15 dias con boleta",
+                      "id_tarjeta": 1,
+                      "tipo": "C",
+                      "cliente": { "id_cliente": 1, "nombre": "Juan", "apellido": "Pérez", "email": "juan@mail.com" },
                       "_links": {
-                        "self":    { "href": "/api/v2/tiendas/1" },
-                        "tiendas": { "href": "/api/v2/tiendas" }
+                        "self":     { "href": "/api/v2/tarjetas/1" },
+                        "tarjetas": { "href": "/api/v2/tarjetas" }
                       }
                     }
                     """
@@ -224,7 +215,7 @@ public class TiendaControllerV2 {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Tienda no encontrada",
+            description = "Tarjeta no encontrada",
             content = @Content(
                 mediaType = "application/json",
                 examples = @ExampleObject(
@@ -234,7 +225,7 @@ public class TiendaControllerV2 {
                     {
                       "status": 404,
                       "success": false,
-                      "message": "Tienda con id 99 no encontrada para actualizar",
+                      "message": "Tarjeta con id 99 no encontrada para actualizar",
                       "timestamp": "2025-06-22T10:00:00"
                     }
                     """
@@ -243,22 +234,22 @@ public class TiendaControllerV2 {
         )
     })
     @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<TiendaDTO.Response>> actualizar(
+    public ResponseEntity<EntityModel<TarjetaDTO.Response>> actualizar(
             @PathVariable Integer id,
-            @Valid @RequestBody TiendaDTO.Request request) {
-        return ResponseEntity.ok(assembler.toModel(tiendaService.updateTienda(id, request)));
+            @Valid @RequestBody TarjetaDTO.Request request) {
+        return ResponseEntity.ok(assembler.toModel(tarjetaService.updateTarjeta(id, request)));
     }
 
-    // DELETE /api/v2/tiendas/{id}
-    @Operation(summary = "Eliminar una tienda por ID", description = "Elimina permanentemente una tienda. Retorna 204 sin contenido si fue exitoso.")
+    // DELETE /api/v2/tarjetas/{id}
+    @Operation(summary = "Eliminar una tarjeta por ID", description = "Elimina permanentemente una tarjeta. Retorna 204 sin contenido si fue exitoso.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "204",
-            description = "Tienda eliminada exitosamente — sin contenido en la respuesta"
+            description = "Tarjeta eliminada exitosamente — sin contenido en la respuesta"
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Tienda no encontrada",
+            description = "Tarjeta no encontrada",
             content = @Content(
                 mediaType = "application/json",
                 examples = @ExampleObject(
@@ -268,7 +259,7 @@ public class TiendaControllerV2 {
                     {
                       "status": 404,
                       "success": false,
-                      "message": "Tienda con id 99 no encontrada",
+                      "message": "Tarjeta con id 99 no encontrada",
                       "timestamp": "2025-06-22T10:00:00"
                     }
                     """
@@ -278,7 +269,7 @@ public class TiendaControllerV2 {
     })
     @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
-        tiendaService.delete(id);
+        tarjetaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
