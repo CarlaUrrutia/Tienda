@@ -1,8 +1,8 @@
-package com.example.producto.controller;
+package com.example.tienda.controller;
 
-import com.example.producto.assembler.ProductoModelAssembler;
-import com.example.producto.dto.ProductoDTO;
-import com.example.producto.service.ProductoService;
+import com.example.tienda.assembler.TiendaModelAssembler;
+import com.example.tienda.dto.TiendaDTO;
+import com.example.tienda.service.TiendaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -23,17 +23,17 @@ import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-@Tag(name = "Productos V2", description = "Gestión de productos con HATEOAS")
+@Tag(name = "Tiendas V2", description = "Gestión de tiendas con HATEOAS")
 @RestController
-@RequestMapping("/api/v2/productos")
+@RequestMapping("/api/v2/tiendas")
 @RequiredArgsConstructor
-public class ProductoControllerV2 {
+public class TiendaControllerV2 {
 
-    private final ProductoService productoService;
-    private final ProductoModelAssembler assembler;
+    private final TiendaService tiendaService;
+    private final TiendaModelAssembler assembler;
 
-    // GET /api/v2/productos
-    @Operation(summary = "Listar todos los productos", description = "Retorna todos los productos con links HATEOAS.")
+    // GET /api/v2/tiendas
+    @Operation(summary = "Listar todas las tiendas", description = "Retorna todas las tiendas con links HATEOAS.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
@@ -43,25 +43,26 @@ public class ProductoControllerV2 {
                 schema = @Schema(implementation = CollectionModel.class),
                 examples = @ExampleObject(
                     name = "Éxito",
-                    summary = "Productos obtenidos exitosamente",
+                    summary = "Tiendas obtenidas exitosamente",
                     value = """
                     {
                       "_embedded": {
                         "responseList": [
                           {
-                            "id_producto": 1,
-                            "nombre": "Camiseta Polo Blanca",
-                            "precio_venta": 15000,
-                            "proveedor": { "id_proveedor": 1, "nombre": "Textiles Norte", "contacto": "contacto@textilesnorte.cl" },
+                            "id_tienda": 1,
+                            "nombre_tienda": "Tienda Central Santiago",
+                            "ubicacion": "Av. Providencia 1234 Santiago",
+                            "horario_apertura": "2025-01-01",
+                            "politicas": "No se aceptan devoluciones sin boleta",
                             "_links": {
-                              "self":      { "href": "/api/v2/productos/1" },
-                              "productos": { "href": "/api/v2/productos" }
+                              "self":    { "href": "/api/v2/tiendas/1" },
+                              "tiendas": { "href": "/api/v2/tiendas" }
                             }
                           }
                         ]
                       },
                       "_links": {
-                        "self": { "href": "/api/v2/productos" }
+                        "self": { "href": "/api/v2/tiendas" }
                       }
                     }
                     """
@@ -70,36 +71,37 @@ public class ProductoControllerV2 {
         )
     })
     @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public CollectionModel<EntityModel<ProductoDTO.Response>> listarTodos() {
-        List<EntityModel<ProductoDTO.Response>> productos = productoService.getAllProductos().stream()
+    public CollectionModel<EntityModel<TiendaDTO.Response>> listarTodos() {
+        List<EntityModel<TiendaDTO.Response>> tiendas = tiendaService.getAllTiendas().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(productos,
-                linkTo(methodOn(ProductoControllerV2.class).listarTodos()).withSelfRel());
+        return CollectionModel.of(tiendas,
+                linkTo(methodOn(TiendaControllerV2.class).listarTodos()).withSelfRel());
     }
 
-    // GET /api/v2/productos/{id}
-    @Operation(summary = "Obtener producto por ID", description = "Retorna un producto específico con sus links HATEOAS.")
+    // GET /api/v2/tiendas/{id}
+    @Operation(summary = "Obtener tienda por ID", description = "Retorna una tienda específica con sus links HATEOAS.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Producto encontrado exitosamente",
+            description = "Tienda encontrada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
                 schema = @Schema(implementation = EntityModel.class),
                 examples = @ExampleObject(
                     name = "Éxito",
-                    summary = "Producto encontrado",
+                    summary = "Tienda encontrada",
                     value = """
                     {
-                      "id_producto": 1,
-                      "nombre": "Camiseta Polo Blanca",
-                      "precio_venta": 15000,
-                      "proveedor": { "id_proveedor": 1, "nombre": "Textiles Norte", "contacto": "contacto@textilesnorte.cl" },
+                      "id_tienda": 1,
+                      "nombre_tienda": "Tienda Central Santiago",
+                      "ubicacion": "Av. Providencia 1234 Santiago",
+                      "horario_apertura": "2025-01-01",
+                      "politicas": "No se aceptan devoluciones sin boleta",
                       "_links": {
-                        "self":      { "href": "/api/v2/productos/1" },
-                        "productos": { "href": "/api/v2/productos" }
+                        "self":    { "href": "/api/v2/tiendas/1" },
+                        "tiendas": { "href": "/api/v2/tiendas" }
                       }
                     }
                     """
@@ -108,17 +110,17 @@ public class ProductoControllerV2 {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Producto no encontrado",
+            description = "Tienda no encontrada",
             content = @Content(
                 mediaType = "application/json",
                 examples = @ExampleObject(
-                    name = "No encontrado",
+                    name = "No encontrada",
                     summary = "ID inexistente",
                     value = """
                     {
                       "status": 404,
                       "success": false,
-                      "message": "Producto con id 99 no encontrado",
+                      "message": "Tienda con id 99 no encontrada",
                       "timestamp": "2025-06-22T10:00:00"
                     }
                     """
@@ -127,31 +129,32 @@ public class ProductoControllerV2 {
         )
     })
     @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<ProductoDTO.Response>> buscarPorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(assembler.toModel(productoService.getProductoById(id)));
+    public ResponseEntity<EntityModel<TiendaDTO.Response>> buscarPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(assembler.toModel(tiendaService.getTiendaById(id)));
     }
 
-    // POST /api/v2/productos
-    @Operation(summary = "Crear un nuevo producto", description = "Registra un producto y retorna su ubicación en el header Location.")
+    // POST /api/v2/tiendas
+    @Operation(summary = "Crear una nueva tienda", description = "Registra una tienda y retorna su ubicación en el header Location.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "201",
-            description = "Producto creado exitosamente",
+            description = "Tienda creada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
                 schema = @Schema(implementation = EntityModel.class),
                 examples = @ExampleObject(
-                    name = "Creado",
-                    summary = "Producto registrado correctamente",
+                    name = "Creada",
+                    summary = "Tienda registrada correctamente",
                     value = """
                     {
-                      "id_producto": 5,
-                      "nombre": "Pantalon Cargo Negro",
-                      "precio_venta": 29900,
-                      "proveedor": { "id_proveedor": 2, "nombre": "Confecciones Sur", "contacto": "ventas@confeccionessur.cl" },
+                      "id_tienda": 5,
+                      "nombre_tienda": "Tienda Norte Concepcion",
+                      "ubicacion": "Av. O'Higgins 567 Concepcion",
+                      "horario_apertura": "2025-03-01",
+                      "politicas": "Cambios dentro de 30 dias con boleta",
                       "_links": {
-                        "self":      { "href": "/api/v2/productos/5" },
-                        "productos": { "href": "/api/v2/productos" }
+                        "self":    { "href": "/api/v2/tiendas/5" },
+                        "tiendas": { "href": "/api/v2/tiendas" }
                       }
                     }
                     """
@@ -172,8 +175,9 @@ public class ProductoControllerV2 {
                       "success": false,
                       "message": "Error de validación en los datos enviados",
                       "errors": {
-                        "nombre":       "El nombre es obligatorio",
-                        "id_proveedor": "El id_proveedor es obligatorio"
+                        "nombre_tienda": "El nombre de la tienda es obligatorio",
+                        "ubicacion":     "La ubicacion de la tienda es obligatoria",
+                        "politicas":     "Las politicas de la tienda son obligatorias"
                       },
                       "timestamp": "2025-06-22T10:00:00"
                     }
@@ -183,34 +187,35 @@ public class ProductoControllerV2 {
         )
     })
     @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<ProductoDTO.Response>> crear(@Valid @RequestBody ProductoDTO.Request request) {
-        ProductoDTO.Response nuevo = productoService.save(request);
+    public ResponseEntity<EntityModel<TiendaDTO.Response>> crear(@Valid @RequestBody TiendaDTO.Request request) {
+        TiendaDTO.Response nueva = tiendaService.save(request);
         return ResponseEntity
-                .created(linkTo(methodOn(ProductoControllerV2.class).buscarPorId(nuevo.getId_producto())).toUri())
-                .body(assembler.toModel(nuevo));
+                .created(linkTo(methodOn(TiendaControllerV2.class).buscarPorId(nueva.getId_tienda())).toUri())
+                .body(assembler.toModel(nueva));
     }
 
-    // PUT /api/v2/productos/{id}
-    @Operation(summary = "Actualizar un producto existente", description = "Modifica los datos de un producto por su ID.")
+    // PUT /api/v2/tiendas/{id}
+    @Operation(summary = "Actualizar una tienda existente", description = "Modifica los datos de una tienda por su ID.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
-            description = "Producto actualizado exitosamente",
+            description = "Tienda actualizada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
                 schema = @Schema(implementation = EntityModel.class),
                 examples = @ExampleObject(
-                    name = "Actualizado",
-                    summary = "Producto modificado correctamente",
+                    name = "Actualizada",
+                    summary = "Tienda modificada correctamente",
                     value = """
                     {
-                      "id_producto": 1,
-                      "nombre": "Camiseta Polo Negra",
-                      "precio_venta": 17000,
-                      "proveedor": { "id_proveedor": 1, "nombre": "Textiles Norte", "contacto": "contacto@textilesnorte.cl" },
+                      "id_tienda": 1,
+                      "nombre_tienda": "Tienda Central Santiago Premium",
+                      "ubicacion": "Av. Providencia 1234 Santiago",
+                      "horario_apertura": "2025-01-01",
+                      "politicas": "Devoluciones hasta 15 dias con boleta",
                       "_links": {
-                        "self":      { "href": "/api/v2/productos/1" },
-                        "productos": { "href": "/api/v2/productos" }
+                        "self":    { "href": "/api/v2/tiendas/1" },
+                        "tiendas": { "href": "/api/v2/tiendas" }
                       }
                     }
                     """
@@ -219,17 +224,17 @@ public class ProductoControllerV2 {
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Producto no encontrado",
+            description = "Tienda no encontrada",
             content = @Content(
                 mediaType = "application/json",
                 examples = @ExampleObject(
-                    name = "No encontrado",
+                    name = "No encontrada",
                     summary = "ID inexistente",
                     value = """
                     {
                       "status": 404,
                       "success": false,
-                      "message": "Producto con id 99 no encontrado para actualizar",
+                      "message": "Tienda con id 99 no encontrada para actualizar",
                       "timestamp": "2025-06-22T10:00:00"
                     }
                     """
@@ -238,32 +243,32 @@ public class ProductoControllerV2 {
         )
     })
     @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<ProductoDTO.Response>> actualizar(
+    public ResponseEntity<EntityModel<TiendaDTO.Response>> actualizar(
             @PathVariable Integer id,
-            @Valid @RequestBody ProductoDTO.Request request) {
-        return ResponseEntity.ok(assembler.toModel(productoService.updateProducto(id, request)));
+            @Valid @RequestBody TiendaDTO.Request request) {
+        return ResponseEntity.ok(assembler.toModel(tiendaService.updateTienda(id, request)));
     }
 
-    // DELETE /api/v2/productos/{id}
-    @Operation(summary = "Eliminar un producto por ID", description = "Elimina permanentemente un producto. Retorna 204 sin contenido si fue exitoso.")
+    // DELETE /api/v2/tiendas/{id}
+    @Operation(summary = "Eliminar una tienda por ID", description = "Elimina permanentemente una tienda. Retorna 204 sin contenido si fue exitoso.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "204",
-            description = "Producto eliminado exitosamente — sin contenido en la respuesta"
+            description = "Tienda eliminada exitosamente — sin contenido en la respuesta"
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
-            description = "Producto no encontrado",
+            description = "Tienda no encontrada",
             content = @Content(
                 mediaType = "application/json",
                 examples = @ExampleObject(
-                    name = "No encontrado",
+                    name = "No encontrada",
                     summary = "ID inexistente",
                     value = """
                     {
                       "status": 404,
                       "success": false,
-                      "message": "Producto con id 99 no encontrado",
+                      "message": "Tienda con id 99 no encontrada",
                       "timestamp": "2025-06-22T10:00:00"
                     }
                     """
@@ -273,7 +278,7 @@ public class ProductoControllerV2 {
     })
     @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
-        productoService.delete(id);
+        tiendaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -5,6 +5,7 @@ import com.example.producto.client.ProveedorClient;
 import com.example.producto.model.Producto;
 import com.example.producto.repository.ProductoRepository;
 import com.example.producto.service.ProductoService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -31,7 +32,10 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public ProductoDTO.Response getProductoById(Integer id) {
         List<Producto> lista = productoRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Producto con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -46,7 +50,9 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public ProductoDTO.Response updateProducto(Integer id, ProductoDTO.Request request) {
         List<Producto> lista = productoRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Producto con id " + id + " no encontrado para actualizar");
+        }
         Producto p = lista.get(0);
         p.setNombre(request.getNombre());
         p.setPrecio_venta(request.getPrecio_venta());
@@ -55,5 +61,8 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public void delete(Integer id) { productoRepository.deleteProductoById(id); }
+    public void delete(Integer id) {
+        getProductoById(id); // valida existencia antes de borrar
+        productoRepository.deleteProductoById(id);
+    }
 }

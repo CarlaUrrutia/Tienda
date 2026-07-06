@@ -4,6 +4,7 @@ import com.example.proveedor.dto.ProveedorDTO;
 import com.example.proveedor.model.Proveedor;
 import com.example.proveedor.repository.ProveedorRepository;
 import com.example.proveedor.service.ProveedorService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -28,7 +29,10 @@ public class ProveedorServiceImpl implements ProveedorService {
     @Override
     public ProveedorDTO.Response getProveedorById(Integer id) {
         List<Proveedor> lista = proveedorRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Proveedor con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -42,15 +46,18 @@ public class ProveedorServiceImpl implements ProveedorService {
     @Override
     public ProveedorDTO.Response updateProveedor(Integer id, ProveedorDTO.Request request) {
         List<Proveedor> lista = proveedorRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Proveedor con id " + id + " no encontrado para actualizar");
+        }
         Proveedor p = lista.get(0);
         p.setNombre(request.getNombre());
         p.setContacto(request.getContacto());
         return toResponse(proveedorRepository.save(p));
     }
 
-         @Override
-        public void delete(Integer id) {
-         proveedorRepository.deleteProveedorById(id);
-            }
+    @Override
+    public void delete(Integer id) {
+        getProveedorById(id); // valida existencia antes de borrar
+        proveedorRepository.deleteProveedorById(id);
+    }
 }

@@ -4,6 +4,7 @@ import com.example.rol.dto.RolDTO;
 import com.example.rol.model.Rol;
 import com.example.rol.repository.RolRepository;
 import com.example.rol.service.RolService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -26,7 +27,10 @@ public class RolServiceimpl implements RolService {
     @Override
     public RolDTO.Response getRolById(Integer id) {
         List<Rol> lista = rolRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Rol con id " + id + " no encontrado");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -39,7 +43,9 @@ public class RolServiceimpl implements RolService {
     @Override
     public RolDTO.Response updateRol(Integer id, RolDTO.Request request) {
         List<Rol> lista = rolRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Rol con id " + id + " no encontrado para actualizar");
+        }
         Rol r = lista.get(0);
         r.setNombre_rol(request.getNombre_rol());
         return toResponse(rolRepository.save(r));
@@ -47,6 +53,7 @@ public class RolServiceimpl implements RolService {
 
     @Override
     public void delete(Integer id) {
+        getRolById(id); // valida existencia antes de borrar
         rolRepository.deleteRolById(id);
     }
 }
