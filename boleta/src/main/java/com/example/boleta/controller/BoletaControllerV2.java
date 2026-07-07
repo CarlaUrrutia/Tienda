@@ -1,6 +1,7 @@
 package com.example.boleta.controller;
 
 import com.example.boleta.assembler.BoletaModelAssembler;
+import com.example.boleta.dto.ApiResponse;
 import com.example.boleta.dto.BoletaDTO;
 import com.example.boleta.service.BoletaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,29 +43,32 @@ public class BoletaControllerV2 {
             description = "Lista obtenida correctamente",
             content = @Content(
                 mediaType = "application/hal+json",
-                schema = @Schema(implementation = CollectionModel.class),
+                schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(
                     name = "Éxito",
                     summary = "Boletas obtenidas exitosamente",
                     value = """
                     {
-                      "_embedded": {
-                        "boletaList": [
-                          {
-                            "id_boleta": 1,
-                            "cliente": { "id_cliente": 1, "nombre": "Juan", "apellido": "Pérez", "email": "juan@mail.com" },
-                            "venta": { "id_venta": 1, "fecha": "2025-06-01", "total": 15000 },
-                            "_links": {
-                              "self":    { "href": "/api/v2/boletas/1" },
-                              "boletas": { "href": "/api/v2/boletas" },
-                              "delete":  { "href": "/api/v2/boletas/1" }
+                      "status": 200,
+                      "success": true,
+                      "message": "Boletas obtenidas exitosamente",
+                      "data": {
+                        "_embedded": {
+                          "responseList": [
+                            {
+                              "id_boleta": 1,
+                              "cliente": { "id_cliente": 1, "nombre": "Juan", "apellido": "Pérez", "email": "juan@mail.com" },
+                              "venta": { "id_venta": 1, "fecha": "2025-06-01", "total": 15000 },
+                              "_links": {
+                                "self":    { "href": "/api/v2/boletas/1" },
+                                "boletas": { "href": "/api/v2/boletas" }
+                              }
                             }
-                          }
-                        ]
+                          ]
+                        },
+                        "_links": { "self": { "href": "/api/v2/boletas" } }
                       },
-                      "_links": {
-                        "self": { "href": "/api/v2/boletas" }
-                      }
+                      "timestamp": "2025-06-22T10:00:00"
                     }
                     """
                 )
@@ -71,13 +76,17 @@ public class BoletaControllerV2 {
         )
     })
     @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public CollectionModel<EntityModel<BoletaDTO.Response>> listarTodos() {
+    public ResponseEntity<ApiResponse<CollectionModel<EntityModel<BoletaDTO.Response>>>> listarTodos() {
         List<EntityModel<BoletaDTO.Response>> boletas = boletaService.getAllBoletas().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(boletas,
+        CollectionModel<EntityModel<BoletaDTO.Response>> collection = CollectionModel.of(boletas,
                 linkTo(methodOn(BoletaControllerV2.class).listarTodos()).withSelfRel());
+
+        return ResponseEntity.ok(
+            ApiResponse.ok("Boletas obtenidas exitosamente", collection, null)
+        );
     }
 
     // GET /api/v2/boletas/{id}
@@ -88,20 +97,26 @@ public class BoletaControllerV2 {
             description = "Boleta encontrada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
-                schema = @Schema(implementation = EntityModel.class),
+                schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(
                     name = "Éxito",
                     summary = "Boleta encontrada",
                     value = """
                     {
-                      "id_boleta": 1,
-                      "cliente": { "id_cliente": 1, "nombre": "Juan", "apellido": "Pérez", "email": "juan@mail.com" },
-                      "venta": { "id_venta": 1, "fecha": "2025-06-01", "total": 15000 },
-                      "_links": {
-                        "self":    { "href": "/api/v2/boletas/1" },
-                        "boletas": { "href": "/api/v2/boletas" },
-                        "delete":  { "href": "/api/v2/boletas/1" }
-                      }
+                      "status": 200,
+                      "success": true,
+                      "message": "Boleta encontrada exitosamente",
+                      "data": {
+                        "id_boleta": 1,
+                        "cliente": { "id_cliente": 1, "nombre": "Juan", "apellido": "Pérez", "email": "juan@mail.com" },
+                        "venta": { "id_venta": 1, "fecha": "2025-06-01", "total": 15000 },
+                        "_links": {
+                          "self":    { "href": "/api/v2/boletas/1" },
+                          "boletas": { "href": "/api/v2/boletas" },
+                          "delete":  { "href": "/api/v2/boletas/1" }
+                        }
+                      },
+                      "timestamp": "2025-06-22T10:00:00"
                     }
                     """
                 )
@@ -128,33 +143,47 @@ public class BoletaControllerV2 {
         )
     })
     @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-        public ResponseEntity<EntityModel<BoletaDTO.Response>> buscarPorId(@PathVariable Integer id) {
-        BoletaDTO.Response boleta = boletaService.getBoletaById(id);
-        return ResponseEntity.ok(assembler.toModel(boleta));
-}
+    public ResponseEntity<ApiResponse<EntityModel<BoletaDTO.Response>>> buscarPorId(@PathVariable Integer id) {
+        try {
+            BoletaDTO.Response boleta = boletaService.getBoletaById(id);
+            return ResponseEntity.ok(
+                ApiResponse.ok("Boleta encontrada exitosamente", assembler.toModel(boleta), null)
+            );
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ApiResponse.notFound(ex.getMessage())
+            );
+        }
+    }
 
     // POST /api/v2/boletas
-    @Operation(summary = "Crear una nueva boleta", description = "Registra una boleta y retorna su ubicación en el header Location.")
+    @Operation(summary = "Crear una nueva boleta", description = "Registra una boleta asociando un cliente y una venta.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "201",
             description = "Boleta creada exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
-                schema = @Schema(implementation = EntityModel.class),
+                schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(
                     name = "Creada",
                     summary = "Boleta registrada correctamente",
                     value = """
                     {
-                      "id_boleta": 5,
-                      "cliente": { "id_cliente": 2, "nombre": "María", "apellido": "González", "email": "maria@mail.com" },
-                      "venta": { "id_venta": 3, "fecha": "2025-06-22", "total": 29900 },
-                      "_links": {
-                        "self":    { "href": "/api/v2/boletas/5" },
-                        "boletas": { "href": "/api/v2/boletas" },
-                        "delete":  { "href": "/api/v2/boletas/5" }
-                      }
+                      "status": 201,
+                      "success": true,
+                      "message": "Boleta creada exitosamente",
+                      "data": {
+                        "id_boleta": 5,
+                        "cliente": { "id_cliente": 2, "nombre": "María", "apellido": "González", "email": "maria@mail.com" },
+                        "venta": { "id_venta": 3, "fecha": "2025-06-22", "total": 29900 },
+                        "_links": {
+                          "self":    { "href": "/api/v2/boletas/5" },
+                          "boletas": { "href": "/api/v2/boletas" },
+                          "delete":  { "href": "/api/v2/boletas/5" }
+                        }
+                      },
+                      "timestamp": "2025-06-22T10:00:00"
                     }
                     """
                 )
@@ -185,19 +214,34 @@ public class BoletaControllerV2 {
         )
     })
     @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<BoletaDTO.Response>> crear(@Valid @RequestBody BoletaDTO.Request request) {
+    public ResponseEntity<ApiResponse<EntityModel<BoletaDTO.Response>>> crear(@Valid @RequestBody BoletaDTO.Request request) {
         BoletaDTO.Response nueva = boletaService.save(request);
-        return ResponseEntity
-                .created(linkTo(methodOn(BoletaControllerV2.class).buscarPorId(nueva.getId_boleta())).toUri())
-                .body(assembler.toModel(nueva));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            ApiResponse.created("Boleta creada exitosamente", assembler.toModel(nueva), null)
+        );
     }
 
     // DELETE /api/v2/boletas/{id}
-    @Operation(summary = "Eliminar una boleta por ID", description = "Elimina permanentemente una boleta. Retorna 204 sin contenido si fue exitoso.")
+    @Operation(summary = "Eliminar una boleta por ID", description = "Elimina permanentemente una boleta.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "204",
-            description = "Boleta eliminada exitosamente — sin contenido en la respuesta"
+            responseCode = "200",
+            description = "Boleta eliminada exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    name = "Eliminada",
+                    summary = "Boleta borrada correctamente",
+                    value = """
+                    {
+                      "status": 200,
+                      "success": true,
+                      "message": "Boleta con id 1 eliminada exitosamente",
+                      "timestamp": "2025-06-22T10:00:00"
+                    }
+                    """
+                )
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
@@ -220,13 +264,17 @@ public class BoletaControllerV2 {
         )
     })
     @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Integer id) {
         try {
-            boletaService.getBoletaById(id); // valida existencia
+            boletaService.getBoletaById(id);
             boletaService.delete(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(
+                ApiResponse.deleted("Boleta con id " + id + " eliminada exitosamente", null)
+            );
         } catch (EntityNotFoundException ex) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ApiResponse.notFound("Boleta con id " + id + " no encontrada para eliminar")
+            );
         }
     }
 }

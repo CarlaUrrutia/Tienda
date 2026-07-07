@@ -1,6 +1,7 @@
 package com.example.cliente.controller;
 
 import com.example.cliente.assembler.ClienteModelAssembler;
+import com.example.cliente.dto.ApiResponse;
 import com.example.cliente.dto.ClienteDTO;
 import com.example.cliente.model.Cliente;
 import com.example.cliente.service.ClienteService;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,29 +43,33 @@ public class ClienteControllerV2 {
             description = "Lista obtenida correctamente",
             content = @Content(
                 mediaType = "application/hal+json",
-                schema = @Schema(implementation = CollectionModel.class),
+                schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(
                     name = "Éxito",
                     summary = "Clientes obtenidos exitosamente",
                     value = """
                     {
-                      "_embedded": {
-                        "responseList": [
-                          {
-                            "id_cliente": 1,
-                            "nombre": "Juan",
-                            "apellido": "Pérez",
-                            "email": "juan@mail.com",
-                            "_links": {
-                              "self":     { "href": "/api/v2/clientes/1" },
-                              "clientes": { "href": "/api/v2/clientes" }
+                      "status": 200,
+                      "success": true,
+                      "message": "Clientes obtenidos exitosamente",
+                      "data": {
+                        "_embedded": {
+                          "responseList": [
+                            {
+                              "id_cliente": 1,
+                              "nombre": "Juan",
+                              "apellido": "Pérez",
+                              "email": "juan@mail.com",
+                              "_links": {
+                                "self":     { "href": "/api/v2/clientes/1" },
+                                "clientes": { "href": "/api/v2/clientes" }
+                              }
                             }
-                          }
-                        ]
+                          ]
+                        },
+                        "_links": { "self": { "href": "/api/v2/clientes" } }
                       },
-                      "_links": {
-                        "self": { "href": "/api/v2/clientes" }
-                      }
+                      "timestamp": "2025-06-22T10:00:00"
                     }
                     """
                 )
@@ -71,14 +77,18 @@ public class ClienteControllerV2 {
         )
     })
     @GetMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public CollectionModel<EntityModel<ClienteDTO.Response>> listarTodos() {
+    public ResponseEntity<ApiResponse<CollectionModel<EntityModel<ClienteDTO.Response>>>> listarTodos() {
         List<EntityModel<ClienteDTO.Response>> clientes = clienteService.getAllClientes().stream()
                 .map(this::toResponse)
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(clientes,
+        CollectionModel<EntityModel<ClienteDTO.Response>> collection = CollectionModel.of(clientes,
                 linkTo(methodOn(ClienteControllerV2.class).listarTodos()).withSelfRel());
+
+        return ResponseEntity.ok(
+            ApiResponse.ok("Clientes obtenidos exitosamente", collection, null)
+        );
     }
 
     // GET /api/v2/clientes/{id}
@@ -89,20 +99,26 @@ public class ClienteControllerV2 {
             description = "Cliente encontrado exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
-                schema = @Schema(implementation = EntityModel.class),
+                schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(
                     name = "Éxito",
                     summary = "Cliente encontrado",
                     value = """
                     {
-                      "id_cliente": 1,
-                      "nombre": "Juan",
-                      "apellido": "Pérez",
-                      "email": "juan@mail.com",
-                      "_links": {
-                        "self":     { "href": "/api/v2/clientes/1" },
-                        "clientes": { "href": "/api/v2/clientes" }
-                      }
+                      "status": 200,
+                      "success": true,
+                      "message": "Cliente encontrado exitosamente",
+                      "data": {
+                        "id_cliente": 1,
+                        "nombre": "Juan",
+                        "apellido": "Pérez",
+                        "email": "juan@mail.com",
+                        "_links": {
+                          "self":     { "href": "/api/v2/clientes/1" },
+                          "clientes": { "href": "/api/v2/clientes" }
+                        }
+                      },
+                      "timestamp": "2025-06-22T10:00:00"
                     }
                     """
                 )
@@ -129,9 +145,11 @@ public class ClienteControllerV2 {
         )
     })
     @GetMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<ClienteDTO.Response>> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<EntityModel<ClienteDTO.Response>>> buscarPorId(@PathVariable Integer id) {
         ClienteDTO.Response response = toResponse(clienteService.getClienteById(id));
-        return ResponseEntity.ok(assembler.toModel(response));
+        return ResponseEntity.ok(
+            ApiResponse.ok("Cliente encontrado exitosamente", assembler.toModel(response), null)
+        );
     }
 
     // POST /api/v2/clientes
@@ -142,20 +160,26 @@ public class ClienteControllerV2 {
             description = "Cliente creado exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
-                schema = @Schema(implementation = EntityModel.class),
+                schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(
                     name = "Creado",
                     summary = "Cliente registrado correctamente",
                     value = """
                     {
-                      "id_cliente": 5,
-                      "nombre": "María",
-                      "apellido": "González",
-                      "email": "maria@mail.com",
-                      "_links": {
-                        "self":     { "href": "/api/v2/clientes/5" },
-                        "clientes": { "href": "/api/v2/clientes" }
-                      }
+                      "status": 201,
+                      "success": true,
+                      "message": "Cliente creado exitosamente",
+                      "data": {
+                        "id_cliente": 5,
+                        "nombre": "María",
+                        "apellido": "González",
+                        "email": "maria@mail.com",
+                        "_links": {
+                          "self":     { "href": "/api/v2/clientes/5" },
+                          "clientes": { "href": "/api/v2/clientes" }
+                        }
+                      },
+                      "timestamp": "2025-06-22T10:00:00"
                     }
                     """
                 )
@@ -187,12 +211,16 @@ public class ClienteControllerV2 {
         )
     })
     @PostMapping(produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<ClienteDTO.Response>> crear(@Valid @RequestBody Cliente cliente) {
+    public ResponseEntity<ApiResponse<EntityModel<ClienteDTO.Response>>> crear(@Valid @RequestBody Cliente cliente) {
         Cliente nuevo = clienteService.save(cliente);
         ClienteDTO.Response response = toResponse(nuevo);
         return ResponseEntity
-                .created(linkTo(methodOn(ClienteControllerV2.class).buscarPorId(nuevo.getId_cliente())).toUri())
-                .body(assembler.toModel(response));
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.created(
+                    "Cliente creado exitosamente",
+                    assembler.toModel(response),
+                    null
+                ));
     }
 
     // PUT /api/v2/clientes/{id}
@@ -203,20 +231,26 @@ public class ClienteControllerV2 {
             description = "Cliente actualizado exitosamente",
             content = @Content(
                 mediaType = "application/hal+json",
-                schema = @Schema(implementation = EntityModel.class),
+                schema = @Schema(implementation = ApiResponse.class),
                 examples = @ExampleObject(
                     name = "Actualizado",
                     summary = "Cliente modificado correctamente",
                     value = """
                     {
-                      "id_cliente": 1,
-                      "nombre": "Juan Carlos",
-                      "apellido": "Pérez",
-                      "email": "jc@mail.com",
-                      "_links": {
-                        "self":     { "href": "/api/v2/clientes/1" },
-                        "clientes": { "href": "/api/v2/clientes" }
-                      }
+                      "status": 200,
+                      "success": true,
+                      "message": "Cliente actualizado exitosamente",
+                      "data": {
+                        "id_cliente": 1,
+                        "nombre": "Juan Carlos",
+                        "apellido": "Pérez",
+                        "email": "jc@mail.com",
+                        "_links": {
+                          "self":     { "href": "/api/v2/clientes/1" },
+                          "clientes": { "href": "/api/v2/clientes" }
+                        }
+                      },
+                      "timestamp": "2025-06-22T10:00:00"
                     }
                     """
                 )
@@ -243,19 +277,36 @@ public class ClienteControllerV2 {
         )
     })
     @PutMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<EntityModel<ClienteDTO.Response>> actualizar(
+    public ResponseEntity<ApiResponse<EntityModel<ClienteDTO.Response>>> actualizar(
             @PathVariable Integer id,
             @Valid @RequestBody Cliente cliente) {
         ClienteDTO.Response response = toResponse(clienteService.updateCliente(id, cliente));
-        return ResponseEntity.ok(assembler.toModel(response));
+        return ResponseEntity.ok(
+            ApiResponse.ok("Cliente actualizado exitosamente", assembler.toModel(response), null)
+        );
     }
 
     // DELETE /api/v2/clientes/{id}
-    @Operation(summary = "Eliminar un cliente por ID", description = "Elimina permanentemente un cliente. Retorna 204 sin contenido si fue exitoso.")
+    @Operation(summary = "Eliminar un cliente por ID", description = "Elimina permanentemente un cliente.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "204",
-            description = "Cliente eliminado exitosamente — sin contenido en la respuesta"
+            responseCode = "200",
+            description = "Cliente eliminado exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    name = "Eliminado",
+                    summary = "Cliente borrado correctamente",
+                    value = """
+                    {
+                      "status": 200,
+                      "success": true,
+                      "message": "Cliente con id 1 eliminado exitosamente",
+                      "timestamp": "2025-06-22T10:00:00"
+                    }
+                    """
+                )
+            )
         ),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "404",
@@ -278,9 +329,11 @@ public class ClienteControllerV2 {
         )
     })
     @DeleteMapping(value = "/{id}", produces = {MediaTypes.HAL_JSON_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable Integer id) {
         clienteService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+            ApiResponse.deleted("Cliente con id " + id + " eliminado exitosamente", null)
+        );
     }
 
     private ClienteDTO.Response toResponse(Cliente cliente) {
