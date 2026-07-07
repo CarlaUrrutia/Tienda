@@ -8,6 +8,7 @@ import com.example.venta.dto.EmpleadoResponse;
 import com.example.venta.model.Venta;
 import com.example.venta.repository.VentaRepository;
 import com.example.venta.service.VentaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class VentaServiceImpl implements VentaService {
 
-    @Autowired
-    private VentaRepository ventaRepository;
-
-    @Autowired
-    private ClienteClient clienteClient;
-
-    @Autowired
-    private EmpleadoClient empleadoClient;
+    @Autowired private VentaRepository ventaRepository;
+    @Autowired private ClienteClient clienteClient;
+    @Autowired private EmpleadoClient empleadoClient;
 
     private VentaDTO.Response toResponse(Venta venta) {
         ClienteResponse cliente = clienteClient.getClienteById(venta.getId_cliente());
@@ -39,16 +35,15 @@ public class VentaServiceImpl implements VentaService {
 
     @Override
     public List<VentaDTO.Response> getAllVentas() {
-        return ventaRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
+        return ventaRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     @Override
     public VentaDTO.Response getVentaById(Integer id) {
         List<Venta> lista = ventaRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Venta con id " + id + " no encontrada");
+        }
         return toResponse(lista.get(0));
     }
 
@@ -58,14 +53,15 @@ public class VentaServiceImpl implements VentaService {
         venta.setFecha_venta(request.getFecha_venta());
         venta.setId_cliente(request.getId_cliente());
         venta.setId_empleado(request.getId_empleado());
-        Venta guardada = ventaRepository.save(venta);
-        return toResponse(guardada);
+        return toResponse(ventaRepository.save(venta));
     }
 
     @Override
     public VentaDTO.Response updateVenta(Integer id, VentaDTO.Request request) {
         List<Venta> lista = ventaRepository.buscarPorId(id);
-        if (lista.isEmpty()) return null;
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Venta con id " + id + " no encontrada para actualizar");
+        }
         Venta existente = lista.get(0);
         existente.setFecha_venta(request.getFecha_venta());
         existente.setId_cliente(request.getId_cliente());
@@ -75,6 +71,7 @@ public class VentaServiceImpl implements VentaService {
 
     @Override
     public void delete(Integer id) {
+        getVentaById(id); // valida existencia antes de borrar
         ventaRepository.deleteVentaById(id);
     }
 }
