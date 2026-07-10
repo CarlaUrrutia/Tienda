@@ -1,5 +1,7 @@
-package com.example.boleta.dto;
+package com.example.boleta.DTO;
 
+import com.example.boleta.DTO.ClienteResponse;
+import com.example.boleta.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
