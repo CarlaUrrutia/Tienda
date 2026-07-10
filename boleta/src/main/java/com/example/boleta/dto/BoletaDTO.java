@@ -1,5 +1,7 @@
-package com.example.boleta.dto;
+package com.example.boleta.DTO;
 
+import com.example.boleta.DTO.ClienteResponse;
+import com.example.boleta.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,24 +9,18 @@ import lombok.NoArgsConstructor;
 
 public class BoletaDTO {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Data @NoArgsConstructor @AllArgsConstructor
     public static class Request {
-
-        @NotBlank(message = "El id es obligatorio")
-        @Min(value = 0)
-        private int id_boleta;
-
+        @Min(value = 1, message = "El id_cliente es obligatorio")
+        private int id_cliente;
+        @Min(value = 1, message = "El id_venta es obligatorio")
+        private int id_venta;
     }
 
-    /**
-     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign. queeeeeeeee
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Data @NoArgsConstructor @AllArgsConstructor
     public static class Response {
         private int id_boleta;
+        private ClienteResponse cliente;
+        private VentaResponse venta;
     }
 }

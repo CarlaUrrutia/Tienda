@@ -1,18 +1,30 @@
 package com.example.inventario.repository;
 
-import com.ejemplo.ms_persona.entity.Persona;
+import com.example.inventario.model.Inventario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface InventarioRepository extends JpaRepository<Inventario, Long> {
+public interface InventarioRepository extends JpaRepository<Inventario, Integer> {
 
-    Optional<Inventario> findByid_inventario(int id_inventario);
+    @Query("SELECT i FROM Inventario i")
+    List<Inventario> findAll();
 
-    boolean existsBycatidad(int cantidad);
+    @Query("SELECT i FROM Inventario i WHERE i.id_inventario = :id")
+    List<Inventario> buscarPorId(@Param("id") Integer id);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Inventario i WHERE i.id_inventario = :id")
+    void deleteInventarioById(@Param("id") Integer id);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE Inventario i SET i.cantidad = :cantidad WHERE i.id_inventario = :id")
+    int updateCantidad(@Param("id") Integer id, @Param("cantidad") int cantidad);
 }

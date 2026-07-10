@@ -1,48 +1,45 @@
 package com.example.cliente.controller;
 
+import com.example.cliente.model.Cliente;
+import com.example.cliente.service.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/cliente")
+@RequestMapping("/api/clientes")
 public class ClienteController {
-    
+
     @Autowired
-    private ClienteService  clienteServi;
+    private ClienteService clienteService;
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> listar(){
-        List<Cliente> clie = clientedServi.getAllCliente();
-        if (clie.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(clie);
+    public List<Cliente> listar() {
+        return clienteService.getAllClientes();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> obtenerPorId(@PathVariable Integer id) {
+        Cliente cliente = clienteService.getClienteById(id);
+        return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> guardar(@RequestBody Cliente clien){
-        Cliente cli = clientedServi.createCliente(clien);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cli);
+    public ResponseEntity<Cliente> crear(@RequestBody Cliente cliente) {
+        Cliente nuevo = clienteService.save(cliente);
+        return nuevo != null ? ResponseEntity.ok(nuevo) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_cliente}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_cliente){
-        try{
-            clientedServi.deleteCliente(id_cliente);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> actualizar(@PathVariable Integer id, @RequestBody Cliente cliente) {
+        Cliente actualizado = clienteService.updateCliente(id, cliente);
+        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_cliente}")
-    public ResponseEntity<Cliente> buscarByid_cliente(@PathVariable
-        int id_cliente){
-            Cliente cli = clientedServi.getPersoByid_cliente(id_cliente);
-            if (cli==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(cli);
-        }
-    
-        
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        clienteService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
-*/

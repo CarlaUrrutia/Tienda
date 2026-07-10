@@ -1,20 +1,25 @@
-//Me da error aqui pero en el compu del duoc no, entonces no se si tocarlo
-import com.ejemplo.ms_persona.entity.Persona;
+package com.example.factura.repository;
+
 import com.example.factura.model.Factura;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.sql.Date;
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface FacturaRepository extends JpaRepository<Factura, Long> {
+public interface FacturaRepository extends JpaRepository<Factura, Integer> {
 
-    Optional<Factura> findByid_factura(long id_factura);
+    @Query("SELECT f FROM Factura f")
+    List<Factura> findAll();
 
-    boolean existsByfecha(Date fecha);
+    @Query("SELECT f FROM Factura f WHERE f.id_factura = :id")
+    List<Factura> buscarPorId(@Param("id") Integer id);
 
-    Optional<Factura> findBytotal(int total);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Factura f WHERE f.id_factura = :id")
+    void deleteFacturaById(@Param("id") Integer id);
 }

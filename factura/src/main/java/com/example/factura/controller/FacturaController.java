@@ -1,57 +1,46 @@
 package com.example.factura.controller;
 
+import com.example.factura.DTO.FacturaDTO;
+import com.example.factura.service.FacturaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.example.gerente.model.Empleado;
-import com.example.gerente.model.Factura;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/factura")
+@RequestMapping("/api/facturas")
 public class FacturaController {
+
     @Autowired
-    private FacturaService  facturaServi;
+    private FacturaService facturaService;
 
     @GetMapping
-    public ResponseEntity<List<Factura>> listar(){
-        List<Factura> fac = facturaServi.getAllEmpleado();
-        if (fac.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(fac);
+    public List<FacturaDTO.Response> listar() {
+        return facturaService.getAllFacturas();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FacturaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        FacturaDTO.Response r = facturaService.getFacturaById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Empleado> guardar(@RequestBody Empleado emple){
-        Empleado em = facturaServi.createDetalle(emple);
-        return ResponseEntity.status(HttpStatus.CREATED).body(em);
+    public ResponseEntity<FacturaDTO.Response> crear(@Valid @RequestBody FacturaDTO.Request request) {
+        FacturaDTO.Response r = facturaService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_empleado}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_empleado){
-        try{
-            facturaServi.deleteEmpleado(id_empleado);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<FacturaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody FacturaDTO.Request request) {
+        FacturaDTO.Response r = facturaService.updateFactura(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_empleado}")
-    public ResponseEntity<Empleado> buscarByid_empleado(@PathVariable
-        int id_empleado){
-            Empleado emple = facturaServi.getPersoByid_empleado(id_empleado);
-            if (emple==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(emple);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        facturaService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

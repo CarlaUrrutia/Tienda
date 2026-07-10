@@ -1,16 +1,25 @@
 package com.example.oferta.repository;
 
-import java.util.Optional;
-
+import com.example.oferta.model.Oferta;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import jakarta.transaction.Transactional;
+import java.util.List;
 
-import com.example.gerente.model.Oferta;
+@Repository
+public interface OfertaRepository extends JpaRepository<Oferta, Integer> {
 
-    @Repository
-public interface OfertaRepository extends JpaRepository<Oferta, Long> {
+    @Query("SELECT o FROM Oferta o")
+    List<Oferta> findAll();
 
-    Optional<Oferta> findByid_oferta(int id_oferta);
+    @Query("SELECT o FROM Oferta o WHERE o.id_oferta = :id")
+    List<Oferta> buscarPorId(@Param("id") Integer id);
 
-    boolean existsBydescripcion(String descripcion);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Oferta o WHERE o.id_oferta = :id")
+    void deleteOfertaById(@Param("id") Integer id);
 }

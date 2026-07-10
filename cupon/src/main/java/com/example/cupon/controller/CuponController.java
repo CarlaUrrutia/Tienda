@@ -1,48 +1,42 @@
 package com.example.cupon.controller;
 
+import com.example.cupon.DTO.CuponDTO;
+import com.example.cupon.service.CuponService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/cupon")
+@RequestMapping("/api/cupones")
 public class CuponController {
-    
-    @Autowired
-    private CuponService  cuponServi;
+    @Autowired private CuponService cuponService;
 
     @GetMapping
-    public ResponseEntity<List<Cupon>> listar(){
-        List<Cupon> cup = cuponServi.getAllCupon();
-        if (cup.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(cup);
+    public List<CuponDTO.Response> listar() { return cuponService.getAllCupones(); }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CuponDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        CuponDTO.Response r = cuponService.getCuponById(id);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Cupon> guardar(@RequestBody Cupon cupo){
-        Cupon cu = cuponServi.createCupon(cupo);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cu);
+    public ResponseEntity<CuponDTO.Response> crear(@Valid @RequestBody CuponDTO.Request request) {
+        CuponDTO.Response r = cuponService.save(request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_cupon}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_cupon){
-        try{
-            cuponServi.deleteCupon(id_cupon);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<CuponDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody CuponDTO.Request request) {
+        CuponDTO.Response r = cuponService.updateCupon(id, request);
+        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_cupon}")
-    public ResponseEntity<Cupon> buscarByid_cupon(@PathVariable
-        int id_cupon){
-            Cupon c = cuponServi.getPersoByid_cupon(id_cupon);
-            if (c==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(c);
-        }
-    
-        
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        cuponService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
-*/

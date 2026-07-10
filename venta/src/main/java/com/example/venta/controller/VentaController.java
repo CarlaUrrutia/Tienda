@@ -1,56 +1,49 @@
-package com.example.venta.Controller;
+package com.example.venta.controller;
 
+import com.example.venta.DTO.VentaDTO;
+import com.example.venta.service.VentaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.gerente.Service.TiendaService;
-import com.example.gerente.Service.VentaService;
-import com.example.gerente.model.Tarjeta;
-import com.example.gerente.model.Tienda;
-import com.example.gerente.model.Venta;
+import java.util.List;
 
+@RestController
+@RequestMapping("/api/ventas")
 public class VentaController {
+
     @Autowired
-    private VentaService  ventaServi;
+    private VentaService ventaService;
 
     @GetMapping
-    public ResponseEntity<List<Venta>> listar(){
-        List<Venta> v = ventaServi.getAllVenta();
-        if (v.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(v);
+    public List<VentaDTO.Response> listar() {
+        return ventaService.getAllVentas();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<VentaDTO.Response> obtenerPorId(@PathVariable Integer id) {
+        VentaDTO.Response venta = ventaService.getVentaById(id);
+        return venta != null ? ResponseEntity.ok(venta) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Venta> guardar(@RequestBody Venta ve){
-        Venta ven = ventaServi.createVenta(ve);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ven);
+    public ResponseEntity<VentaDTO.Response> crear(@Valid @RequestBody VentaDTO.Request request) {
+        VentaDTO.Response nueva = ventaService.save(request);
+        return nueva != null ? ResponseEntity.ok(nueva) : ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/{id_venta}")
-    public ResponseEntity<Void> eliminar(@PathVariable int id_venta){
-        try{
-            ventaServi.deleteVenta(id_venta);
-            return ResponseEntity.noContent().build();
-        }catch(Exception ex){
-            return ResponseEntity.notFound().build();
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<VentaDTO.Response> actualizar(
+            @PathVariable Integer id,
+            @Valid @RequestBody VentaDTO.Request request) {
+        VentaDTO.Response actualizada = ventaService.updateVenta(id, request);
+        return actualizada != null ? ResponseEntity.ok(actualizada) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id_venta}")
-    public ResponseEntity<Venta> buscarByid_venta(@PathVariable
-        int id_venta){
-            Venta vent = ventaServi.getPersoByid_venta(id_venta);
-            if (vent==null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(vent);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        ventaService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
