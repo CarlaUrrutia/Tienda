@@ -1,6 +1,6 @@
 package com.example.devolucion.service;
 
-import com.example.devolucion.DTO.DevolucionDTO;
+import com.example.devolucion.dto.DevolucionDTO;
 import java.util.List;
 
 public interface DevolucionService {

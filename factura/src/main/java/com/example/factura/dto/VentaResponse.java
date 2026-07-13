@@ -1,4 +1,4 @@
-package com.example.factura.DTO;
+package com.example.factura.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -7,7 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -24,43 +23,41 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "envio")
 public class Envio {
-    @NotNull(message = "El id no debe ser nulo")
-    @NotEmpty(message = "el id no debe ser nulo")
-    @Min(value = 0)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_envio;
+    private Integer id_envio;
+
     @Column(name = "fecha_envio")
-    /*Se debe validar el date? */
     private Date fecha_envio;
+
     @Column(name = "fecha_estimada_entrega")
-    /*Se debe validar el date? */
     private Date fecha_estimada_entrega;
-    @Column(name = "estado",nullable = false)
-    @NotNull(message = "La estado  no debe ser nulo")
-    @NotEmpty(message = "La estado no debe ser nulo")
-    @Min(value = 0)
+
+    @Column(name = "estado", nullable = false)
+    @NotNull(message = "El estado no debe ser nulo")
+    @NotEmpty(message = "El estado no debe ser nulo")
     private String estado;
-    @Column(name = "cantidad",nullable = false)
-    @NotNull(message = "La Cantidad  no debe ser nula")
-    @NotEmpty(message = "La Cantidad no debe ser nula")
+
+    @Column(name = "cantidad", nullable = false)
+    @NotNull(message = "La cantidad no debe ser nula")
     @Min(value = 0)
-    private int cantidad;
-    @Column(name = "direccion_destino",nullable = false)
-    @NotNull(message = "La direccion de destino  no debe ser nulo")
-    @NotEmpty(message = "La direccion de destino no debe ser nulo")
+    private Integer cantidad;
+
+    @Column(name = "direccion_destino", nullable = false)
+    @NotNull(message = "La dirección de destino no debe ser nula")
+    @NotEmpty(message = "La dirección de destino no debe ser nula")
     private String direccion_destino;
 
+    @Column(name = "id_venta", nullable = false)
+    private Integer id_venta;
 
-    @Column(name = "id_venta",nullable = false)
-    private int id_venta;
+    @Column(name = "id_cliente", nullable = false)
+    private Integer id_cliente;
 
-    @Column(name = "id_cliente",nullable = false)
-    private int id_cliente;
+    @Column(name = "id_empleado", nullable = false)
+    private Integer id_empleado;
 
-    @Column(name = "id_empleado",nullable = false)  
-    private int id_empleado;
-
-    @Column(name = "id_ciudad",nullable = false)
-    private int id_ciudad;
+    @Column(name = "id_ciudad", nullable = false)
+    private Integer id_ciudad;
 }

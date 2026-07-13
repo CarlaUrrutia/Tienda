@@ -1,4 +1,4 @@
-package com.example.venta.client;
+package com.example.tarjeta.client;
 
 import com.example.venta.dto.ClienteResponse;
 import org.springframework.cloud.openfeign.FeignClient;

@@ -1,6 +1,6 @@
 package com.example.factura.controller;
 
-import com.example.factura.DTO.FacturaDTO;
+import com.example.factura.dto.FacturaDTO;
 import com.example.factura.service.FacturaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

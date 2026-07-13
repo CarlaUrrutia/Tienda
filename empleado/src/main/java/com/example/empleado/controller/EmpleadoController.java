@@ -1,6 +1,6 @@
 package com.example.empleado.controller;
 
-import com.example.empleado.DTO.EmpleadoDTO;
+import com.example.empleado.dto.EmpleadoDTO;
 import com.example.empleado.service.EmpleadoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

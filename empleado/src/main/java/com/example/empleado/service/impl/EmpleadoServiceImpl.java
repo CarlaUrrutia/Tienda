@@ -1,6 +1,6 @@
 package com.example.empleado.service.impl;
 
-import com.example.empleado.DTO.EmpleadoDTO;
+import com.example.empleado.dto.EmpleadoDTO;
 import com.example.empleado.client.TiendaClient;
 import com.example.empleado.model.Empleado;
 import com.example.empleado.repository.EmpleadoRepository;

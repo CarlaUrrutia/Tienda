@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -23,24 +22,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "oferta")
 public class Oferta {
-    @NotNull(message = "El id no debe ser nulo")
-    @NotEmpty(message = "el id no debe ser nulo")
-    @Min(value = 0)
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "descripcion",nullable = false)
+    private Integer id;
+
+    @Column(name = "descripcion", nullable = false)
     @NotEmpty
     @NotNull
     @Size(min = 2, max = 100, message = "Error descripcion no valida")
     private String descripcion;
-    @Column(name = "descuento",nullable = false)
+
+    @Column(name = "descuento", nullable = false)
     @NotNull(message = "El descuento no debe ser nulo")
-    @NotEmpty(message = "el descuento no debe ser nulo")
     @Min(value = 0)
-    private int descuento; // 0.1 = 10%
-    /*clavesita */
-    
-    @Column(name = "id_producto",nullable = false)
-    private int id_producto;
+    private Integer descuento;
+
+    @Column(name = "id_producto", nullable = false)
+    private Integer id_producto;
 }

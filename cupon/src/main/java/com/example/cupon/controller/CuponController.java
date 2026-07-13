@@ -1,6 +1,6 @@
 package com.example.cupon.controller;
 
-import com.example.cupon.DTO.CuponDTO;
+import com.example.cupon.dto.CuponDTO;
 import com.example.cupon.service.CuponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

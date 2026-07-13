@@ -1,6 +1,6 @@
 package com.example.inventario.controller;
 
-import com.example.inventario.DTO.InventarioDTO;
+import com.example.inventario.dto.InventarioDTO;
 import com.example.inventario.service.InventarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -1,6 +1,6 @@
 package com.example.devolucion.controller;
 
-import com.example.devolucion.DTO.DevolucionDTO;
+import com.example.devolucion.dto.DevolucionDTO;
 import com.example.devolucion.service.DevolucionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

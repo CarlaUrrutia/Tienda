@@ -1,6 +1,6 @@
-package com.example.cupon.DTO;
+package com.example.cupon.dto;
 
-import com.example.cupon.DTO.ClienteResponse;
+import com.example.cupon.dto.ClienteResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
