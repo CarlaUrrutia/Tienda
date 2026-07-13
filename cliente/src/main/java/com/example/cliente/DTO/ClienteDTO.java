@@ -4,6 +4,8 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class ClienteDTO {
 
@@ -34,6 +36,15 @@ public class ClienteDTO {
 
     }
 
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+public static class Response extends RepresentationModel<Response> {
+    private int id_cliente;
+    private String nombre;
+    private String apellido;
+    private String email;
+}
+    
+}
     /**
      * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
      */

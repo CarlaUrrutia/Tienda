@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class OfertaDTO {
     @Data
@@ -25,11 +27,8 @@ public class OfertaDTO {
         private int descuento;  
     }
 
-    //TAmbien me da error con el data y el AllArgsConstructor y la clave foranea ProductoDTO
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_oferta;
         private String descripcion;
         private int descuento;

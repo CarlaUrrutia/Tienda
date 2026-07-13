@@ -4,6 +4,8 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class InventarioDTO {
 
@@ -20,13 +22,11 @@ public class InventarioDTO {
         
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private int id_empleado;
-        private int edad;
-        private TiendaDTO tienda; // clave foranea
-        private ProductoDTO producto; //clave foranea
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
+        private int id_inventario;
+        private int cantidad;
+        private ProductoResponse producto;
+        private TiendaResponse tienda;
     }
 }

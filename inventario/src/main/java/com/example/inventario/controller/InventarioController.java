@@ -3,66 +3,74 @@ package com.example.inventario.controller;
 import com.example.inventario.dto.InventarioDTO;
 import com.example.inventario.service.InventarioService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Inventario", description = "Gestión de inventario")
 @RestController
 @RequestMapping("/api/inventarios")
+@Tag(name = "Inventarios", description = "Operaciones CRUD sobre inventarios")
 public class InventarioController {
 
     @Autowired
     private InventarioService inventarioService;
 
-    @Operation(summary = "Listar todos los inventarios")
-    @ApiResponse(responseCode = "200", description = "Lista obtenida correctamente")
-    @GetMapping
-    public List<InventarioDTO.Response> listar() {
-        return inventarioService.getAllInventarios();
+    private void agregarLinks(InventarioDTO.Response r) {
+        r.add(linkTo(methodOn(InventarioController.class).obtenerPorId(r.getId_inventario())).withSelfRel());
+        r.add(linkTo(methodOn(InventarioController.class).listar()).withRel("inventarios"));
+        r.add(linkTo(methodOn(InventarioController.class).actualizar(r.getId_inventario(), null)).withRel("actualizar"));
+        r.add(linkTo(methodOn(InventarioController.class).eliminar(r.getId_inventario())).withRel("eliminar"));
     }
 
-    @Operation(summary = "Obtener inventario por ID")
+    @Operation(summary = "Listar todos los inventarios")
+    @GetMapping
+    public CollectionModel<InventarioDTO.Response> listar() {
+        var inventarios = inventarioService.getAllInventarios();
+        inventarios.forEach(this::agregarLinks);
+        return CollectionModel.of(inventarios, linkTo(methodOn(InventarioController.class).listar()).withSelfRel());
+    }
+
+    @Operation(summary = "Obtener un inventario por su id")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Inventario encontrado"),
-        @ApiResponse(responseCode = "404", description = "Inventario no encontrado")
+            @ApiResponse(responseCode = "200", description = "Inventario encontrado"),
+            @ApiResponse(responseCode = "404", description = "Inventario no encontrado")
     })
     @GetMapping("/{id}")
     public ResponseEntity<InventarioDTO.Response> obtenerPorId(@PathVariable Integer id) {
         InventarioDTO.Response r = inventarioService.getInventarioById(id);
-        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
+        if (r == null) return ResponseEntity.notFound().build();
+        agregarLinks(r);
+        return ResponseEntity.ok(r);
     }
 
     @Operation(summary = "Crear un nuevo inventario")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Inventario creado correctamente"),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos")
-    })
     @PostMapping
     public ResponseEntity<InventarioDTO.Response> crear(@Valid @RequestBody InventarioDTO.Request request) {
         InventarioDTO.Response r = inventarioService.save(request);
-        return r != null ? ResponseEntity.ok(r) : ResponseEntity.badRequest().build();
+        if (r == null) return ResponseEntity.badRequest().build();
+        agregarLinks(r);
+        return ResponseEntity.ok(r);
     }
 
     @Operation(summary = "Actualizar un inventario existente")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Inventario actualizado correctamente"),
-        @ApiResponse(responseCode = "404", description = "Inventario no encontrado")
-    })
     @PutMapping("/{id}")
     public ResponseEntity<InventarioDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody InventarioDTO.Request request) {
         InventarioDTO.Response r = inventarioService.updateInventario(id, request);
-        return r != null ? ResponseEntity.ok(r) : ResponseEntity.notFound().build();
+        if (r == null) return ResponseEntity.notFound().build();
+        agregarLinks(r);
+        return ResponseEntity.ok(r);
     }
 
-    @Operation(summary = "Eliminar un inventario por ID")
-    @ApiResponse(responseCode = "200", description = "Inventario eliminado correctamente")
+    @Operation(summary = "Eliminar un inventario")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         inventarioService.delete(id);

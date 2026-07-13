@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
+
 
 public class TarjetaDTO {
      @Data
@@ -16,13 +19,8 @@ public class TarjetaDTO {
         /*El char se valida?? ni idea preguntar al profe */
     }
 
-    /**
-     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_tarjeta;
         private ClienteDTO cliente;
     }

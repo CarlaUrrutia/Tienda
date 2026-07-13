@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Date;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 
 public class EnvioDTO {
@@ -32,8 +34,8 @@ public class EnvioDTO {
         private int id_ciudad;
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_envio;
         private Date fecha_envio;
         private Date fecha_estimada_entrega;

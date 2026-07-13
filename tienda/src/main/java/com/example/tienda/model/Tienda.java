@@ -1,28 +1,19 @@
 package com.example.tienda.model;
 
 import java.sql.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Valid
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "tienda")
-public class Tienda {
+public class Tienda extends RepresentationModel<Tienda> {
+    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +38,5 @@ public class Tienda {
     @Size(min = 2, max = 100, message = "Error politicas no validas")
     private String politicas;
 
-    @Column(name = "id_empleado", nullable = false)
-    private Integer id_empleado;
+    //Tienda tambien es un caso especial ya que
 }
