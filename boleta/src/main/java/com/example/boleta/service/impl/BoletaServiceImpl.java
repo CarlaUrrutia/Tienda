@@ -1,13 +1,15 @@
 package com.example.boleta.service.impl;
 
-import com.example.boleta.DTO.BoletaDTO;
 import com.example.boleta.client.ClienteClient;
 import com.example.boleta.client.VentaClient;
+import com.example.boleta.dto.BoletaDTO;
 import com.example.boleta.model.Boleta;
 import com.example.boleta.repository.BoletaRepository;
 import com.example.boleta.service.BoletaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,13 +30,19 @@ public class BoletaServiceImpl implements BoletaService {
 
     @Override
     public List<BoletaDTO.Response> getAllBoletas() {
-        return boletaRepository.findAll().stream().map(this::toResponse).collect(Collectors.toList());
+        return boletaRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
     public BoletaDTO.Response getBoletaById(Integer id) {
         List<Boleta> lista = boletaRepository.buscarPorId(id);
-        return lista.isEmpty() ? null : toResponse(lista.get(0));
+        if (lista.isEmpty()) {
+            throw new EntityNotFoundException("Boleta con id " + id + " no encontrada");
+        }
+        return toResponse(lista.get(0));
     }
 
     @Override
@@ -46,5 +54,7 @@ public class BoletaServiceImpl implements BoletaService {
     }
 
     @Override
-    public void delete(Integer id) { boletaRepository.deleteBoletaById(id); }
+    public void delete(Integer id) {
+        boletaRepository.deleteBoletaById(id);
+    }
 }

@@ -1,31 +1,50 @@
-package com.example.empleado.DTO;
+package com.example.empleado.dto;
 
-import com.example.empleado.DTO.TiendaResponse;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class EmpleadoDTO {
-
-    @Data @NoArgsConstructor @AllArgsConstructor
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Request {
-        @NotBlank(message = "El nombre es obligatorio")
+
+        @NotBlank(message = "El id del empleado es obligatorio")
+        @Min(value = 0)
+        private int  id_empleado;
+
+        @NotBlank(message = "El nombre  es obligatorio")
+        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
+                 message = "El nombre debe contener al menos 2 palabras")
         private String nombre;
+
         @NotBlank(message = "El apellido es obligatorio")
+        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
+                 message = "El apellido debe contener al menos 2 palabras")
         private String apellido;
-        @Min(value = 0, message = "El sueldo no puede ser negativo")
-        private float sueldo;
-        @Min(value = 1, message = "El id_tienda es obligatorio")
-        private int id_tienda;
+        
+        @NotBlank(message = "El sueldo del empleado es obligatorio")
+        @Min(value = 0)
+        private int  sueldo;
+
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
+    /**
+     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response {
         private int id_empleado;
         private String nombre;
         private String apellido;
-        private float sueldo;
-        private TiendaResponse tienda;
+        private int sueldo;
+        private TiendarResponse tienda; 
+        private RolResponse rol;
     }
 }

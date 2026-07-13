@@ -1,12 +1,10 @@
-package com.example.factura.DTO;
+package com.example.factura.dto;
 
-import com.example.factura.DTO.ClienteResponse;
-import com.example.factura.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Date;
+
 
 public class FacturaDTO {
 
