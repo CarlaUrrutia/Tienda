@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: venta
+  profiles:
+    active: dev
+
+server:
+  port: 8086
+
+ms:
+  cliente:
+    url: http://localhost:8082
+  empleado:
+    url: http://localhost:8081
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html

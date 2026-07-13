@@ -1,25 +1,29 @@
-package com.example.tarjeta.DTO;
+package com.example.tarjeta.dto;
 
-import com.example.tarjeta.DTO.ClienteResponse;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class TarjetaDTO {
-
-    @Data @NoArgsConstructor @AllArgsConstructor
+     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Request {
-        @NotNull(message = "El tipo es obligatorio")
-        private Character tipo;
-        @Min(value = 1, message = "El id_cliente es obligatorio")
-        private int id_cliente;
+
+        @Min(value = 0, message = "El id de la tarjeta no puede ser negativo")
+        private int id_tarjeta;
+        /*El char se valida?? ni idea preguntar al profe */
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
+    /**
+     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response {
         private int id_tarjeta;
-        private char tipo;
-        private ClienteResponse cliente;
+        private ClienteDTO cliente;
     }
 }

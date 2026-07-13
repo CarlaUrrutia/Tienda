@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: detalleVenta
+  profiles:
+    active: dev
+
+server:
+  port: 8087
+
+ms:
+  venta:
+    url: http://localhost:8086
+  producto:
+    url: http://localhost:8083
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html

@@ -1,13 +1,17 @@
+//todos los package me dan error
 package com.example.empleado.repository;
 
-import com.example.empleado.model.Empleado;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.example.gerente.model.Empleado;
+
 import jakarta.transaction.Transactional;
-import java.util.List;
 
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, Integer> {

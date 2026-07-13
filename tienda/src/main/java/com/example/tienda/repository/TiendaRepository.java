@@ -1,13 +1,14 @@
-package com.example.tienda.repository;
+package com.example.tienda.Repository;
 
-import com.example.tienda.model.Tienda;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+
+
+import com.example.gerente.model.Tienda;
 
 @Repository
 public interface TiendaRepository extends JpaRepository<Tienda, Integer> {

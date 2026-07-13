@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: boleta
+  profiles:
+    active: dev
+
+server:
+  port: 8088
+
+ms:
+  cliente:
+    url: http://localhost:8082
+  venta:
+    url: http://localhost:8086
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html

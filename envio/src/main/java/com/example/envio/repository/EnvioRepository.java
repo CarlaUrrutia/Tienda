@@ -28,3 +28,4 @@ public interface EnvioRepository extends JpaRepository<Envio, Integer> {
     @Query("DELETE FROM Envio e WHERE e.id_envio = :id")
     void deleteEnvioById(@Param("id") Integer id);
 }
+
