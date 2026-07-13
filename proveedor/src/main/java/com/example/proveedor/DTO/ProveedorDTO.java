@@ -1,4 +1,4 @@
-package com.example.proveedor.DTO;
+package com.example.proveedor.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -30,6 +30,9 @@ public class ProveedorDTO {
         
     }
 
+    /**
+     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
+     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

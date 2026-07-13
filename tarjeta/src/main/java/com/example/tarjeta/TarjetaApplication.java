@@ -2,12 +2,12 @@ package com.example.tarjeta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients
 public class TarjetaApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(TarjetaApplication.class, args);
-    }
+
+	public static void main(String[] args) {
+		SpringApplication.run(TarjetaApplication.class, args);
+	}
+
 }

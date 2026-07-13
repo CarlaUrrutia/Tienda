@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: tarjeta
+  profiles:
+    active: dev
+
+server:
+  port: 8091
+
+ms:
+  cliente:
+    url: http://localhost:8082
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html

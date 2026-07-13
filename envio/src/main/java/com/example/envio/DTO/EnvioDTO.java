@@ -1,8 +1,8 @@
-package com.example.envio.DTO;
+package com.example.envio.dto;
 
-import com.example.envio.DTO.ClienteResponse;
-import com.example.envio.DTO.EmpleadoResponse;
-import com.example.envio.DTO.VentaResponse;
+import com.example.envio.dto.ClienteResponse;
+import com.example.envio.dto.EmpleadoResponse;
+import com.example.envio.dto.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Date;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
+
 
 public class EnvioDTO {
 

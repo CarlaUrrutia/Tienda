@@ -1,6 +1,6 @@
 package com.example.empleado.controller;
 
-import com.example.empleado.DTO.EmpleadoDTO;
+import com.example.empleado.dto.EmpleadoDTO;
 import com.example.empleado.service.EmpleadoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Tag(name = "Empleados", description = "Gestión de empleados")
 @RestController
 @RequestMapping("/api/empleados")
 @Tag(name = "Empleados", description = "Operaciones CRUD sobre empleados")
 public class EmpleadoController {
-    @Autowired private EmpleadoService empleadoService;
 
     private void agregarLinks(EmpleadoDTO.Response r) {
         r.add(linkTo(methodOn(EmpleadoController.class).obtenerPorId(r.getId_empleado())).withSelfRel());

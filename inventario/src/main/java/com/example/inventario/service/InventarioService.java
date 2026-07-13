@@ -1,6 +1,6 @@
 package com.example.inventario.service;
 
-import com.example.inventario.DTO.InventarioDTO;
+import com.example.inventario.dto.InventarioDTO;
 import java.util.List;
 
 public interface InventarioService {

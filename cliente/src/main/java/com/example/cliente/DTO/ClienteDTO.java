@@ -1,4 +1,4 @@
-package com.example.cliente.DTO;
+package com.example.cliente.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -14,17 +14,26 @@ public class ClienteDTO {
     @AllArgsConstructor
     public static class Request {
 
+        @NotBlank(message = "El id del cliente es obligatorio")
+        @Min(value = 0)
+        private int  id_cliente;
+
         @NotBlank(message = "El nombre es obligatorio")
-        @Size(min = 2, message = "El nombre debe tener al menos 2 caracteres")
+        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
+                 message = "El nombre debe contener al menos 2 palabras")
         private String nombre;
 
         @NotBlank(message = "El apellido es obligatorio")
-        @Size(min = 2, message = "El apellido debe tener al menos 2 caracteres")
+        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
+                 message = "El apellido debe contener al menos 2 palabras")
         private String apellido;
-
+        
         @NotBlank(message = "El email es obligatorio")
-        @Email(message = "El email debe tener un formato válido")
+        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
+                 message = "El email debe contener al menos 2 palabras")
         private String email;
+
+
     }
 
     @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
@@ -35,4 +44,18 @@ public static class Response extends RepresentationModel<Response> {
     private String email;
 }
     
+}
+    /**
+     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Response {
+        private int id_cliente;
+        private String nombre;
+        private String apellido;
+        private String email;
+        // private ClienteDTO genero; // CLAVEEEE FORANEAAA, 
+    }
 }

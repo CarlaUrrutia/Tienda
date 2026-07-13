@@ -1,6 +1,6 @@
 package com.example.venta.controller;
 
-import com.example.venta.DTO.VentaDTO;
+import com.example.venta.dto.VentaDTO;
 import com.example.venta.service.VentaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Tag(name = "Ventas", description = "Gestión de ventas")
 @RestController
 @RequestMapping("/api/ventas")
 @Tag(name = "Ventas", description = "Operaciones CRUD sobre ventas")
@@ -62,9 +63,7 @@ public class VentaController {
 
     @Operation(summary = "Actualizar una venta existente")
     @PutMapping("/{id}")
-    public ResponseEntity<VentaDTO.Response> actualizar(
-            @PathVariable Integer id,
-            @Valid @RequestBody VentaDTO.Request request) {
+    public ResponseEntity<VentaDTO.Response> actualizar(@PathVariable Integer id, @Valid @RequestBody VentaDTO.Request request) {
         VentaDTO.Response actualizada = ventaService.updateVenta(id, request);
         if (actualizada == null) return ResponseEntity.notFound().build();
         agregarLinks(actualizada);

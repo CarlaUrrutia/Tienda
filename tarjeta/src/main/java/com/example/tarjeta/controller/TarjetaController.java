@@ -1,6 +1,6 @@
 package com.example.tarjeta.controller;
 
-import com.example.tarjeta.DTO.TarjetaDTO;
+import com.example.tarjeta.dto.TarjetaDTO;
 import com.example.tarjeta.service.TarjetaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Tag(name = "Tarjetas", description = "Gestión de tarjetas de clientes")
 @RestController
 @RequestMapping("/api/tarjetas")
 @Tag(name = "Tarjetas", description = "Operaciones CRUD sobre tarjetas")
 public class TarjetaController {
-    @Autowired private TarjetaService tarjetaService;
 
     private void agregarLinks(TarjetaDTO.Response r) {
         r.add(linkTo(methodOn(TarjetaController.class).obtenerPorId(r.getId_tarjeta())).withSelfRel());

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Tag(name = "Proveedores", description = "Gestión de proveedores")
 @RestController
 @RequestMapping("/api/proveedores")
 @Tag(name = "Proveedores", description = "Operaciones CRUD sobre proveedores")

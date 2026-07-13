@@ -1,6 +1,6 @@
 package com.example.factura.controller;
 
-import com.example.factura.DTO.FacturaDTO;
+import com.example.factura.dto.FacturaDTO;
 import com.example.factura.service.FacturaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Tag(name = "Facturas", description = "Gestión de facturas")
 @RestController
 @RequestMapping("/api/facturas")
 @Tag(name = "Facturas", description = "Operaciones CRUD sobre facturas")
