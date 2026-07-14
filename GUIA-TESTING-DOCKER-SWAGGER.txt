@@ -1,0 +1,405 @@
+GUIA COMPLETA - PROYECTO TIENDA
+
+Este documento tiene 3 partes:
+  Como levantar y probar TODO con Docker (recomendado)
+  Como levantar y probar CADA microservicio por separado, sin Docker (desde el IDE o la terminal), uno por uno.
+  URLs de Swagger (documentacion interactiva de cada API)
+
+Credenciales de base de datos (MySQL):
+  TODOS los microservicios usan lo mismo ahora (incluyendo "rol" y "cupon",
+  que antes eran la excepcion):
+    usuario: root
+    contraseña: (vacia en local sin Docker) / root (con Docker, ver docker-compose.yml)
+
+IMPORTANTE - Login (Spring Security):
+  Todos los microservicios usan el usuario/contraseña que Spring Security genera
+  solo cada vez que arrancas, y aparece en la consola asi:
+    "Using generated security password: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  Ese usuario es "user" y la contraseña CAMBIA cada vez que reinicias el microservicio.
+  ("cupon" ya no tiene login fijo, tambien quedo con este comportamiento estandar).
+
+
+PARTE 1: LEVANTAR TODO CON DOCKER
+
+1) Abre una terminal en la carpeta raiz del proyecto (donde esta el archivo docker-compose.yml).
+
+2) Construye las imagenes (la primera vez tarda varios minutos):
+   docker compose build
+
+3) Levanta todos los contenedores:
+   docker compose up -d
+
+4) Verifica que todo esta corriendo (columna STATUS debe decir "Up"):
+   docker compose ps
+
+5) Si algo no dice "Up", revisa su log especifico, ejemplo:
+   docker compose logs -f cliente
+
+6) Para apagar todo:
+   docker compose down
+
+7) Para apagar y borrar tambien los datos de MySQL (empezar de cero):
+   docker compose down -v
+
+Nota: dentro de Docker, en cada arranque el "generated security password" tambien va a cambiar, para los 16 microservicios por igual. Revisalo con "docker compose logs -f <servicio>" si necesitas hacer login.
+
+
+PARTE 2: LEVANTAR CADA MICROSERVICIO POR SEPARADO (sin Docker)
+
+Requisito: tener MySQL corriendo en tu equipo (puede ser tu MySQL local, o solo el contenedor de MySQL con: docker compose up -d mysql)
+
+Para levantar un microservicio SIN Docker tienes 2 opciones:
+
+  OPCION A con VS Code
+    - Abre la carpeta del microservicio (ej: cliente/)
+    - Busca la clase principal (ej: ClienteApplication.java)
+    - Click derecho -> Run / Ejecutar
+
+  OPCION B (desde la terminal, con Maven):
+    - Entra a la carpeta del microservicio, ejemplo:
+        cd cliente
+    - Ejecuta:
+        mvn spring-boot:run
+    - Cuando en la terminal veas algo como:
+        "Started ClienteApplication in X seconds"
+      significa que el microservicio LEVANTO correctamente. Esto es el testing: si arranca sin stacktrace de error rojo, el microservicio esta OK.
+    - Si en cambio ves un error tipo "Communications link failure" o "Connection refused", el microservicio SI levanto bien, pero no encontro el MySQL.
+
+A continuacion, el detalle de los 16 microservicios: como levantarlo, su URL base REST, su URL de Swagger (la real: /doc/swagger-ui/index.html), y ejemplos reales para CREAR, VER POR ID y ELIMINAR POR ID.
+
+1) CLIENTE
+Levantalo en: ClienteApplication (carpeta cliente/)
+URL base:     http://localhost:8082/api/clientes
+Swagger:      http://localhost:8082/doc/swagger-ui/index.html
+
+Crear (POST):
+curl -X POST http://localhost:8082/api/clientes ^
+  -H "Content-Type: application/json" ^
+  -d "{\"nombre\":\"Juan\",\"apellido\":\"Perez\",\"email\":\"juan@test.com\"}"
+
+Ver por id (GET), reemplaza 1 por el id que te devolvio el POST:
+curl http://localhost:8082/api/clientes/1
+
+Eliminar por id (DELETE):
+curl -X DELETE http://localhost:8082/api/clientes/1
+
+-----------------------------------------------------------------
+2) PROVEEDOR
+-----------------------------------------------------------------
+Levantalo en: ProveedorApplication (carpeta proveedor/)
+URL base:     http://localhost:8084/api/proveedores
+Swagger:      http://localhost:8084/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8084/api/proveedores ^
+  -H "Content-Type: application/json" ^
+  -d "{\"nombre\":\"Distribuidora ABC\",\"contacto\":\"999888777\"}"
+
+Ver por id:
+curl http://localhost:8084/api/proveedores/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8084/api/proveedores/1
+
+-----------------------------------------------------------------
+3) TIENDA   (ahora tambien depende de empleado: ms.empleado.url)
+-----------------------------------------------------------------
+Levantalo en: TiendaApplication (carpeta tienda/)
+URL base:     http://localhost:8085/api/tiendas
+Swagger:      http://localhost:8085/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8085/api/tiendas ^
+  -H "Content-Type: application/json" ^
+  -d "{\"nombre_tienda\":\"Sucursal Centro\",\"ubicacion\":\"Av. Principal 123\",\"horario_apertura\":\"2026-01-01\",\"politicas\":\"Sin devoluciones despues de 30 dias\"}"
+
+Ver por id:
+curl http://localhost:8085/api/tiendas/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8085/api/tiendas/1
+
+-----------------------------------------------------------------
+4) EMPLEADO   (necesita un id_tienda existente, usa el del paso 3.
+   Ahora tambien depende de "rol": ms.rol.url=http://localhost:8080)
+-----------------------------------------------------------------
+Levantalo en: EmpleadoApplication (carpeta empleado/)
+URL base:     http://localhost:8081/api/empleados
+Swagger:      http://localhost:8081/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8081/api/empleados ^
+  -H "Content-Type: application/json" ^
+  -d "{\"nombre\":\"Maria\",\"apellido\":\"Lopez\",\"sueldo\":650000,\"id_tienda\":1}"
+
+Ver por id:
+curl http://localhost:8081/api/empleados/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8081/api/empleados/1
+
+-----------------------------------------------------------------
+5) PRODUCTO   (necesita un id_proveedor existente, usa el del paso 2)
+-----------------------------------------------------------------
+Levantalo en: ProductoApplication (carpeta producto/)
+URL base:     http://localhost:8083/api/productos
+Swagger:      http://localhost:8083/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8083/api/productos ^
+  -H "Content-Type: application/json" ^
+  -d "{\"nombre\":\"Zapatilla Urbana\",\"precio_venta\":29990,\"id_proveedor\":1}"
+
+Ver por id:
+curl http://localhost:8083/api/productos/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8083/api/productos/1
+
+-----------------------------------------------------------------
+6) VENTA   (necesita id_cliente e id_empleado existentes; aqui es
+   donde se prueba de verdad que un microservicio SI puede hablar
+   con otro, porque Venta le pregunta a Cliente y a Empleado)
+-----------------------------------------------------------------
+Levantalo en: VentaApplication (carpeta venta/)
+URL base:     http://localhost:8086/api/ventas
+Swagger:      http://localhost:8086/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8086/api/ventas ^
+  -H "Content-Type: application/json" ^
+  -d "{\"fecha_venta\":\"2026-07-12\",\"id_cliente\":1,\"id_empleado\":1}"
+
+Ver por id:
+curl http://localhost:8086/api/ventas/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8086/api/ventas/1
+
+-----------------------------------------------------------------
+7) DETALLEVENTA   (necesita id_venta e id_producto existentes)
+-----------------------------------------------------------------
+Levantalo en: DetalleVentaApplication (carpeta detalleVenta/)
+URL base:     http://localhost:8087/api/detalles
+Swagger:      http://localhost:8087/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8087/api/detalles ^
+  -H "Content-Type: application/json" ^
+  -d "{\"cantidad\":2,\"precio_unitario_venta\":29990,\"id_venta\":1,\"id_producto\":1}"
+
+Ver por id:
+curl http://localhost:8087/api/detalles/1
+
+Ver todos los detalles de una venta:
+curl http://localhost:8087/api/detalles/venta/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8087/api/detalles/1
+
+-----------------------------------------------------------------
+8) BOLETA   (necesita id_cliente e id_venta existentes)
+-----------------------------------------------------------------
+Levantalo en: BoletaApplication (carpeta boleta/)
+URL base:     http://localhost:8088/api/boletas
+Swagger:      http://localhost:8088/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8088/api/boletas ^
+  -H "Content-Type: application/json" ^
+  -d "{\"id_cliente\":1,\"id_venta\":1}"
+
+Ver por id:
+curl http://localhost:8088/api/boletas/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8088/api/boletas/1
+
+-----------------------------------------------------------------
+9) FACTURA   (necesita id_venta e id_cliente existentes)
+-----------------------------------------------------------------
+Levantalo en: FacturaApplication (carpeta factura/)
+URL base:     http://localhost:8089/api/facturas
+Swagger:      http://localhost:8089/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8089/api/facturas ^
+  -H "Content-Type: application/json" ^
+  -d "{\"fecha\":\"2026-07-12\",\"total\":59980,\"id_venta\":1,\"id_cliente\":1}"
+
+Ver por id:
+curl http://localhost:8089/api/facturas/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8089/api/facturas/1
+
+-----------------------------------------------------------------
+10) CUPON   (necesita id_cliente existente)
+-----------------------------------------------------------------
+Levantalo en: CuponApplication (carpeta cupon/)
+URL base:     http://localhost:8090/api/cupones
+Swagger:      http://localhost:8090/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8090/api/cupones ^
+  -H "Content-Type: application/json" ^
+  -d "{\"codigo\":\"VERANO10\",\"descuento\":10,\"fecha_expiracion\":\"2026-12-31\",\"id_cliente\":1}"
+
+Ver por id:
+curl http://localhost:8090/api/cupones/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8090/api/cupones/1
+
+-----------------------------------------------------------------
+11) TARJETA   (necesita id_cliente existente)
+-----------------------------------------------------------------
+Levantalo en: TarjetaApplication (carpeta tarjeta/)
+URL base:     http://localhost:8091/api/tarjetas
+Swagger:      http://localhost:8091/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8091/api/tarjetas ^
+  -H "Content-Type: application/json" ^
+  -d "{\"tipo\":\"C\",\"id_cliente\":1}"
+
+Ver por id:
+curl http://localhost:8091/api/tarjetas/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8091/api/tarjetas/1
+
+-----------------------------------------------------------------
+12) OFERTA   (necesita id_producto existente)
+-----------------------------------------------------------------
+Levantalo en: OfertaApplication (carpeta oferta/)
+URL base:     http://localhost:8092/api/ofertas
+Swagger:      http://localhost:8092/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8092/api/ofertas ^
+  -H "Content-Type: application/json" ^
+  -d "{\"descripcion\":\"2x1 en zapatillas\",\"descuento\":50,\"id_producto\":1}"
+
+Ver por id:
+curl http://localhost:8092/api/ofertas/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8092/api/ofertas/1
+
+-----------------------------------------------------------------
+13) INVENTARIO   (necesita id_producto e id_tienda existentes)
+-----------------------------------------------------------------
+Levantalo en: InventarioApplication (carpeta inventario/)
+URL base:     http://localhost:8093/api/inventarios
+Swagger:      http://localhost:8093/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8093/api/inventarios ^
+  -H "Content-Type: application/json" ^
+  -d "{\"cantidad\":50,\"id_producto\":1,\"id_tienda\":1}"
+
+Ver por id:
+curl http://localhost:8093/api/inventarios/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8093/api/inventarios/1
+
+-----------------------------------------------------------------
+14) ENVIO   (necesita id_venta, id_cliente, id_empleado existentes)
+-----------------------------------------------------------------
+Levantalo en: EnvioApplication (carpeta envio/)
+URL base:     http://localhost:8094/api/envios
+Swagger:      http://localhost:8094/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8094/api/envios ^
+  -H "Content-Type: application/json" ^
+  -d "{\"fecha_envio\":\"2026-07-12\",\"fecha_estimada_entrega\":\"2026-07-15\",\"estado\":\"PENDIENTE\",\"direccion_destino\":\"Calle Falsa 123\",\"id_venta\":1,\"id_cliente\":1,\"id_empleado\":1,\"id_ciudad\":1}"
+
+Ver por id:
+curl http://localhost:8094/api/envios/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8094/api/envios/1
+
+-----------------------------------------------------------------
+15) DEVOLUCION   (necesita id_empleado, id_cliente, id_tarjeta,
+    id_venta, id_producto existentes)
+-----------------------------------------------------------------
+Levantalo en: DevolucionApplication (carpeta devolucion/)
+URL base:     http://localhost:8095/api/devoluciones
+Swagger:      http://localhost:8095/doc/swagger-ui/index.html
+
+Crear:
+curl -X POST http://localhost:8095/api/devoluciones ^
+  -H "Content-Type: application/json" ^
+  -d "{\"fecha_devolucion\":\"2026-07-12\",\"motivo\":\"Producto defectuoso\",\"monto_reembolso\":29990,\"cantidad_devuelta\":1,\"id_empleado\":1,\"id_cliente\":1,\"id_tarjeta\":1,\"id_venta\":1,\"id_producto\":1}"
+
+Ver por id:
+curl http://localhost:8095/api/devoluciones/1
+
+Eliminar por id:
+curl -X DELETE http://localhost:8095/api/devoluciones/1
+
+-----------------------------------------------------------------
+16) ROL   (antes se llamaba "gerente". Ya usa las mismas
+    credenciales root que el resto)
+-----------------------------------------------------------------
+Levantalo en: RolApplication o GerenteApplication, segun como se
+              llame la clase principal en tu carpeta (revisa la
+              carpeta del microservicio para confirmar el nombre)
+URL base:     http://localhost:8080
+Swagger:      http://localhost:8080/doc/swagger-ui/index.html
+
+
+PARTE 3: URLs DE SWAGGER (resumen, todas juntas)
+
+  empleado      -> http://localhost:8081/doc/swagger-ui/index.html
+  cliente       -> http://localhost:8082/doc/swagger-ui/index.html
+  producto      -> http://localhost:8083/doc/swagger-ui/index.html
+  proveedor     -> http://localhost:8084/doc/swagger-ui/index.html
+  tienda        -> http://localhost:8085/doc/swagger-ui/index.html
+  venta         -> http://localhost:8086/doc/swagger-ui/index.html
+  detalleVenta  -> http://localhost:8087/doc/swagger-ui/index.html
+  boleta        -> http://localhost:8088/doc/swagger-ui/index.html
+  factura       -> http://localhost:8089/doc/swagger-ui/index.html
+  cupon         -> http://localhost:8090/doc/swagger-ui/index.html
+  tarjeta       -> http://localhost:8091/doc/swagger-ui/index.html
+  oferta        -> http://localhost:8092/doc/swagger-ui/index.html
+  inventario    -> http://localhost:8093/doc/swagger-ui/index.html
+  envio         -> http://localhost:8094/doc/swagger-ui/index.html
+  devolucion    -> http://localhost:8095/doc/swagger-ui/index.html
+  rol           -> http://localhost:8080/doc/swagger-ui/index.html
+
+El JSON crudo del OpenAPI (para importar en Postman/Insomnia) sigue en la ruta por defecto /v3/api-docs, ejemplo:
+  http://localhost:8082/v3/api-docs
+
+RECUERDA sobre el login:
+  Los 16 microservicios piden usuario/contraseña por Spring Security, y en todos
+  la contraseña es GENERADA Y CAMBIA cada reinicio (usuario "user", ver consola:
+  "Using generated security password: ...").
+
+
+NOTAS FINALES
+
+- El simbolo ^ al final de linea en los curl es para Windows (CMD). Si usas Mac/Linux o Git Bash, cambia el ^ por \ al final de cada linea, o simplemente escribe el comando en una sola linea.
+
+- Si prefieres no usar la terminal, puedes copiar cada bloque "Crear / Ver por id / Eliminar por id" directo en Postman, o directo en el propio Swagger UI (boton "Try it out" en cada endpoint).
+
+- El orden 1 a 15 de esta lista NO es arbitrario: respeta las dependencias reales (ej. no puedes crear una Venta sin que exista antes un Cliente y un Empleado). Si pruebas fuera de orden y te da error 500 o "not found", revisa que el id que estas usando (id_cliente, id_producto, etc.) realmente exista.
+
+- "rol" (antes "gerente") y "cupon" ya quedaron con las mismas credenciales root que el resto, tanto en local como en Docker. El docker-compose.yml ya sobreescribe usuario/contraseña de TODOS los servicios a root/root via variables de entorno, asi que no hace falta nada especial para estos dos.
+
+- El docker-compose.yml se actualizo con las nuevas dependencias entre microservicios:
+  - "empleado" ahora tambien depende de "rol" (variable MS_ROL_URL=http://rol:8080)
+  - "tienda" ahora tambien depende de "empleado" (variable MS_EMPLEADO_URL=http://empleado:8081)
+  Como "empleado" ya dependia de "tienda", agregar la dependencia inversa crearia
+  un ciclo que Docker Compose no permite en el orden de arranque (depends_on).
+  Por eso "tienda" SI tiene la variable de entorno para llamar a "empleado", pero
+  NO espera a que "empleado" arranque primero (no es necesario: Feign solo la usa
+  cuando alguien pega a un endpoint que la necesita, no al iniciar).
+
+- OJO: el servicio "rol" en el docker-compose.yml asume que tu carpeta se llama
+  "rol" (build: ./rol). Si tu carpeta todavia se llama "gerente", solo cambia esa
+  linea a "build: ./gerente" antes de correr "docker compose build".

@@ -1,52 +1,33 @@
-package com.example.empleado.dto;
+package com.example.empleado.DTO;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import com.example.empleado.DTO.TiendaResponse;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class EmpleadoDTO {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Data @NoArgsConstructor @AllArgsConstructor
     public static class Request {
-
         @NotBlank(message = "El nombre es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El nombre debe contener al menos 2 palabras")
         private String nombre;
-
         @NotBlank(message = "El apellido es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El apellido debe contener al menos 2 palabras")
         private String apellido;
-
-        @NotNull(message = "El sueldo del empleado es obligatorio")
-        @Min(value = 0)
-        private Integer sueldo;
-
-        @NotNull(message = "El id_rol es obligatorio")
-        @Min(value = 1)
-        private Integer id_rol;
-
-        @NotNull(message = "El id_tienda es obligatorio")
-        @Min(value = 1)
-        private Integer id_tienda;
+        @Min(value = 0, message = "El sueldo no puede ser negativo")
+        private float sueldo;
+        @Min(value = 1, message = "El id_tienda es obligatorio")
+        private int id_tienda;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private Integer id_empleado;
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
+        private int id_empleado;
         private String nombre;
         private String apellido;
-        private Integer sueldo;
-        private TiendarResponse tienda;
-        private RolResponse rol;
+        private float sueldo;
+        private TiendaResponse tienda;
     }
 }

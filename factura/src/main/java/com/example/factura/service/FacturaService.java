@@ -1,6 +1,6 @@
 package com.example.factura.service;
 
-import com.example.factura.dto.FacturaDTO;
+import com.example.factura.DTO.FacturaDTO;
 import java.util.List;
 
 public interface FacturaService {

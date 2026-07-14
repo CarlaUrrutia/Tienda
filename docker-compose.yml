@@ -1,0 +1,375 @@
+version: "3.9"
+
+networks:
+  tienda-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+services:
+
+  # ---------------------------------------------------
+  # BASE DE DATOS
+  # ---------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: patata
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tienda-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------
+  # MICROSERVICIOS SIN DEPENDENCIAS DE OTROS MS
+  # ---------------------------------------------------
+  cliente:
+    build: ./cliente
+    container_name: cliente
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8082:8082"
+    networks:
+      - tienda-net
+
+  proveedor:
+    build: ./proveedor
+    container_name: proveedor
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8084:8084"
+    networks:
+      - tienda-net
+
+  tienda:
+    build: ./tienda
+    container_name: tienda
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      # OJO: NO se agrega "empleado" aqui como depends_on porque empleado
+      # tambien depende de tienda -> eso crearia una dependencia circular
+      # que Docker Compose rechaza. La URL de todos modos funciona porque
+      # Feign solo la usa cuando alguien pega a un endpoint que la necesita,
+      # no al momento de arrancar.
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_EMPLEADO_URL: http://empleado:8081
+    ports:
+      - "8085:8085"
+    networks:
+      - tienda-net
+
+  # ---------------------------------------------------
+  # MICROSERVICIOS QUE DEPENDEN DE UNO O MAS MS
+  # ---------------------------------------------------
+  empleado:
+    build: ./empleado
+    container_name: empleado
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      tienda:
+        condition: service_started
+      rol:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_TIENDA_URL: http://tienda:8085
+      MS_ROL_URL: http://rol:8080
+    ports:
+      - "8081:8081"
+    networks:
+      - tienda-net
+
+  producto:
+    build: ./producto
+    container_name: producto
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      proveedor:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_PROVEEDOR_URL: http://proveedor:8084
+    ports:
+      - "8083:8083"
+    networks:
+      - tienda-net
+
+  venta:
+    build: ./venta
+    container_name: venta
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      cliente:
+        condition: service_started
+      empleado:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_CLIENTE_URL: http://cliente:8082
+      MS_EMPLEADO_URL: http://empleado:8081
+    ports:
+      - "8086:8086"
+    networks:
+      - tienda-net
+
+  detalleVenta:
+    build: ./detalleVenta
+    container_name: detalleVenta
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      venta:
+        condition: service_started
+      producto:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_VENTA_URL: http://venta:8086
+      MS_PRODUCTO_URL: http://producto:8083
+    ports:
+      - "8087:8087"
+    networks:
+      - tienda-net
+
+  boleta:
+    build: ./boleta
+    container_name: boleta
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      cliente:
+        condition: service_started
+      venta:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_CLIENTE_URL: http://cliente:8082
+      MS_VENTA_URL: http://venta:8086
+    ports:
+      - "8088:8088"
+    networks:
+      - tienda-net
+
+  factura:
+    build: ./factura
+    container_name: factura
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      cliente:
+        condition: service_started
+      venta:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_CLIENTE_URL: http://cliente:8082
+      MS_VENTA_URL: http://venta:8086
+    ports:
+      - "8089:8089"
+    networks:
+      - tienda-net
+
+  cupon:
+    build: ./cupon
+    container_name: cupon
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      cliente:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_CLIENTE_URL: http://cliente:8082
+    ports:
+      - "8090:8090"
+    networks:
+      - tienda-net
+
+  tarjeta:
+    build: ./tarjeta
+    container_name: tarjeta
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      cliente:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_CLIENTE_URL: http://cliente:8082
+    ports:
+      - "8091:8091"
+    networks:
+      - tienda-net
+
+  oferta:
+    build: ./oferta
+    container_name: oferta
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      producto:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_PRODUCTO_URL: http://producto:8083
+    ports:
+      - "8092:8092"
+    networks:
+      - tienda-net
+
+  inventario:
+    build: ./inventario
+    container_name: inventario
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      producto:
+        condition: service_started
+      tienda:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_PRODUCTO_URL: http://producto:8083
+      MS_TIENDA_URL: http://tienda:8085
+    ports:
+      - "8093:8093"
+    networks:
+      - tienda-net
+
+  envio:
+    build: ./envio
+    container_name: envio
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      venta:
+        condition: service_started
+      cliente:
+        condition: service_started
+      empleado:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_VENTA_URL: http://venta:8086
+      MS_CLIENTE_URL: http://cliente:8082
+      MS_EMPLEADO_URL: http://empleado:8081
+    ports:
+      - "8094:8094"
+    networks:
+      - tienda-net
+
+  devolucion:
+    build: ./devolucion
+    container_name: devolucion
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      venta:
+        condition: service_started
+      cliente:
+        condition: service_started
+      empleado:
+        condition: service_started
+      tarjeta:
+        condition: service_started
+      producto:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      MS_VENTA_URL: http://venta:8086
+      MS_CLIENTE_URL: http://cliente:8082
+      MS_EMPLEADO_URL: http://empleado:8081
+      MS_TARJETA_URL: http://tarjeta:8091
+      MS_PRODUCTO_URL: http://producto:8083
+    ports:
+      - "8095:8095"
+    networks:
+      - tienda-net
+
+  rol:
+    # OJO: asumo que la carpeta se llama "rol" (antes "gerente").
+    # Si tu carpeta todavia se llama "gerente", cambia el build de abajo a: ./gerente
+    build: ./rol
+    container_name: rol
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/patata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    networks:
+      - tienda-net

@@ -6,8 +6,8 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
 http://www.liquibase.org/xml/ns/dbchangelog
 https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="db/changelog/scripts/create_table_rol.sql"/>
-    <include file="db/changelog/scripts/insert_into_rol.sql"/>
-    <include file="db/changelog/scripts/change_data_rol.sql"/>
+    <include file="db/changelog/scripts/create_empleado_table.sql"/>
+    <include file="db/changelog/scripts/insert_into_empleado.sql"/>
+    <include file="db/changelog/scripts/change_nombre.sql"/>
 
 </databaseChangeLog>

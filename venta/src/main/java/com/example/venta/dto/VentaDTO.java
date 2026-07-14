@@ -1,11 +1,14 @@
-package com.example.venta.dto;
+package com.example.venta.DTO;
 
-import java.sql.Date;
-
-import jakarta.validation.constraints.NotNull;
+import com.example.venta.DTO.ClienteResponse;
+import com.example.venta.DTO.EmpleadoResponse;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.sql.Date;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class VentaDTO {
 
@@ -17,20 +20,22 @@ public class VentaDTO {
         @NotNull(message = "La fecha de venta es obligatoria")
         private Date fecha_venta;
 
-        @NotNull(message = "El id_cliente es obligatorio")
-        private Integer id_cliente;
+        @Min(value = 1, message = "El id_cliente es obligatorio")
+        private int id_cliente;
 
-        @NotNull(message = "El id_empleado es obligatorio")
-        private Integer id_empleado;
+        @Min(value = 1, message = "El id_empleado es obligatorio")
+        private int id_empleado;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private Integer id_venta;
+    /**
+     * Response enriquecido: incluye los datos completos de cliente y empleado
+     * obtenidos via Feign desde sus respectivos microservicios.
+     */
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
+        private int id_venta;
         private Date fecha_venta;
-        private ClienteDTO cliente;
-        private EmpleadoDTO empleado;
+        private ClienteResponse cliente;
+        private EmpleadoResponse empleado;
     }
 }

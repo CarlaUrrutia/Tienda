@@ -1,6 +1,6 @@
 package com.example.envio.service;
 
-import com.example.envio.dto.EnvioDTO;
+import com.example.envio.DTO.EnvioDTO;
 import java.util.List;
 
 public interface EnvioService {

@@ -1,6 +1,6 @@
 package com.example.inventario.service.impl;
 
-import com.example.inventario.dto.InventarioDTO;
+import com.example.inventario.DTO.InventarioDTO;
 import com.example.inventario.client.ProductoClient;
 import com.example.inventario.client.TiendaClient;
 import com.example.inventario.model.Inventario;

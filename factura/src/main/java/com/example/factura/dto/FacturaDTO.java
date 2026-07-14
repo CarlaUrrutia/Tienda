@@ -1,10 +1,14 @@
-package com.example.factura.dto;
+package com.example.factura.DTO;
 
+import com.example.factura.DTO.ClienteResponse;
+import com.example.factura.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Date;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class FacturaDTO {
 
@@ -12,22 +16,19 @@ public class FacturaDTO {
     public static class Request {
         @NotNull(message = "La fecha es obligatoria")
         private Date fecha;
-        @NotNull(message = "El total es obligatorio")
         @Min(value = 0, message = "El total no puede ser negativo")
-        private Integer total;
-        @NotNull(message = "El id_venta es obligatorio")
-        @Min(value = 1)
-        private Integer id_venta;
-        @NotNull(message = "El id_cliente es obligatorio")
-        @Min(value = 1)
-        private Integer id_cliente;
+        private int total;
+        @Min(value = 1, message = "El id_venta es obligatorio")
+        private int id_venta;
+        @Min(value = 1, message = "El id_cliente es obligatorio")
+        private int id_cliente;
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
-        private Long id;
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
+        private int id_factura;
         private Date fecha;
-        private Integer total;
+        private int total;
         private ClienteResponse cliente;
         private VentaResponse venta;
     }

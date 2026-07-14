@@ -1,6 +1,6 @@
 package com.example.producto.service.impl;
 
-import com.example.producto.dto.ProductoDTO;
+import com.example.producto.DTO.ProductoDTO;
 import com.example.producto.client.ProveedorClient;
 import com.example.producto.model.Producto;
 import com.example.producto.repository.ProductoRepository;

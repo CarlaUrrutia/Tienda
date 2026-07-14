@@ -1,6 +1,6 @@
 package com.example.oferta.controller;
 
-import com.example.oferta.dto.OfertaDTO;
+import com.example.oferta.DTO.OfertaDTO;
 import com.example.oferta.service.OfertaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Tag(name = "Ofertas", description = "Gestión de ofertas y descuentos")
 @RestController
 @RequestMapping("/api/ofertas")
 @Tag(name = "Ofertas", description = "Operaciones CRUD sobre ofertas")

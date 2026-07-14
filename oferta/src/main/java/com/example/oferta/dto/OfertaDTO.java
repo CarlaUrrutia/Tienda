@@ -1,41 +1,29 @@
-package com.example.oferta.dto;
+package com.example.oferta.DTO;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class OfertaDTO {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Data @NoArgsConstructor @AllArgsConstructor
     public static class Request {
-
         @NotBlank(message = "La descripcion es obligatoria")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "La descripcion debe contener al menos 2 palabras")
         private String descripcion;
-
-        @NotNull(message = "El descuento es obligatorio")
         @Min(value = 0, message = "El descuento no puede ser negativo")
-        private Integer descuento;
-
-        @NotNull(message = "El id_producto es obligatorio")
-        @Min(value = 1)
-        private Integer id_producto;
+        private int descuento;
+        @Min(value = 1, message = "El id_producto es obligatorio")
+        private int id_producto;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private Integer id;
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
+        private int id_oferta;
         private String descripcion;
-        private Integer descuento;
-        private ProductoDTO producto;
+        private int descuento;
+        private ProductoResponse producto;
     }
 }

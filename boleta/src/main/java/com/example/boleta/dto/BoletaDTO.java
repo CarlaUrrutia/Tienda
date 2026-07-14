@@ -1,9 +1,13 @@
-package com.example.boleta.dto;
+package com.example.boleta.DTO;
 
+import com.example.boleta.DTO.ClienteResponse;
+import com.example.boleta.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class BoletaDTO {
 
@@ -15,10 +19,10 @@ public class BoletaDTO {
         private int id_venta;
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_boleta;
         private ClienteResponse cliente;
         private VentaResponse venta;
-    }
+}
 }

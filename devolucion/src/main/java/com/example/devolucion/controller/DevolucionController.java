@@ -1,6 +1,6 @@
 package com.example.devolucion.controller;
 
-import com.example.devolucion.dto.DevolucionDTO;
+import com.example.devolucion.DTO.DevolucionDTO;
 import com.example.devolucion.service.DevolucionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Tag(name = "Devoluciones", description = "Gestión de devoluciones")
 @RestController
 @RequestMapping("/api/devoluciones")
 @Tag(name = "Devoluciones", description = "Operaciones CRUD sobre devoluciones")
