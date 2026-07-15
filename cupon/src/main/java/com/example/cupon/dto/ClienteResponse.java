@@ -1,4 +1,4 @@
-package com.example.cupon.dto;
+package com.example.cupon.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

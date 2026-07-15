@@ -1,9 +1,11 @@
-package com.example.cliente.dto;
+package com.example.cliente.DTO;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class ClienteDTO {
 
@@ -12,33 +14,25 @@ public class ClienteDTO {
     @AllArgsConstructor
     public static class Request {
 
-        @NotNull(message = "El id del cliente es obligatorio")
-        @Min(value = 0)
-        private Integer id_cliente;
-
         @NotBlank(message = "El nombre es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El nombre debe contener al menos 2 palabras")
+        @Size(min = 2, message = "El nombre debe tener al menos 2 caracteres")
         private String nombre;
 
         @NotBlank(message = "El apellido es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El apellido debe contener al menos 2 palabras")
+        @Size(min = 2, message = "El apellido debe tener al menos 2 caracteres")
         private String apellido;
 
         @NotBlank(message = "El email es obligatorio")
-        @Pattern(regexp = "^[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}\\s+[\\w\\sáéíóúÁÉÍÓÚñÑ]{2,}.*$",
-                 message = "El email debe contener al menos 2 palabras")
+        @Email(message = "El email debe tener un formato válido")
         private String email;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private Integer id_cliente;
-        private String nombre;
-        private String apellido;
-        private String email;
-    }
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+public static class Response extends RepresentationModel<Response> {
+    private int id_cliente;
+    private String nombre;
+    private String apellido;
+    private String email;
+}
+    
 }

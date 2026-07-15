@@ -1,11 +1,13 @@
-package com.example.detalleventa.dto;
+package com.example.detalleventa.DTO;
 
-import com.example.detalleventa.dto.ProductoResponse;
-import com.example.detalleventa.dto.VentaResponse;
+import com.example.detalleventa.DTO.ProductoResponse;
+import com.example.detalleventa.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class DetalleVentaDTO {
 
@@ -21,8 +23,8 @@ public class DetalleVentaDTO {
         private int id_producto;
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_detalle;
         private int cantidad;
         private int precio_unitario_venta;

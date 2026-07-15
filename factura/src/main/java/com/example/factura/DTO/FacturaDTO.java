@@ -1,5 +1,7 @@
-package com.example.factura.dto;
+package com.example.factura.DTO;
 
+import com.example.factura.DTO.ClienteResponse;
+import com.example.factura.DTO.VentaResponse;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

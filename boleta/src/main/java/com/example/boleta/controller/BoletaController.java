@@ -1,6 +1,6 @@
 package com.example.boleta.controller;
 
-import com.example.boleta.dto.BoletaDTO;
+import com.example.boleta.DTO.BoletaDTO;
 import com.example.boleta.service.BoletaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Tag(name = "Boletas", description = "Gestión de boletas")
 @RestController
 @RequestMapping("/api/boletas")
 @Tag(name = "Boletas", description = "Operaciones CRUD sobre boletas")
@@ -61,8 +60,6 @@ public class BoletaController {
     }
 
     @Operation(summary = "Eliminar una boleta")
-    @Operation(summary = "Eliminar una boleta por ID")
-    @ApiResponse(responseCode = "200", description = "Boleta eliminada correctamente")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         boletaService.delete(id);

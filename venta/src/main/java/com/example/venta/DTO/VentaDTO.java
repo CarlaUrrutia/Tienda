@@ -1,6 +1,8 @@
-package com.example.venta.dto;
+package com.example.venta.DTO;
 
-import jakarta.validation.constraints.Min;
+import com.example.venta.DTO.ClienteResponse;
+import com.example.venta.DTO.EmpleadoResponse;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,23 +11,31 @@ import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
 
 public class VentaDTO {
-     @Data
+
+    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
 
-        @Min(value = 0, message = "El id de la venta no puede ser negativa")
-        private int id_venta;
+        @NotNull(message = "La fecha de venta es obligatoria")
+        private Date fecha_venta;
 
+        @Min(value = 1, message = "El id_cliente es obligatorio")
+        private int id_cliente;
+
+        @Min(value = 1, message = "El id_empleado es obligatorio")
+        private int id_empleado;
     }
 
     /**
-     * La respuesta incluye el GeneroDTO completo obtenido desde ms-genero via Feign.
+     * Response enriquecido: incluye los datos completos de cliente y empleado
+     * obtenidos via Feign desde sus respectivos microservicios.
      */
     @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
     public static class Response extends RepresentationModel<Response> {
         private int id_venta;
-        private ClienteDTO cliente;
-        private EmpleadoDTO empleado;
+        private Date fecha_venta;
+        private ClienteResponse cliente;
+        private EmpleadoResponse empleado;
     }
 }

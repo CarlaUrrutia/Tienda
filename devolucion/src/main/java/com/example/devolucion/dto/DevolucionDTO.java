@@ -1,11 +1,13 @@
-package com.example.devolucion.dto;
+package com.example.devolucion.DTO;
 
-import com.example.devolucion.dto.*;
+import com.example.devolucion.DTO.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Date;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 public class DevolucionDTO {
 
@@ -24,8 +26,8 @@ public class DevolucionDTO {
         @Min(value = 1) private int id_producto;
     }
 
-    @Data @NoArgsConstructor @AllArgsConstructor
-    public static class Response {
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
         private int id_devolucion;
         private Date fecha_devolucion;
         private String motivo;

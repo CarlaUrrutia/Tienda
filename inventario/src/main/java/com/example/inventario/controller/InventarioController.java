@@ -1,6 +1,6 @@
 package com.example.inventario.controller;
 
-import com.example.inventario.dto.InventarioDTO;
+import com.example.inventario.DTO.InventarioDTO;
 import com.example.inventario.service.InventarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Tag(name = "Inventario", description = "Gestión de inventario")
 @RestController
 @RequestMapping("/api/inventarios")
 @Tag(name = "Inventarios", description = "Operaciones CRUD sobre inventarios")

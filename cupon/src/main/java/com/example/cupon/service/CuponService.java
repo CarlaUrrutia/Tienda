@@ -1,6 +1,6 @@
 package com.example.cupon.service;
 
-import com.example.cupon.dto.CuponDTO;
+import com.example.cupon.DTO.CuponDTO;
 import java.util.List;
 
 public interface CuponService {

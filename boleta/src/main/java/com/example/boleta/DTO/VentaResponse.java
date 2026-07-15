@@ -1,4 +1,4 @@
-package com.example.boleta.dto;
+package com.example.boleta.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

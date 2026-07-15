@@ -1,6 +1,6 @@
 package com.example.detalleventa.service.impl;
 
-import com.example.detalleventa.dto.DetalleVentaDTO;
+import com.example.detalleventa.DTO.DetalleVentaDTO;
 import com.example.detalleventa.client.ProductoClient;
 import com.example.detalleventa.client.VentaClient;
 import com.example.detalleventa.model.DetalleVenta;

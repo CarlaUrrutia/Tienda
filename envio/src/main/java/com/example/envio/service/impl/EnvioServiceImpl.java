@@ -1,6 +1,6 @@
 package com.example.envio.service.impl;
 
-import com.example.envio.dto.EnvioDTO;
+import com.example.envio.DTO.EnvioDTO;
 import com.example.envio.client.ClienteClient;
 import com.example.envio.client.EmpleadoClient;
 import com.example.envio.client.VentaClient;

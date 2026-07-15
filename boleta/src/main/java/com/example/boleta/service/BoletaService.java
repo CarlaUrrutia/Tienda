@@ -1,6 +1,6 @@
 package com.example.boleta.service;
 
-import com.example.boleta.dto.BoletaDTO;
+import com.example.boleta.DTO.BoletaDTO;
 import java.util.List;
 
 public interface BoletaService {

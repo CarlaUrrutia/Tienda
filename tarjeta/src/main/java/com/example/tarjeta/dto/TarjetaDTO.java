@@ -1,30 +1,28 @@
-package com.example.tarjeta.dto;
+package com.example.tarjeta.DTO;
 
-import jakarta.validation.constraints.NotNull;
+import com.example.tarjeta.DTO.ClienteResponse;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
+
 
 public class TarjetaDTO {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    @Data @NoArgsConstructor @AllArgsConstructor
     public static class Request {
-
-        @NotNull(message = "El tipo de tarjeta es obligatorio")
+        @NotNull(message = "El tipo es obligatorio")
         private Character tipo;
-
-        @NotNull(message = "El id_cliente es obligatorio")
-        private Integer id_cliente;
+        @Min(value = 1, message = "El id_cliente es obligatorio")
+        private int id_cliente;
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-        private Integer id_tarjeta;
-        private Character tipo;
-        private ClienteDTO cliente;
+    @Data @EqualsAndHashCode(callSuper = false) @NoArgsConstructor @AllArgsConstructor
+    public static class Response extends RepresentationModel<Response> {
+        private int id_tarjeta;
+        private char tipo;
+        private ClienteResponse cliente;
     }
 }
