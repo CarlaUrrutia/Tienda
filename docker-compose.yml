@@ -156,7 +156,7 @@ services:
 
   detalleVenta:
     build: ./detalleVenta
-    container_name: detalleVenta
+    container_name: detalleventa
     restart: unless-stopped
     depends_on:
       mysql:
