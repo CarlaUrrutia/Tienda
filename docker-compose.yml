@@ -154,9 +154,9 @@ services:
     networks:
       - tienda-net
 
-  detalleVenta:
+  detalleventa:
     build: ./detalleVenta
-    container_name: detalleventa
+    container_name: detalleVenta
     restart: unless-stopped
     depends_on:
       mysql:
